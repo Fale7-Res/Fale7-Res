@@ -68,6 +68,7 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
     const blob = await put("menu.pdf", req.file.buffer, {
       access: 'public',
       contentType: 'application/pdf',
+      addRandomSuffix: false,
     });
     return res.json({ success: true, message: "Menu uploaded.", url: blob.url });
   } catch (error) {
@@ -89,7 +90,9 @@ app.get("/menu", async (req, res) => {
       res.send(views.menu({ menuExists: false }));
     }
   } catch (error) {
-    console.error('Error fetching menu from Vercel Blob:', error);
+    // If head returns a 404 or other error, it means the menu doesn't exist.
+    // Log the error for debugging but show the user a clean "not found" page.
+    console.error('Error fetching menu from Vercel Blob:', error.message);
     res.send(views.menu({ menuExists: false }));
   }
 });
