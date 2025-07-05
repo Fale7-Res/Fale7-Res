@@ -176,7 +176,4 @@ if (require.main === module) {
   const PORT = args.port || process.env.PORT || 3000;
   const HOSTNAME = args.hostname || '0.0.0.0';
   
-  app.listen(PORT, HOSTNAME, () => {
-    console.log(`🚀 Server ready at http://${HOSTNAME}:${PORT}`);
-  });
-}
+  app.
