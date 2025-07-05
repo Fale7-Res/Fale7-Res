@@ -27,7 +27,7 @@ app.set('trust proxy', 1);
 
 app.use(cookieSession({
   name: 'session',
-  keys: ["aVeryStrongSecretKeyForSecurity"], // Use a strong, secret key
+  keys: ["a-new-very-strong-secret-key-for-this-app"], // A new, clean secret key
   maxAge: 24 * 60 * 60 * 1000, // 24 hours
   secure: true, // Enforce secure cookies, as we are always on HTTPS
   httpOnly: true,
