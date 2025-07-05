@@ -1,81 +1,53 @@
 const express = require("express");
 const cookieSession = require("cookie-session");
-const path = require("path");
 const multer = require("multer");
 const { put, del, head } = require("@vercel/blob");
+const views = require('./views');
 
 const app = express();
+const BLOB_READ_WRITE_TOKEN = "vercel_blob_rw_lx7fCZBwbzt55vlQ_BD9rYottV2MvqRePIY4SAJQW0l79pE";
 
-const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
-  if (arg.startsWith('--')) {
-    const key = arg.substring(2);
-    const next = arr[index + 1];
-    if (next && !next.startsWith('--')) {
-      acc[key] = next;
-    } else {
-      acc[key] = true;
-    }
-  }
-  return acc;
-}, {});
-
-const PORT = args.port || process.env.PORT || 3000;
-const HOSTNAME = args.hostname || '0.0.0.0';
-
-// يخبر الخادم بأن يثق بالمعلومات التي تصله من Vercel.
-// هذا السطر هو مفتاح حل مشكلة تسجيل الدخول.
+// Trust the Vercel proxy for secure cookies
 app.set('trust proxy', true);
 
+// Use cookie-session which is better for serverless environments
 app.use(cookieSession({
-  name: 'fale7-session-stable', // اسم جديد للكوكى لضمان عدم استخدام أي نسخة قديمة
-  keys: ["this-is-the-final-secret-key-i-swear-1961"], // مفتاح سري جديد تماماً
-  maxAge: 24 * 60 * 60 * 1000, // 24 ساعة
-  secure: true,   // ضروري لـ Vercel وبيئة HTTPS
-  httpOnly: true, // إجراء أمني قياسي
-  sameSite: 'lax' // أفضل توازن بين الأمان وسهولة الاستخدام
+  name: 'menu-session-stable', // A new name to avoid conflicts with old cookies
+  keys: ["a-very-secret-and-new-key-for-signing-cookies-1961"], // New secret key
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  secure: true,
+  httpOnly: true,
+  sameSite: 'lax'
 }));
 
-// Middleware للتحقق من تسجيل الدخول وحماية الصفحات
+// Middleware to parse POST data
+app.use(express.urlencoded({ extended: true }));
+
+// Setup multer to use memory storage, not disk, for Vercel's ephemeral filesystem
+const upload = multer({ storage: multer.memoryStorage() });
+
+// Middleware to protect routes that require authentication
 const requireLogin = (req, res, next) => {
   if (!req.session || !req.session.loggedIn) {
-    // إذا كان الطلب من جافاسكريبت (مثل الحذف والرفع)، أرجع خطأ
+    // For API-like requests, send a JSON error. For page requests, redirect.
     if (req.xhr || (req.headers.accept && req.headers.accept.includes('json'))) {
-      return res.status(401).json({ success: false, message: "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى." });
+        return res.status(401).json({ success: false, message: "Unauthorized. Please log in again." });
     }
-    // إذا كان الطلب لصفحة، قم بالتحويل لصفحة الدخول
-    return res.redirect('/login');
+    return res.redirect("/login");
   }
   next();
 };
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+// --- Routes ---
 
-// سياسة أمان المحتوى لزيادة الأمان والسماح للمكونات بالعمل
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com blob:; " +
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
-    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
-    "worker-src 'self' blob:; " +
-    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com; " +
-    "img-src 'self' data:; " +
-    "object-src 'none';"
-  );
-  next();
-});
-
-const upload = multer({ storage: multer.memoryStorage() });
-
-// --- المسارات العامة ---
 app.get("/", (req, res) => res.redirect("/menu"));
 
+// Login page
 app.get("/login", (req, res) => {
   res.send(views.login({ error: null }));
 });
 
+// Handle login attempt
 app.post("/login", (req, res) => {
   if (req.body.password === "fale71961") {
     req.session.loggedIn = true;
@@ -85,75 +57,104 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.get("/menu", async (req, res) => {
-  try {
-    const blob = await head('menu.pdf');
-    res.send(views.menu({
-      menuExists: true,
-      menuUrl: blob.url
-    }));
-  } catch (error) {
-    if (error.status === 404) {
-      // هذا طبيعي إذا لم يتم رفع المنيو بعد
-      res.send(views.menu({ menuExists: false }));
-    } else {
-      // خطأ آخر غير متوقع
-      console.error('Error fetching menu from Vercel Blob:', error.message);
-      res.status(500).send("<h1>Error fetching menu</h1>");
-    }
-  }
-});
-
-// --- المسارات المحمية (تتطلب تسجيل دخول) ---
+// Admin dashboard
 app.get("/admin", requireLogin, (req, res) => {
   res.send(views.admin());
 });
 
+// Logout
+app.get("/logout", (req, res) => {
+  req.session = null;
+  res.redirect("/login");
+});
+
+// Public menu page
+app.get("/menu", async (req, res) => {
+  try {
+    // Check if the 'menu.pdf' exists in Vercel Blob
+    const blob = await head('menu.pdf', { token: BLOB_READ_WRITE_TOKEN });
+    // Pass the blob URL and a cache-busting version to the template
+    res.send(views.menu({
+      menuExists: true,
+      menuUrl: blob.url,
+      version: new Date(blob.uploadedAt).getTime() 
+    }));
+  } catch (error) {
+    if (error.status === 404) {
+      // This is expected if the menu hasn't been uploaded yet
+      res.send(views.menu({ menuExists: false }));
+    } else {
+      console.error('Error fetching menu from Vercel Blob:', error);
+      res.status(500).send("<h1>Error fetching menu data.</h1>");
+    }
+  }
+});
+
+// Handle menu upload
 app.post("/upload", requireLogin, upload.single("menu"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded." });
   }
 
   try {
-    const blob = await put("menu.pdf", req.file.buffer, {
+    // Upload the file from memory buffer to Vercel Blob
+    await put("menu.pdf", req.file.buffer, {
       access: 'public',
       contentType: 'application/pdf',
-      addRandomSuffix: false, // لضمان ثبات اسم الملف
+      addRandomSuffix: false, // Ensure the filename is always 'menu.pdf'
+      token: BLOB_READ_WRITE_TOKEN,
     });
-    return res.json({ success: true, message: "Menu uploaded.", url: blob.url });
+    return res.json({ success: true, message: "Menu uploaded successfully." });
   } catch (error) {
     console.error('Error uploading to Vercel Blob:', error);
     return res.status(500).json({ success: false, message: 'Error uploading file.' });
   }
 });
 
+// Handle menu deletion
 app.get("/delete-menu", requireLogin, async (req, res) => {
   try {
-    // للحذف، يجب أن نعرف الرابط الكامل للملف.
-    // بما أننا لا نستخدم لاحقة عشوائية، يمكننا الحصول عليه من head()
-    const blobInfo = await head('menu.pdf');
-    await del(blobInfo.url);
-    console.log('تم حذف ملف المنيو من Vercel Blob بنجاح');
+    // To delete a blob, you need its full URL. We get it from head() first.
+    const blobInfo = await head('menu.pdf', { token: BLOB_READ_WRITE_TOKEN });
+    if (blobInfo) {
+       await del(blobInfo.url, { token: BLOB_READ_WRITE_TOKEN });
+    }
+    console.log('Menu deleted successfully from Vercel Blob.');
     return res.json({ success: true, message: "Menu deleted." });
   } catch (error) {
     if (error.status === 404) {
-       // إذا كان الملف غير موجود أصلاً، فهذا يعتبر نجاحاً من وجهة نظر المستخدم
-       console.log('ملف المنيو غير موجود أصلاً في Vercel Blob (404)');
+       // If the file doesn't exist, consider it a success from the user's perspective.
        return res.json({ success: true, message: "Menu already deleted." });
     }
-    // خطأ آخر غير متوقع
-    console.error('خطأ في حذف ملف المنيو من Vercel Blob:', error);
+    console.error('Error deleting menu from Vercel Blob:', error);
     return res.status(500).json({ success: false, message: "Error deleting menu." });
   }
 });
 
-app.get("/logout", (req, res) => {
-  req.session = null; // لمسح الكوكي
-  res.redirect("/login");
-});
 
-const views = require('./views');
+// Export the app for Vercel's serverless environment
+module.exports = app;
 
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`🚀 شغال على http://localhost:${PORT}`);
-});
+// Start the server only if the file is run directly (for local development)
+if (require.main === module) {
+  // Helper to parse command-line arguments for local development
+  const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
+    if (arg.startsWith('--')) {
+      const key = arg.substring(2);
+      const next = arr[index + 1];
+      if (next && !next.startsWith('--')) {
+        acc[key] = next;
+      } else {
+        acc[key] = true;
+      }
+    }
+    return acc;
+  }, {});
+
+  const PORT = args.port || process.env.PORT || 3000;
+  const HOSTNAME = args.hostname || '0.0.0.0';
+  
+  app.listen(PORT, HOSTNAME, () => {
+    console.log(`🚀 Server ready at http://${HOSTNAME}:${PORT}`);
+  });
+}
