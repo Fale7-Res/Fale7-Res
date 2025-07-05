@@ -32,7 +32,7 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000, // 24 hours
   secure: true, // Enforce secure cookies, as we are always on HTTPS
   httpOnly: true,
-  sameSite: 'lax' // Be explicit for better browser compatibility
+  sameSite: 'none' // Use 'none' for maximum compatibility behind proxies
 }));
 
 app.use(express.urlencoded({ extended: true }));
