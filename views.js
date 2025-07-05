@@ -651,20 +651,18 @@ module.exports = {
             });
 
             xhr.addEventListener('load', () => {
+                loadingOverlay.style.display = 'none';
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    loadingText.innerText = 'اكتمل بنجاح!';
-                    progressBar.style.width = '100%';
-                    progressPercentage.innerText = '100%';
-                    setTimeout(() => window.location.reload(), 1000);
+                    alert('اكتمل الرفع بنجاح!');
+                    window.location.reload();
                 } else {
                     alert('حدث خطأ أثناء الرفع: ' + xhr.responseText);
-                    loadingOverlay.style.display = 'none';
                 }
             });
 
             xhr.addEventListener('error', () => {
-                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
                 loadingOverlay.style.display = 'none';
+                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
             });
             
             loadingText.innerText = 'جاري رفع المنيو...';
@@ -697,24 +695,30 @@ module.exports = {
                 progressPercentage.innerText = progress + '%';
                 if (progress >= 100) {
                     clearInterval(interval);
-                    
-                    // Perform fetch after simulation
-                    fetch('/delete-menu')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                loadingText.innerText = 'اكتمل الحذف!';
-                                setTimeout(() => window.location.reload(), 1000);
-                            } else {
-                                throw new Error(data.message || 'فشل الحذف');
-                            }
-                        })
-                        .catch(error => {
-                            alert('حدث خطأ: ' + error.message);
-                            loadingOverlay.style.display = 'none';
-                        });
                 }
             }, 50);
+
+            fetch('/delete-menu')
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw new Error(err.message || 'فشل الحذف') });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        loadingText.innerText = 'اكتمل الحذف!';
+                        progressBar.style.width = '100%';
+                        progressPercentage.innerText = '100%';
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        throw new Error(data.message || 'فشل الحذف');
+                    }
+                })
+                .catch(error => {
+                    alert('حدث خطأ: ' + error.message);
+                    loadingOverlay.style.display = 'none';
+                });
         });
     });
   </script>
@@ -724,8 +728,9 @@ module.exports = {
 
   // قالب صفحة المنيو
   menu: (data) => {
-    // Determine the menu URL with cache-busting query parameter
-    const menuUrl = data.menuExists ? `/menu.pdf?v=${data.version}` : '';
+    // Determine the menu URL. The URL comes directly from the backend now.
+    // The 'version' is a hash from Vercel Blob used for cache-busting.
+    const menuUrl = data.menuExists ? `${data.menuUrl}?v=${data.version}` : '';
 
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -993,12 +998,18 @@ module.exports = {
     @media (max-width: 640px) {
       .top-bar {
         padding: 0.75rem;
+        flex-direction: row-reverse;
       }
       .social-icons {
         gap: 1rem;
       }
       .action-buttons {
-        gap: 0.5rem;
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 40;
+        flex-direction: column;
+        align-items: flex-end;
       }
       .social-icon span {
         height: 45px;
@@ -1011,8 +1022,17 @@ module.exports = {
       }
       
       .btn {
-        padding: 0.375rem 0.75rem;
-        font-size: 0.75rem;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+      }
+       .btn span {
+        display: none;
+      }
+      .btn .icon {
+        font-size: 1.25rem;
       }
       
       .no-menu-icon {
@@ -1033,16 +1053,6 @@ module.exports = {
   ${data.menuExists ? `
     <!-- Top Bar -->
     <div class="top-bar">
-       <div class="action-buttons">
-        <a href="${menuUrl}" class="btn btn-primary" download>
-          <span class="icon">📥</span>
-          تحميل
-        </a>
-        <a href="javascript:location.reload(true)" class="btn btn-secondary">
-          <span class="icon">🔄</span>
-          تحديث
-        </a>
-      </div>
       <div class="social-icons">
         <div class="social-icon tiktok">
           <a href="https://www.tiktok.com/@fale7_1961?_t=ZS-8x1AmLeHCEc&_r=1" target="_blank">
@@ -1059,6 +1069,16 @@ module.exports = {
             <span><i class="fas fa-map-marker-alt"></i></span>
           </a>
         </div>
+      </div>
+      <div class="action-buttons">
+        <a href="${menuUrl}" class="btn btn-primary" download>
+          <span class="icon">📥</span>
+          <span>تحميل</span>
+        </a>
+        <a href="javascript:location.reload(true)" class="btn btn-secondary">
+          <span class="icon">🔄</span>
+          <span>تحديث</span>
+        </a>
       </div>
     </div>
     
@@ -1091,18 +1111,21 @@ module.exports = {
           // مسح محتوى التحميل
           container.innerHTML = '';
           
+          const scale = window.devicePixelRatio || 1;
+
           // عرض كل صفحة
           for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
             const page = await pdf.getPage(pageNum);
             
-            // إنشاء canvas للصفحة
+            const viewport = page.getViewport({ scale: 1.5 * scale });
+            
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             
-            // تحديد حجم العرض
-            const viewport = page.getViewport({ scale: 1.5 });
             canvas.height = viewport.height;
             canvas.width = viewport.width;
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
             canvas.className = 'pdf-page';
             
             // رسم الصفحة
@@ -1116,7 +1139,7 @@ module.exports = {
         } catch (error) {
           console.error('خطأ في تحميل PDF:', error);
           document.getElementById('pdfContainer').innerHTML = 
-            '<div style="text-align: center; padding: 2rem;"><p>حدث خطأ في تحميل المنيو. يرجى المحاولة مرة أخرى.</p></div>';
+            '<div class="no-menu"><div class="no-menu-icon">⚠️</div><h2 class="no-menu-title">خطأ في تحميل المنيو</h2><p class="no-menu-text">حدث خطأ في تحميل ملف المنيو. يرجى المحاولة مرة أخرى أو الاتصال بالدعم.</p></div>';
         }
       }
       
@@ -1126,8 +1149,8 @@ module.exports = {
   ` : `
     <div class="no-menu">
       <div class="no-menu-icon">📋</div>
-      <h2 class="no-menu-title">المنيو غير متوفر حالياً</h2>
-      <p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.</p>
+      <h2 class="no-menu-title">${data.error ? 'خطأ في التحميل' : 'المنيو غير متوفر حالياً'}</h2>
+      <p class="no-menu-text">${data.error || 'لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.'}</p>
     </div>
   `}
 </body>
