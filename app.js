@@ -22,12 +22,12 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 
-// Trust the Vercel proxy to allow secure cookies
+// Trust the Vercel proxy. This is the crucial line for Vercel deployment.
 app.set('trust proxy', 1);
 
 app.use(cookieSession({
   name: 'session',
-  keys: ["yet-another-very-strong-secret-key-2024"], // A new, clean secret key
+  keys: ["the-final-and-correct-secret-key-2024"], // A new, clean secret key
   maxAge: 24 * 60 * 60 * 1000, // 24 hours
   secure: true, // Enforce secure cookies, as we are always on HTTPS
   httpOnly: true,
