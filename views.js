@@ -621,8 +621,8 @@ module.exports = {
                 uploadText.textContent = file.name;
                 // Convert bytes to a more readable format (KB or MB)
                 const fileSize = file.size > 1024 * 1024 
-                    ? \`\${(file.size / 1024 / 1024).toFixed(2)} MB\`
-                    : \`\${(file.size / 1024).toFixed(2)} KB\`;
+                    ? \`${(file.size / 1024 / 1024).toFixed(2)} MB\`
+                    : \`${(file.size / 1024).toFixed(2)} KB\`;
                 uploadHint.textContent = \`حجم الملف: \${fileSize}\`;
             } else {
                 uploadText.textContent = 'اسحب وأفلت ملف PDF هنا';
@@ -730,8 +730,8 @@ module.exports = {
 
   // قالب صفحة المنيو
   menu: (data) => {
-    // Determine the menu URL with cache-busting query parameter
-    const menuUrl = data.menuExists ? `${data.menuUrl}&v=${data.version}` : '';
+    // The URL from Vercel Blob is sufficient and includes a token for access.
+    const menuUrl = data.menuExists ? data.menuUrl : '';
 
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
