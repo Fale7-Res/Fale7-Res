@@ -46,7 +46,7 @@ app.use((req, res, next) => {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
     "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
     "worker-src 'self' blob:; " +
-    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com; " +
+    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com https://www.google-analytics.com; " +
     "img-src 'self' data: https://*.blob.vercel-storage.com; " +
     "object-src 'none'; " +
     "frame-src 'self';"
