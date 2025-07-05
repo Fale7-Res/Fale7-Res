@@ -72,17 +72,19 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-  if (req.session && req.session.loggedIn) {
-    res.send(views.admin());
-  } else {
+  try {
+    if (req.session && req.session.loggedIn) {
+      res.send(views.admin());
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.error("Error in /admin route, redirecting to login:", error);
     res.redirect("/login");
   }
 });
 
 app.post("/upload", upload.single("menu"), async (req, res) => {
-  if (!req.session || !req.session.loggedIn) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded." });
   }
@@ -114,9 +116,6 @@ app.get("/menu", async (req, res) => {
 });
 
 app.get("/delete-menu", async (req, res) => {
-  if (!req.session || !req.session.loggedIn) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
   try {
     const blob = await head('menu.pdf');
     if (blob && blob.url) {
