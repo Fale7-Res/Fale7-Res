@@ -22,13 +22,13 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 
-// هذا هو أهم سطر لتعمل الجلسات على Vercel بشكل صحيح.
 // يخبر الخادم بأن يثق بالمعلومات التي تصله من Vercel.
+// هذا السطر هو مفتاح حل مشكلة تسجيل الدخول.
 app.set('trust proxy', true);
 
 app.use(cookieSession({
-  name: 'fale7-res-session', // اسم فريد للكوكي
-  keys: ["a-brand-new-very-secret-key-for-fale7-1961-final"], // مفتاح سري جديد تماماً
+  name: 'fale7-session-stable', // اسم جديد للكوكى لضمان عدم استخدام أي نسخة قديمة
+  keys: ["this-is-the-final-secret-key-i-swear-1961"], // مفتاح سري جديد تماماً
   maxAge: 24 * 60 * 60 * 1000, // 24 ساعة
   secure: true,   // ضروري لـ Vercel وبيئة HTTPS
   httpOnly: true, // إجراء أمني قياسي
@@ -51,7 +51,7 @@ const requireLogin = (req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// سياسة أمان المحتوى لزيادة الأمان
+// سياسة أمان المحتوى لزيادة الأمان والسماح للمكونات بالعمل
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
