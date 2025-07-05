@@ -57,9 +57,6 @@ app.get("/admin", (req, res) => {
 });
 
 app.post("/upload", upload.single("menu"), async (req, res) => {
-  if (!req.session.loggedIn) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded." });
   }
@@ -90,18 +87,12 @@ app.get("/menu", async (req, res) => {
       res.send(views.menu({ menuExists: false }));
     }
   } catch (error) {
-    // If head returns a 404 or other error, it means the menu doesn't exist.
-    // Log the error for debugging but show the user a clean "not found" page.
     console.error('Error fetching menu from Vercel Blob:', error.message);
     res.send(views.menu({ menuExists: false }));
   }
 });
 
 app.get("/delete-menu", async (req, res) => {
-  if (!req.session.loggedIn) {
-    return res.redirect("/login");
-  }
-
   try {
     const blob = await head('menu.pdf');
     if (blob && blob.url) {
