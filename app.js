@@ -5,7 +5,13 @@ const { put, del, head } = require("@vercel/blob");
 const views = require('./views');
 
 const app = express();
-const BLOB_READ_WRITE_TOKEN = "vercel_blob_rw_lx7fCZBwbzt55vlQ_BD9rYottV2MvqRePIY4SAJQW0l79pE";
+const { BLOB_READ_WRITE_TOKEN } = process.env;
+
+if (!BLOB_READ_WRITE_TOKEN) {
+  console.error("FATAL ERROR: The BLOB_READ_WRITE_TOKEN environment variable is not set.");
+  // In a real server, you'd exit, but for a serverless function, throwing is sufficient to stop execution.
+  throw new Error("Server cannot start without a blob storage token.");
+}
 
 // Trust the Vercel proxy for secure cookies
 app.set('trust proxy', true);
@@ -22,6 +28,22 @@ app.use(cookieSession({
 
 // Middleware to parse POST data
 app.use(express.urlencoded({ extended: true }));
+
+// Add Content Security Policy middleware
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com blob:; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+    "worker-src 'self' blob:; " +
+    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com; " +
+    "img-src 'self' data:; " +
+    "object-src 'none';"
+  );
+  next();
+});
 
 // Setup multer to use memory storage, not disk, for Vercel's ephemeral filesystem
 const upload = multer({ storage: multer.memoryStorage() });
