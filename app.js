@@ -27,7 +27,7 @@ app.set('trust proxy', 1);
 
 app.use(cookieSession({
   name: 'session',
-  keys: ["a-new-very-strong-secret-key-for-this-app"], // A new, clean secret key
+  keys: ["yet-another-very-strong-secret-key-2024"], // A new, clean secret key
   maxAge: 24 * 60 * 60 * 1000, // 24 hours
   secure: true, // Enforce secure cookies, as we are always on HTTPS
   httpOnly: true,
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
     "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
     "worker-src 'self' blob:; " +
-    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com https://www.google-analytics.com; " +
+    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com; " +
     "img-src 'self' data:; " +
     "object-src 'none';"
   );
