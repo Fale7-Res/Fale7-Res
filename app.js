@@ -1,13 +1,11 @@
+
 const express = require("express");
 const session = require("express-session");
 const path = require("path");
 const multer = require("multer");
-const fs = require("fs");
+const { put, del, head } = require('@vercel/blob');
 
 const app = express();
-
-// A simple in-memory cache-busting version key.
-let menuVersion = Date.now();
 
 // Helper to parse command-line arguments
 const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
@@ -26,37 +24,25 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 
-// إعداد الجلسة
+// Session setup
 app.use(session({
   secret: "mySecret",
   resave: false,
   saveUninitialized: true,
 }));
 
-// استقبال بيانات POST
+// POST data handling
 app.use(express.urlencoded({ extended: true }));
 
-// إعداد رفع المنيو
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, "public")),
-  filename: (req, file, cb) => cb(null, "menu.pdf"),
-});
-const upload = multer({ storage });
+// Multer setup for in-memory storage
+const upload = multer({ storage: multer.memoryStorage() });
 
-// إنشاء مجلد public إذا لم يكن موجوداً
+// The 'public' directory is no longer used for the menu PDF on Vercel.
 const publicDir = path.join(__dirname, "public");
-if (!fs.existsSync(publicDir)) {
-  fs.mkdirSync(publicDir, { recursive: true });
-}
+app.use(express.static(publicDir));
 
-// ملفات ثابتة with long-term caching
-app.use(express.static(publicDir, {
-  maxAge: '1y', // Aggressively cache for 1 year
-  etag: true,
-  lastModified: true
-}));
 
-// المسارات
+// Routes
 app.get("/", (req, res) => res.redirect("/menu"));
 
 app.get("/login", (req, res) => {
@@ -80,48 +66,55 @@ app.get("/admin", (req, res) => {
   }
 });
 
-app.post("/upload", upload.single("menu"), (req, res) => {
+app.post("/upload", upload.single("menu"), async (req, res) => {
   if (!req.session.loggedIn) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  if (req.file) {
-    menuVersion = Date.now(); // Invalidate cache by updating version
-    return res.json({ success: true, message: "Menu uploaded." });
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded." });
   }
-  res.status(400).json({ success: false, message: "No file uploaded." });
-});
-
-app.get("/menu", (req, res) => {
-  // التحقق من وجود ملف المنيو قبل عرضه
-  const menuPath = path.join(__dirname, 'public', 'menu.pdf');
   
-  if (fs.existsSync(menuPath)) {
-    res.send(views.menu({ menuExists: true, version: menuVersion }));
-  } else {
-    res.send(views.menu({ menuExists: false }));
+  try {
+    const blob = await put('menu.pdf', req.file.buffer, {
+      access: 'public',
+      cacheControl: 'public, max-age=31536000, immutable'
+    });
+    return res.json({ success: true, message: "Menu uploaded." });
+  } catch (error) {
+    console.error('Error uploading to Vercel Blob:', error);
+    return res.status(500).json({ success: false, message: "Error uploading menu." });
   }
 });
 
-app.get("/delete-menu", (req, res) => {
-  if (req.session.loggedIn) {
-    const menuPath = path.join(__dirname, 'public', 'menu.pdf');
-    if (fs.existsSync(menuPath)) {
-      try {
-        fs.unlinkSync(menuPath);
-        menuVersion = Date.now(); // Invalidate cache by updating version
-        console.log('تم حذف ملف المنيو بنجاح');
-        return res.json({ success: true, message: "Menu deleted." });
-      } catch (err) {
-        console.error('خطأ في حذف ملف المنيو:', err);
-        return res.status(500).json({ success: false, message: "Error deleting menu." });
-      }
+app.get("/menu", async (req, res) => {
+  try {
+    const { url, version } = await head('menu.pdf');
+    res.send(views.menu({ menuExists: true, menuUrl: url, version: version }));
+  } catch (error) {
+    if (error.status === 404) {
+      res.send(views.menu({ menuExists: false }));
     } else {
-      console.log('ملف المنيو غير موجود');
-      // If file doesn't exist, it's still a "success" from user's perspective
+      console.error("Error fetching menu from Vercel Blob:", error);
+      res.send(views.menu({ menuExists: false, error: "حدث خطأ أثناء تحميل المنيو" }));
+    }
+  }
+});
+
+app.get("/delete-menu", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    const { url } = await head('menu.pdf');
+    await del(url);
+    return res.json({ success: true, message: "Menu deleted." });
+  } catch (error) {
+    if (error.status === 404) {
       return res.json({ success: true, message: "Menu already deleted." });
     }
-  } else {
-    res.redirect("/login");
+    console.error('Error deleting from Vercel Blob:', error);
+    return res.status(500).json({ success: false, message: "Error deleting menu." });
   }
 });
 
@@ -130,7 +123,7 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-// استيراد القوالب من ملف views.js
+// Import views
 const views = require('./views');
 
 app.listen(PORT, HOSTNAME, () => {
