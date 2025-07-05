@@ -26,10 +26,28 @@ app.use(session({
   secret: "mySecret",
   resave: false,
   saveUninitialized: true,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// Add a Content Security Policy to allow necessary resources
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+    "worker-src 'self' blob:; " + // Allows pdf.js worker
+    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com; " +
+    "img-src 'self' data: https://*.blob.vercel-storage.com; " +
+    "object-src 'none'; " +
+    "frame-src 'self';"
+  );
+  next();
+});
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -49,7 +67,8 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-  if (req.session.loggedIn) {
+  // Defensive check to prevent crash if session object is missing
+  if (req.session && req.session.loggedIn) {
     res.send(views.admin());
   } else {
     res.redirect("/login");
@@ -77,15 +96,10 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
 app.get("/menu", async (req, res) => {
   try {
     const blob = await head('menu.pdf');
-    if (blob) {
-      res.send(views.menu({
-        menuExists: true,
-        menuUrl: blob.url,
-        version: new Date(blob.uploadedAt).getTime()
-      }));
-    } else {
-      res.send(views.menu({ menuExists: false }));
-    }
+    res.send(views.menu({
+      menuExists: true,
+      menuUrl: blob.url
+    }));
   } catch (error) {
     console.error('Error fetching menu from Vercel Blob:', error.message);
     res.send(views.menu({ menuExists: false }));
