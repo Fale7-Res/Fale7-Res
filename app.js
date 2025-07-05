@@ -1,5 +1,5 @@
 const express = require("express");
-const session = require("express-session");
+const cookieSession = require("cookie-session");
 const path = require("path");
 const multer = require("multer");
 const { put, del, head } = require("@vercel/blob");
@@ -22,14 +22,36 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 
-app.use(session({
-  secret: "mySecret",
-  resave: false,
-  saveUninitialized: true,
+// Trust the Vercel proxy to allow secure cookies
+app.set('trust proxy', 1);
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ["aVeryStrongSecretKeyForSecurity"], // Use a strong, secret key
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  secure: true, // Enforce secure cookies, as we are always on HTTPS
+  httpOnly: true,
+  sameSite: 'lax' // Recommended for security and compatibility
 }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// Add a comprehensive Content Security Policy to allow necessary resources
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com blob:; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+    "worker-src 'self' blob:; " +
+    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com https://www.google-analytics.com; " +
+    "img-src 'self' data:; " +
+    "object-src 'none';"
+  );
+  next();
+});
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -49,9 +71,14 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-  if (req.session.loggedIn) {
-    res.send(views.admin());
-  } else {
+  try {
+    if (req.session && req.session.loggedIn) {
+      res.send(views.admin());
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.error("Error in /admin route, redirecting to login:", error);
     res.redirect("/login");
   }
 });
@@ -65,7 +92,7 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
     const blob = await put("menu.pdf", req.file.buffer, {
       access: 'public',
       contentType: 'application/pdf',
-      addRandomSuffix: false,
+      addRandomSuffix: false, // Ensure a consistent filename
     });
     return res.json({ success: true, message: "Menu uploaded.", url: blob.url });
   } catch (error) {
@@ -77,17 +104,14 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
 app.get("/menu", async (req, res) => {
   try {
     const blob = await head('menu.pdf');
-    if (blob) {
-      res.send(views.menu({
-        menuExists: true,
-        menuUrl: blob.url,
-        version: new Date(blob.uploadedAt).getTime()
-      }));
-    } else {
-      res.send(views.menu({ menuExists: false }));
-    }
+    // If head is successful, blob exists.
+    res.send(views.menu({
+      menuExists: true,
+      menuUrl: blob.url
+    }));
   } catch (error) {
-    console.error('Error fetching menu from Vercel Blob:', error.message);
+    // If head fails (e.g., 404), it means the menu doesn't exist.
+    console.error('Info: Menu not found in Vercel Blob. Displaying no-menu page.', error.message);
     res.send(views.menu({ menuExists: false }));
   }
 });
@@ -100,21 +124,24 @@ app.get("/delete-menu", async (req, res) => {
       console.log('تم حذف ملف المنيو من Vercel Blob بنجاح');
       return res.json({ success: true, message: "Menu deleted." });
     } else {
+      // This case is unlikely if head succeeds, but good for robustness.
       console.log('ملف المنيو غير موجود في Vercel Blob');
       return res.json({ success: true, message: "Menu already deleted." });
     }
   } catch (error) {
+    // If the file doesn't exist, Vercel Blob throws a 404 error.
     if (error.status === 404) {
-       console.log('ملف المنيو غير موجود في Vercel Blob');
+       console.log('ملف المنيو غير موجود في Vercel Blob (404)');
        return res.json({ success: true, message: "Menu already deleted." });
     }
+    // For other errors (like auth issues), return a 500.
     console.error('خطأ في حذف ملف المنيو من Vercel Blob:', error);
     return res.status(500).json({ success: false, message: "Error deleting menu." });
   }
 });
 
 app.get("/logout", (req, res) => {
-  req.session.destroy();
+  req.session = null; // For cookie-session, this clears the session.
   res.redirect("/login");
 });
 
