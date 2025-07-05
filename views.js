@@ -1,4 +1,3 @@
-
 // ملف القوالب المدمجة مع التصميم الجديد
 module.exports = {
   // قالب تسجيل الدخول
@@ -225,7 +224,7 @@ module.exports = {
         </div>
       ` : ''}
       
-      <form method="POST">
+      <form action="/login" method="POST">
         <div class="form-group">
           <label for="password" class="form-label">كلمة المرور</label>
           <div class="password-container">
@@ -564,8 +563,8 @@ module.exports = {
         <p class="card-subtitle">إدارة منيو المطعم</p>
       </div>
       <div class="card-content">
-        <form id="uploadForm" method="POST" enctype="multipart/form-data">
-          <div class="upload-area">
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+          <div class="upload-area" onclick="document.getElementById('fileInput').click()">
             <div class="upload-icon">📄</div>
             <div class="upload-text" id="uploadText">اسحب وأفلت ملف PDF هنا</div>
             <div class="upload-hint" id="uploadHint">أو انقر للاختيار من جهازك</div>
@@ -584,20 +583,17 @@ module.exports = {
             صفحة المستخدم
           </a>
           
-          <a href="/delete-menu" id="deleteBtn" class="btn btn-danger">
+          <button id="deleteBtn" class="btn btn-danger">
             <span class="icon">🗑️</span>
-            حذف المنيو القديم
-          </a>
+            حذف المنيو الحالي
+          </button>
         </div>
         
-        <a href="/logout" class="btn btn-secondary">
+        <a href="/logout" class="btn btn-secondary" style="margin-top: 1rem;">
           <span class="icon">🚪</span>
           تسجيل الخروج
         </a>
         
-        <div class="debug-info">
-          نظام إدارة المنيو - الإصدار 2.0
-        </div>
       </div>
     </div>
   </div>
@@ -619,10 +615,9 @@ module.exports = {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 uploadText.textContent = file.name;
-                // Convert bytes to a more readable format (KB or MB)
                 const fileSize = file.size > 1024 * 1024 
-                    ? \`${(file.size / 1024 / 1024).toFixed(2)} MB\`
-                    : \`${(file.size / 1024).toFixed(2)} KB\`;
+                    ? \`\${(file.size / 1024 / 1024).toFixed(2)} MB\`
+                    : \`\${(file.size / 1024).toFixed(2)} KB\`;
                 uploadHint.textContent = \`حجم الملف: \${fileSize}\`;
             } else {
                 uploadText.textContent = 'اسحب وأفلت ملف PDF هنا';
@@ -633,12 +628,10 @@ module.exports = {
         // Handle Upload
         uploadForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
             if (!fileInput.files || fileInput.files.length === 0) {
                 alert('الرجاء اختيار ملف أولاً.');
                 return;
             }
-
             const formData = new FormData(uploadForm);
             const xhr = new XMLHttpRequest();
 
@@ -651,23 +644,23 @@ module.exports = {
             });
 
             xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    loadingText.innerText = 'اكتمل بنجاح!';
-                    progressBar.style.width = '100%';
-                    progressPercentage.innerText = '100%';
-                    setTimeout(() => {
-                      alert('تم رفع المنيو بنجاح!');
+                loadingOverlay.style.display = 'none';
+                try {
+                  const response = JSON.parse(xhr.responseText);
+                  if (xhr.status >= 200 && xhr.status < 300) {
+                      alert(response.message || 'تم رفع المنيو بنجاح!');
                       window.location.reload();
-                    }, 1000);
-                } else {
-                    alert('حدث خطأ أثناء الرفع: ' + xhr.responseText);
-                    loadingOverlay.style.display = 'none';
+                  } else {
+                      alert('حدث خطأ أثناء الرفع: ' + (response.message || 'خطأ غير معروف'));
+                  }
+                } catch (err) {
+                   alert('حدث خطأ غير متوقع.');
                 }
             });
 
             xhr.addEventListener('error', () => {
-                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
                 loadingOverlay.style.display = 'none';
+                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
             });
             
             loadingText.innerText = 'جاري رفع المنيو...';
@@ -682,7 +675,6 @@ module.exports = {
         // Handle Delete
         deleteBtn.addEventListener('click', (e) => {
             e.preventDefault();
-
             if (!confirm('هل أنت متأكد أنك تريد حذف المنيو؟ لا يمكن التراجع عن هذا الإجراء.')) {
                 return;
             }
@@ -691,36 +683,22 @@ module.exports = {
             progressBar.style.width = '0%';
             progressPercentage.innerText = '0%';
             loadingOverlay.style.display = 'flex';
-
-            // Simulate progress for delete action
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressPercentage.innerText = progress + '%';
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    
-                    // Perform fetch after simulation
-                    fetch('/delete-menu')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                loadingText.innerText = 'اكتمل الحذف!';
-                                setTimeout(() => {
-                                  alert('تم حذف المنيو بنجاح.');
-                                  window.location.reload();
-                                }, 1000);
-                            } else {
-                                throw new Error(data.message || 'فشل الحذف');
-                            }
-                        })
-                        .catch(error => {
-                            alert('حدث خطأ: ' + error.message);
-                            loadingOverlay.style.display = 'none';
-                        });
-                }
-            }, 50);
+            
+            fetch('/delete-menu')
+                .then(res => {
+                    loadingOverlay.style.display = 'none';
+                    if (!res.ok) {
+                        return res.json().then(err => { throw new Error(err.message || 'فشل الحذف') });
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    alert(data.message || 'تم حذف المنيو بنجاح.');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    alert('حدث خطأ: ' + error.message);
+                });
         });
     });
   </script>
@@ -730,15 +708,17 @@ module.exports = {
 
   // قالب صفحة المنيو
   menu: (data) => {
-    // The URL from Vercel Blob is sufficient and includes a token for access.
+    // The URL from Vercel Blob is sufficient for access
     const menuUrl = data.menuExists ? data.menuUrl : '';
+    // We add the version to the download link to ensure the browser fetches the latest version
+    const downloadUrl = data.menuExists ? `${data.menuUrl}?v=${data.version}` : '';
 
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <title>منيو المطعم | نظام إدارة المنيو</title>
+  <title>منيو المطعم</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -788,6 +768,7 @@ module.exports = {
       z-index: 30;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       padding: 1rem;
       display: flex;
@@ -797,7 +778,7 @@ module.exports = {
     
     .social-icons {
       display: flex;
-      gap: 2rem;
+      gap: 1.5rem;
     }
 
     .social-icon {
@@ -814,46 +795,44 @@ module.exports = {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 50px;
-      width: 50px;
+      height: 45px;
+      width: 45px;
       background: white;
       border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
-      font-size: 20px;
-      color: #666;
+      font-size: 18px;
+      color: #555;
     }
     
     .social-icon.tiktok:hover span {
       background: #000000;
       color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
     
     .social-icon.facebook:hover span {
       background: #3b5998;
       color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(59, 89, 152, 0.4);
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 15px rgba(59, 89, 152, 0.3);
     }
     
     .social-icon.location:hover span {
       background: #34b7f1;
       color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(52, 183, 241, 0.4);
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 15px rgba(52, 183, 241, 0.3);
     }
     
     .pdf-viewer-container {
       position: fixed;
-      top: 90px;
+      top: 85px; /* Adjusted for top bar height */
       left: 0;
       right: 0;
       bottom: 0;
-      background: white;
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+      background: #f0f2f5;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -870,25 +849,26 @@ module.exports = {
     }
     
     .pdf-page {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
       max-width: 100%;
       height: auto;
+      background-color: white;
     }
     
-    .loading-spinner {
+    .loading-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 200px;
+      height: 100%;
       gap: 1rem;
     }
     
     .spinner {
       width: 40px;
       height: 40px;
-      border: 4px solid #f3f3f3;
+      border: 4px solid #e5e7eb;
       border-top: 4px solid #3b82f6;
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -911,13 +891,13 @@ module.exports = {
       justify-content: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid transparent;
+      border-radius: var(--radius);
       font-size: 0.875rem;
       font-weight: 500;
       text-decoration: none;
       transition: all 0.2s;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      width: auto; /* Allow buttons to size to content */
+      cursor: pointer;
     }
     
     .btn-primary {
@@ -927,19 +907,15 @@ module.exports = {
     
     .btn-primary:hover {
       background: #2563eb;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
     
     .btn-secondary {
-      background: white;
-      color: #3b82f6;
-      border: 1px solid #3b82f6;
+      background: #e5e7eb;
+      color: #1f2937;
     }
     
     .btn-secondary:hover {
-      background: rgba(59, 130, 246, 0.05);
-      transform: translateY(-1px);
+      background: #d1d5db;
     }
     
     .icon {
@@ -958,21 +934,19 @@ module.exports = {
     
     .no-menu-icon {
       font-size: 4rem;
-      color: #94a3b8;
+      color: #9ca3af;
       margin-bottom: 1.5rem;
     }
     
     .no-menu-title {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 0.75rem;
+      color: #111827;
+      margin-bottom: 0.5rem;
     }
     
     .no-menu-text {
-      color: #64748b;
-      max-width: 400px;
-      margin-bottom: 1.5rem;
+      color: #4b5563;
     }
     
     .mobile-hint {
@@ -984,10 +958,11 @@ module.exports = {
       background: rgba(0, 0, 0, 0.7);
       color: white;
       padding: 0.5rem 1rem;
-      border-radius: 20px;
+      border-radius: 9999px;
       font-size: 0.75rem;
       text-align: center;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
     
     @media (min-width: 768px) {
@@ -1003,75 +978,55 @@ module.exports = {
       .social-icons {
         gap: 1rem;
       }
-      .action-buttons {
-        gap: 0.5rem;
-      }
       .social-icon span {
-        height: 45px;
-        width: 45px;
-        font-size: 18px;
+        height: 40px;
+        width: 40px;
+        font-size: 16px;
       }
-      
       .pdf-viewer-container {
-        top: 80px;
+        top: 75px;
       }
-      
       .btn {
-        padding: 0.375rem 0.75rem;
-        font-size: 0.75rem;
-      }
-      
-      .no-menu-icon {
-        font-size: 3rem;
-      }
-      
-      .no-menu-title {
-        font-size: 1.25rem;
-      }
-      
-      .no-menu-text {
-        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
       }
     }
   </style>
 </head>
 <body>
   ${data.menuExists ? `
-    <!-- Top Bar -->
     <div class="top-bar">
        <div class="action-buttons">
-        <a href="${menuUrl}" class="btn btn-primary" download="menu.pdf">
+        <a href="${downloadUrl}" class="btn btn-primary" download="menu.pdf">
           <span class="icon">📥</span>
           تحميل
         </a>
-        <a href="javascript:location.reload(true)" class="btn btn-secondary">
+        <a href="/" class="btn btn-secondary">
           <span class="icon">🔄</span>
           تحديث
         </a>
       </div>
       <div class="social-icons">
         <div class="social-icon tiktok">
-          <a href="https://www.tiktok.com/@fale7_1961?_t=ZS-8x1AmLeHCEc&_r=1" target="_blank">
+          <a href="https://www.tiktok.com/@fale7_1961" target="_blank" aria-label="TikTok">
             <span><i class="fab fa-tiktok"></i></span>
           </a>
         </div>
         <div class="social-icon facebook">
-          <a href="https://www.facebook.com/share/1FTjzqpHv8/" target="_blank">
+          <a href="https://www.facebook.com/share/1FTjzqpHv8/" target="_blank" aria-label="Facebook">
             <span><i class="fab fa-facebook-f"></i></span>
           </a>
         </div>
         <div class="social-icon location">
-          <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank">
+          <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" aria-label="Location">
             <span><i class="fas fa-map-marker-alt"></i></span>
           </a>
         </div>
       </div>
     </div>
     
-    <!-- عارض PDF مخصص -->
     <div class="pdf-viewer-container">
       <div class="pdf-canvas-container" id="pdfContainer">
-        <div class="loading-spinner">
+        <div class="loading-container">
           <div class="spinner"></div>
           <p>جاري تحميل المنيو...</p>
         </div>
@@ -1083,56 +1038,34 @@ module.exports = {
     </div>
     
     <script>
-      // تحديد مسار PDF.js worker
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
       
-      // تحميل وعرض PDF
-      async function loadPDF() {
+      async function renderPDF(url) {
+        const container = document.getElementById('pdfContainer');
         try {
-          const container = document.getElementById('pdfContainer');
-          const pdfUrl = '${menuUrl}';
-
-          if (!pdfUrl) {
-            throw new Error('Menu URL is not available.');
-          }
-          
-          // تحميل PDF
-          const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-          
-          // مسح محتوى التحميل
+          const pdf = await pdfjsLib.getDocument({ url: url }).promise;
           container.innerHTML = '';
           
-          // عرض كل صفحة
-          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            
-            // إنشاء canvas للصفحة
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: window.devicePixelRatio || 1.5 });
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            
-            // تحديد حجم العرض
-            const viewport = page.getViewport({ scale: 1.5 });
             canvas.height = viewport.height;
             canvas.width = viewport.width;
             canvas.className = 'pdf-page';
-            
-            // رسم الصفحة
-            await page.render({
-              canvasContext: context,
-              viewport: viewport
-            }).promise;
-            
             container.appendChild(canvas);
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
           }
         } catch (error) {
-          console.error('خطأ في تحميل PDF:', error);
-          document.getElementById('pdfContainer').innerHTML = 
-            '<div style="text-align: center; padding: 2rem;"><p>حدث خطأ في تحميل المنيو. يرجى المحاولة مرة أخرى.</p></div>';
+          console.error('Error rendering PDF:', error);
+          container.innerHTML = '<p style="color: red; text-align: center; padding: 2rem;">حدث خطأ في عرض المنيو.</p>';
         }
       }
       
-      // تحميل PDF عند تحميل الصفحة
-      document.addEventListener('DOMContentLoaded', loadPDF);
+      document.addEventListener('DOMContentLoaded', () => {
+          renderPDF('${downloadUrl}');
+      });
     </script>
   ` : `
     <div class="no-menu">
