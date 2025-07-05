@@ -1,6 +1,5 @@
-
 const express = require("express");
-const cookieSession = require("cookie-session");
+const session = require("express-session");
 const path = require("path");
 const multer = require("multer");
 const { put, del, head } = require("@vercel/blob");
@@ -23,37 +22,14 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 
-// Trust the Vercel proxy to allow secure cookies
-app.set('trust proxy', 1);
-
-app.use(cookieSession({
-  name: 'session',
-  keys: ["mySecretKey"], // Use a strong, secret key
-  maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  secure: true, // Enforce secure cookies, as we are always on HTTPS
-  httpOnly: true,
-  sameSite: 'none' // Use 'none' for maximum compatibility behind proxies
+app.use(session({
+  secret: "mySecret",
+  resave: false,
+  saveUninitialized: true,
 }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-
-// Add a Content Security Policy to allow necessary resources
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com blob:; " +
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
-    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
-    "worker-src 'self' blob:; " +
-    "connect-src 'self' https://*.blob.vercel-storage.com https://vitals.vercel-insights.com https://www.google-analytics.com; " +
-    "img-src 'self' data: https://*.blob.vercel-storage.com; " +
-    "object-src 'none'; " +
-    "frame-src 'self';"
-  );
-  next();
-});
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -73,14 +49,9 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-  try {
-    if (req.session && req.session.loggedIn) {
-      res.send(views.admin());
-    } else {
-      res.redirect("/login");
-    }
-  } catch (error) {
-    console.error("Error in /admin route, redirecting to login:", error);
+  if (req.session.loggedIn) {
+    res.send(views.admin());
+  } else {
     res.redirect("/login");
   }
 });
@@ -106,10 +77,15 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
 app.get("/menu", async (req, res) => {
   try {
     const blob = await head('menu.pdf');
-    res.send(views.menu({
-      menuExists: true,
-      menuUrl: blob.url
-    }));
+    if (blob) {
+      res.send(views.menu({
+        menuExists: true,
+        menuUrl: blob.url,
+        version: new Date(blob.uploadedAt).getTime()
+      }));
+    } else {
+      res.send(views.menu({ menuExists: false }));
+    }
   } catch (error) {
     console.error('Error fetching menu from Vercel Blob:', error.message);
     res.send(views.menu({ menuExists: false }));
@@ -138,7 +114,7 @@ app.get("/delete-menu", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  req.session = null;
+  req.session.destroy();
   res.redirect("/login");
 });
 
