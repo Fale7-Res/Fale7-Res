@@ -30,8 +30,9 @@ app.use(cookieSession({
   name: 'session',
   keys: ["mySecretKey"], // Use a strong, secret key
   maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  secure: process.env.NODE_ENV === 'production',
-  httpOnly: true
+  secure: true, // Enforce secure cookies, as we are always on HTTPS
+  httpOnly: true,
+  sameSite: 'lax' // Be explicit for better browser compatibility
 }));
 
 app.use(express.urlencoded({ extended: true }));
