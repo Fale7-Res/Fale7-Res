@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cookieSession = require("cookie-session");
 const path = require("path");
@@ -21,6 +22,9 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
+
+// Trust the Vercel proxy to allow secure cookies
+app.set('trust proxy', 1);
 
 app.use(cookieSession({
   name: 'session',
