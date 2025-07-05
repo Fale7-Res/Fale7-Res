@@ -23,16 +23,17 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 
-// Trust the Vercel proxy. This is the crucial line for Vercel deployment.
-app.set('trust proxy', 1);
+// Trust the Vercel proxy. Using `true` is a robust setting for managed platforms.
+app.set('trust proxy', true);
 
 app.use(cookieSession({
   name: 'session',
-  keys: ["the-final-and-correct-secret-key-2024"], // A new, clean secret key
+  // A brand new secret key to ensure no old/bad cookies are being used.
+  keys: ["a-completely-new-and-final-secret-key-for-fale7"],
   maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  secure: true, // Enforce secure cookies, as we are always on HTTPS
-  httpOnly: true,
-  sameSite: 'lax' // Recommended for security and compatibility
+  secure: true,   // MUST be true because we are always on HTTPS.
+  httpOnly: true, // Standard security measure.
+  sameSite: 'lax' // The best balance of security and functionality for this use case.
 }));
 
 app.use(express.urlencoded({ extended: true }));
