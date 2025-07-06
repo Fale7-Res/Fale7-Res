@@ -9,10 +9,8 @@
   },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/admin", "dest": "/api/admin" },
     { "src": "/(.*)", "dest": "/public/$1" },
     { "src": "/", "dest": "/api/menu" }
-  ],
-  "env": {
-    "BLOB_READ_WRITE_TOKEN": "vercel_blob_rw_lx7fCZBwbzt55vlQ_BD9rYottV2MvqRePIY4SAJQW0l79pE"
-  }
+  ]
 }
