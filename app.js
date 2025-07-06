@@ -51,7 +51,7 @@ if (!fs.existsSync(publicDir)) {
 
 // ملفات ثابتة with long-term caching
 app.use(express.static(publicDir, {
-  maxAge: '1y', // Aggressively cache for 1 year
+  maxAge: '1y',
   etag: true,
   lastModified: true
 }));
@@ -85,16 +85,14 @@ app.post("/upload", upload.single("menu"), (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   if (req.file) {
-    menuVersion = Date.now(); // Invalidate cache by updating version
+    menuVersion = Date.now(); // invalidate cache
     return res.json({ success: true, message: "Menu uploaded." });
   }
   res.status(400).json({ success: false, message: "No file uploaded." });
 });
 
 app.get("/menu", (req, res) => {
-  // التحقق من وجود ملف المنيو قبل عرضه
   const menuPath = path.join(__dirname, 'public', 'menu.pdf');
-  
   if (fs.existsSync(menuPath)) {
     res.send(views.menu({ menuExists: true, version: menuVersion }));
   } else {
@@ -108,7 +106,7 @@ app.get("/delete-menu", (req, res) => {
     if (fs.existsSync(menuPath)) {
       try {
         fs.unlinkSync(menuPath);
-        menuVersion = Date.now(); // Invalidate cache by updating version
+        menuVersion = Date.now();
         console.log('تم حذف ملف المنيو بنجاح');
         return res.json({ success: true, message: "Menu deleted." });
       } catch (err) {
@@ -116,8 +114,6 @@ app.get("/delete-menu", (req, res) => {
         return res.status(500).json({ success: false, message: "Error deleting menu." });
       }
     } else {
-      console.log('ملف المنيو غير موجود');
-      // If file doesn't exist, it's still a "success" from user's perspective
       return res.json({ success: true, message: "Menu already deleted." });
     }
   } else {
