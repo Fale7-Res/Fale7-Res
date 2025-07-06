@@ -1,5 +1,6 @@
 import { put } from '@vercel/blob';
 import cookie from 'cookie';
+import formidable from 'formidable';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -12,13 +13,30 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
+  const form = formidable({ multiples: false });
+
   try {
-    const file = req.files?.menu;
+    const { fields, files } = await new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        resolve({ fields, files });
+      });
+    });
+
+    const file = files.menu?.[0];
     if (!file) {
       return res.status(400).json({ success: false, message: 'No file uploaded.' });
     }
 
-    const { url } = await put('menu.pdf', file.data, { access: 'public' });
+    const buffer = await new Promise((resolve, reject) => {
+      const fs = require('fs');
+      fs.readFile(file.filepath, (err, data) => {
+        if (err) reject(err);
+        resolve(data);
+      });
+    });
+
+    const { url } = await put('menu.pdf', buffer, { access: 'public' });
     res.status(200).json({ success: true, message: 'Menu uploaded.', url });
   } catch (error) {
     console.error('Error uploading to Blob:', error);
