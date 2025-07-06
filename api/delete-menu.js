@@ -1,11 +1,14 @@
 import { del, list } from '@vercel/blob';
+import cookie from 'cookie';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  if (req.cookies.auth !== 'loggedIn') {
+  const cookies = req.headers.cookie ? cookie.parse(req.headers.cookie) : {};
+
+  if (cookies.auth !== 'loggedIn') {
     return res.redirect(302, '/api/login');
   }
 
