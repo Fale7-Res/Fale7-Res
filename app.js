@@ -1,8 +1,7 @@
 const express = require("express");
 const session = require("express-session");
-const path = require("path");
 const multer = require("multer");
-const fs = require("fs");
+const { put, del, list } = require('@vercel/blob');
 
 const app = express();
 
@@ -36,25 +35,8 @@ app.use(session({
 // استقبال بيانات POST
 app.use(express.urlencoded({ extended: true }));
 
-// إعداد رفع المنيو
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, "public")),
-  filename: (req, file, cb) => cb(null, "menu.pdf"),
-});
-const upload = multer({ storage });
-
-// إنشاء مجلد public إذا لم يكن موجوداً
-const publicDir = path.join(__dirname, "public");
-if (!fs.existsSync(publicDir)) {
-  fs.mkdirSync(publicDir, { recursive: true });
-}
-
-// ملفات ثابتة with long-term caching
-app.use(express.static(publicDir, {
-  maxAge: '1y', // Aggressively cache for 1 year
-  etag: true,
-  lastModified: true
-}));
+// إعداد رفع المنيو باستخدام الذاكرة بدلاً من القرص
+const upload = multer({ storage: multer.memoryStorage() });
 
 // المسارات
 app.get("/", (req, res) => res.redirect("/menu"));
@@ -80,45 +62,51 @@ app.get("/admin", (req, res) => {
   }
 });
 
-app.post("/upload", upload.single("menu"), (req, res) => {
+app.post("/upload", upload.single("menu"), async (req, res) => {
   if (!req.session.loggedIn) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   if (req.file) {
-    menuVersion = Date.now(); // Invalidate cache by updating version
-    return res.json({ success: true, message: "Menu uploaded." });
+    try {
+      const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+      const result = await put('menu.pdf', req.file.buffer, { access: 'public', ...blobOptions });
+      menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
+      return res.json({ success: true, message: "Menu uploaded.", url: result.url });
+    } catch (error) {
+      console.error('خطأ في رفع الملف إلى Blob:', error);
+      return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
+    }
   }
-  res.status(400).json({ success: false, message: "No file uploaded." });
+  res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
 });
 
-app.get("/menu", (req, res) => {
-  // التحقق من وجود ملف المنيو قبل عرضه
-  const menuPath = path.join(__dirname, 'public', 'menu.pdf');
-  
-  if (fs.existsSync(menuPath)) {
-    res.send(views.menu({ menuExists: true, version: menuVersion }));
-  } else {
+app.get("/menu", async (req, res) => {
+  try {
+    const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+    const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
+    if (blobs.length > 0) {
+      const menuUrl = blobs[0].url;
+      res.send(views.menu({ menuExists: true, menuUrl, version: menuVersion }));
+    } else {
+      res.send(views.menu({ menuExists: false }));
+    }
+  } catch (error) {
+    console.error('خطأ في التحقق من Blob:', error);
     res.send(views.menu({ menuExists: false }));
   }
 });
 
-app.get("/delete-menu", (req, res) => {
+app.get("/delete-menu", async (req, res) => {
   if (req.session.loggedIn) {
-    const menuPath = path.join(__dirname, 'public', 'menu.pdf');
-    if (fs.existsSync(menuPath)) {
-      try {
-        fs.unlinkSync(menuPath);
-        menuVersion = Date.now(); // Invalidate cache by updating version
-        console.log('تم حذف ملف المنيو بنجاح');
-        return res.json({ success: true, message: "Menu deleted." });
-      } catch (err) {
-        console.error('خطأ في حذف ملف المنيو:', err);
-        return res.status(500).json({ success: false, message: "Error deleting menu." });
-      }
-    } else {
-      console.log('ملف المنيو غير موجود');
-      // If file doesn't exist, it's still a "success" from user's perspective
-      return res.json({ success: true, message: "Menu already deleted." });
+    try {
+      const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+      await del('menu.pdf', blobOptions);
+      menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
+      console.log('تم حذف ملف المنيو بنجاح');
+      return res.json({ success: true, message: "تم حذف المنيو." });
+    } catch (error) {
+      console.error('خطأ في حذف ملف المنيو:', error);
+      return res.status(500).json({ success: false, message: "خطأ في حذف المنيو." });
     }
   } else {
     res.redirect("/login");
