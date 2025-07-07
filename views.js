@@ -2,7 +2,7 @@ module.exports = {
   // قالب تسجيل الدخول
   login: (data) => {
     return `<!DOCTYPE html>
-<html lang="ar" dirnotes="rtl">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,199 @@ module.exports = {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* ... نفس الأنماط السابقة ... */
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 0 0% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 0 0% 3.9%;
+      --primary: 0 0% 9%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 0 0% 96.1%;
+      --secondary-foreground: 0 0% 9%;
+      --muted: 0 0% 96.1%;
+      --muted-foreground: 0 0% 45.1%;
+      --accent: 0 0% 96.1%;
+      --accent-foreground: 0 0% 9%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 0 0% 89.8%;
+      --input: 0 0% 89.8%;
+      --ring: 0 0% 3.9%;
+      --radius: 0.5rem;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+      color: hsl(var(--foreground));
+    }
+    
+    .card {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .card-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    
+    .card-content {
+      padding: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: hsl(var(--foreground));
+      margin-bottom: 0.5rem;
+      text-align: right;
+    }
+    
+    .password-container {
+      position: relative;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 1rem;
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .toggle-password {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+      transition: color 0.2s;
+    }
+    
+    .toggle-password:hover {
+      color: #3b82f6;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: calc(var(--radius) - 2px);
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+    
+    .alert-error {
+      background: hsl(var(--destructive) / 0.1);
+      color: hsl(var(--destructive));
+      border: 1px solid hsl(var(--destructive) / 0.2);
+    }
+    
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: inline-block;
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+      
+      .card-header {
+        padding: 1.5rem;
+      }
+      
+      .card-content {
+        padding: 1.5rem;
+      }
+      
+      .card-title {
+        font-size: 1.25rem;
+      }
+    }
   </style>
 </head>
 <body>
