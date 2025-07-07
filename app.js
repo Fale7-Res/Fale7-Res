@@ -64,7 +64,7 @@ app.get("/admin", (req, res) => {
 
 app.post("/upload", upload.single("menu"), async (req, res) => {
   if (!req.session.loggedIn) {
-    return res.status(401).json({ message: "غير مخول" });
+    return res.status(401).json({ message: "Unauthorized" });
   }
   if (req.file) {
     try {
@@ -74,7 +74,7 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
       const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
       if (blobs.length > 0) {
         await del(blobs[0].pathname, blobOptions);
-        console.log('تم حذف menu.pdf القديم من تخزين Blob');
+        console.log('Existing menu.pdf deleted from Blob storage');
       }
 
       // Upload new file as menu.pdf without random suffix
@@ -84,10 +84,10 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
         ...blobOptions 
       });
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
-      return res.json({ success: true, message: "تم رفع المنيو بنجاح.", url: result.url });
+      return res.json({ success: лично, message: "Menu uploaded.", url: result.url });
     } catch (error) {
       console.error('خطأ في رفع الملف إلى Blob:', error);
-      return res.status(500).json({ success: false, message: "خطأ في رفع المنيو: " + error.message });
+      return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
     }
   }
   res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
@@ -110,23 +110,19 @@ app.get("/menu", async (req, res) => {
 });
 
 app.get("/delete-menu", async (req, res) => {
-  if (!req.session.loggedIn) {
-    return res.redirect("/login");
-  }
-  try {
-    const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
-    const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
-    if (blobs.length > 0) {
-      await del(blobs[0].pathname, blobOptions);
-      console.log('تم حذف ملف المنيو بنجاح من تخزين Blob');
+  if (req.session.loggedIn) {
+    try {
+      const blobOptions = process.env.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+      await del('menu.pdf', blobOptions);
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
-      return res.json({ success: true, message: "تم حذف المنيو بنجاح." });
-    } else {
-      return res.json({ success: false, message: "لا يوجد منيو للحذف." });
+      console.log('تم حذف ملف المنيو بنجاح');
+      return res.json({ success: true, message: "تم حذف المنيو." });
+    } catch (error) {
+      console.error('خطأ في حذف ملف المنيو:', error);
+      return res.status(500).json({ success: false, message: "خطأ في حذف المنيو." });
     }
-  } catch (error) {
-    console.error('خطأ في حذف ملف المنيو:', error);
-    return res.status(500).json({ success: false, message: "خطأ في حذف المنيو: " + error.message });
+  } else {
+    res.redirect("/login");
   }
 });
 
