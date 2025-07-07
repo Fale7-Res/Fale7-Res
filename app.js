@@ -1,7 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const multer = require("multer");
-const { put, list } = require('@vercel/blob');
+const { put, del, list } = require('@vercel/blob');
 
 const app = express();
 
@@ -64,7 +64,7 @@ app.get("/admin", (req, res) => {
 
 app.post("/upload", upload.single("menu"), async (req, res) => {
   if (!req.session.loggedIn) {
-    return res.status(401).json({ success: false, message: "غير مصرح" });
+    return res.status(401).json({ message: "Unauthorized" });
   }
   if (req.file) {
     try {
@@ -84,10 +84,10 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
         ...blobOptions 
       });
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
-      return res.json({ success: true, message: "تم رفع المنيو بنجاح.", url: result.url });
+      return res.json({ success: true, message: "Menu uploaded.", url: result.url });
     } catch (error) {
       console.error('خطأ في رفع الملف إلى Blob:', error);
-      return res.status(500).json({ success: false, message: "خطأ في رفع المنيو: " + error.message });
+      return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
     }
   }
   res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
@@ -98,8 +98,8 @@ app.get("/menu", async (req, res) => {
     const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
     const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
     if (blobs.length > 0) {
-      const menuUrl = blobs[0].url;
-      res.send(views.menu({ menuExists: true, menuUrl, version: menuVersion }));
+      const menuUrl = `${blobs[0].url}?v=${menuVersion}`;
+      res.send(views.menu({ menuExists: true, menuUrl }));
     } else {
       res.send(views.menu({ menuExists: false }));
     }
