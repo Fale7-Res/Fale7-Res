@@ -84,7 +84,7 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
         ...blobOptions 
       });
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
-      return res.json({ success: лично, message: "Menu uploaded.", url: result.url });
+      return res.json({ success: true, message: "Menu uploaded.", url: result.url });
     } catch (error) {
       console.error('خطأ في رفع الملف إلى Blob:', error);
       return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
@@ -112,7 +112,8 @@ app.get("/menu", async (req, res) => {
 app.get("/delete-menu", async (req, res) => {
   if (req.session.loggedIn) {
     try {
-      const blobOptions = process.env.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+      // التصحيح: إزالة .env الزائدة
+      const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
       await del('menu.pdf', blobOptions);
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
       console.log('تم حذف ملف المنيو بنجاح');
