@@ -1,4 +1,3 @@
-// ملف القوالب المدمجة مع التصميم الجديد
 module.exports = {
   // قالب تسجيل الدخول
   login: (data) => {
@@ -30,7 +29,7 @@ module.exports = {
       --destructive-foreground: 0 0% 98%;
       --border: 0 0% 89.8%;
       --input: 0 0% 89.8%;
-      --ring: 0 极客 3.9%;
+      --ring: 0 0% 3.9%;
       --radius: 0.5rem;
     }
     
@@ -143,7 +142,7 @@ module.exports = {
       width: 100%;
       padding: 0.75rem 1rem;
       border: none;
-      border-radius: calc(var(--radius) - 2极客);
+      border-radius: calc(var(--radius) - 2px);
       font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
@@ -257,11 +256,8 @@ module.exports = {
       const passwordInput = document.getElementById('password');
       
       togglePassword.addEventListener('click', function() {
-        // تبديل نوع حقل كلمة المرور
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        
-        // تبديل الأيقونة
         this.querySelector('i').classList.toggle('fa-eye');
         this.querySelector('i').classList.toggle('fa-eye-slash');
       });
@@ -425,7 +421,7 @@ module.exports = {
       color: white;
     }
     
-极客    .btn-primary:hover {
+    .btn-primary:hover {
       background: #2563eb;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
@@ -446,25 +442,11 @@ module.exports = {
       transform: translateY(-1px);
     }
     
-    .btn-danger {
-      background: white;
-      color: #ef4444;
-      border: 1px solid #ef4444;
-    }
-    
-    .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.05);
-      transform: translateY(-1px);
-    }
-    
     .icon {
       display: inline-block;
     }
     
     .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
       margin-top: 1.5rem;
     }
     
@@ -476,49 +458,70 @@ module.exports = {
     }
 
     #loadingOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
-        display: none; /* Hidden by default */
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        flex-direction: column;
-        color: white;
-        text-align: center;
-        backdrop-filter: blur(5px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      backdrop-filter: blur(5px);
     }
 
     #loadingText {
-        font-size: 1.25rem;
-        font-weight: 500;
-        margin-bottom: 1rem;
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
     }
 
     .progress-container {
-        width: 80%;
-        max-width: 400px;
-        background-color: #4b5563;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #6b7280;
+      width: 80%;
+      max-width: 400px;
+      background-color: #4b5563;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #6b7280;
     }
 
     #progressBar {
-        width: 0%;
-        height: 20px;
-        background-color: #3b82f6;
-        border-radius: 8px 0 0 8px;
-        transition: width 0.2s ease-out;
+      width: 0%;
+      height: 20px;
+      background-color: #3b82f6;
+      border-radius: 8px 0 0 8px;
+      transition: width 0.2s ease-out;
     }
 
     #progressPercentage {
-        font-size: 1rem;
-        margin-top: 0.75rem;
-        font-weight: 500;
+      font-size: 1rem;
+      margin-top: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: calc(var(--radius) - 2px);
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      text-align: center;
+      display: none;
+    }
+    
+    .alert-success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
     }
     
     @media (max-width: 640px) {
@@ -548,10 +551,11 @@ module.exports = {
   <div id="loadingOverlay">
     <p id="loadingText">جاري المعالجة...</p>
     <div class="progress-container">
-        <div id="progressBar"></div>
+      <div id="progressBar"></div>
     </div>
     <p id="progressPercentage">0%</p>
   </div>
+  <div id="alertBox" class="alert"></div>
 
   <div class="container">
     <div class="card">
@@ -567,7 +571,7 @@ module.exports = {
           <div class="upload-area">
             <div class="upload-icon">📄</div>
             <div class="upload-text" id="uploadText">اسحب وأفلت ملف PDF هنا</div>
-            <div class="upload-hint" id="uploadHint">أو انقر للاختيار من جهازك</极客>
+            <div class="upload-hint" id="uploadHint">أو انقر للاختيار من جهازك</div>
             <input type="file" id="fileInput" name="menu" accept="application/pdf" required class="file-input" />
           </div>
           
@@ -578,14 +582,9 @@ module.exports = {
         </form>
         
         <div class="actions">
-          <a href="/menu" target="_blank" class="极客 btn-secondary">
+          <a href="/menu" target="_blank" class="btn btn-secondary">
             <span class="icon">📋</span>
             صفحة المستخدم
-          </a>
-          
-          <a href="/delete-menu" id="deleteBtn" class="btn btn-danger">
-            <span class="icon">🗑️</span>
-            حذف المنيو القديم
           </a>
         </div>
         
@@ -603,118 +602,93 @@ module.exports = {
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const uploadForm = document.getElementById('uploadForm');
-        const fileInput = document.getElementById('fileInput');
-        const deleteBtn = document.getElementById('deleteBtn');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const progressBar = document.getElementById('progressBar');
-        const progressPercentage = document.getElementById('progressPercentage');
-        const uploadText = document.getElementById('uploadText');
-        const uploadHint = document.getElementById('uploadHint');
+      const uploadForm = document.getElementById('uploadForm');
+      const fileInput = document.getElementById('fileInput');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercentage = document.getElementById('progressPercentage');
+      const uploadText = document.getElementById('uploadText');
+      const uploadHint = document.getElementById('uploadHint');
+      const alertBox = document.getElementById('alertBox');
 
-        // Display selected file name
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                uploadText.textContent = file.name;
-                // Convert bytes to a more readable format (KB or MB)
-                const fileSize = file.size > 1024 * 1024 
-                    ? \`\${(file.size / 1024 / 1024).toFixed(2)} MB\`
-                    : \`\${(file.size / 1024).toFixed(2)} KB\`;
-                uploadHint.textContent = \`حجم الملف: \${fileSize}\`;
+      // Function to show alert
+      const showAlert = (message, type) => {
+        alertBox.textContent = message;
+        alertBox.className = `alert alert-${type}`;
+        alertBox.style.display = 'block';
+        setTimeout(() => {
+          alertBox.style.display = 'none';
+        }, 3000);
+      };
+
+      // Display selected file name
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          uploadText.textContent = file.name;
+          const fileSize = file.size > 1024 * 1024 
+            ? \`\${(file.size / 1024 / 1024).toFixed(2)} MB\`
+            : \`\${(file.size / 1024).toFixed(2)} KB\`;
+          uploadHint.textContent = \`حجم الملف: \${fileSize}\`;
+        } else {
+          uploadText.textContent = 'اسحب وأفلت ملف PDF هنا';
+          uploadHint.textContent = 'أو انقر للاختيار من جهازك';
+        }
+      });
+
+      // Handle Upload
+      uploadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          showAlert('الرجاء اختيار ملف أولاً.', 'error');
+          return;
+        }
+
+        const formData = new FormData(uploadForm);
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            progressBar.style.width = percentComplete + '%';
+            progressPercentage.innerText = percentComplete + '%';
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          try {
+            const response = JSON.parse(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300 && response.success) {
+              loadingText.innerText = 'اكتمل بنجاح!';
+              progressBar.style.width = '100%';
+              progressPercentage.innerText = '100%';
+              showAlert(response.message, 'success');
+              setTimeout(() => window.location.reload(), 1000);
             } else {
-                uploadText.textContent = 'اسحب وأفلت ملف PDF هنا';
-                uploadHint.textContent = 'أو انقر للاختيار من جهازك';
+              showAlert(response.message || 'حدث خطأ أثناء الرفع.', 'error');
+              loadingOverlay.style.display = 'none';
             }
+          } catch (error) {
+            showAlert('خطأ في معالجة الاستجابة: ' + error.message, 'error');
+            loadingOverlay.style.display = 'none';
+          }
         });
 
-        // Handle Upload
-        uploadForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert('الرجاء اختيار ملف أولاً.');
-                return;
-            }
-
-            const formData = new FormData(uploadForm);
-            const xhr = new XMLHttpRequest();
-
-            xhr.upload.addEventListener('progress', (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    progressBar.style.width = percentComplete + '%';
-                    progressPercentage.innerText = percentComplete + '%';
-                }
-            });
-
-            xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    loadingText.innerText = 'اكتمل بنجاح!';
-                    progressBar.style.width = '100%';
-                    progressPercentage.innerText = '100%';
-                    setTimeout(() => window.location.reload(), 1000);
-                } else {
-                    alert('حدث خطأ أثناء الرفع: ' + xhr.responseText);
-                    loadingOverlay.style.display = 'none';
-                }
-            });
-
-            xhr.addEventListener('error', () => {
-                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
-                loadingOverlay.style.display = 'none';
-            });
-            
-            loadingText.innerText = 'جاري رفع المنيو...';
-            progressBar.style.width = '0%';
-            progressPercentage.innerText = '0%';
-            loadingOverlay.style.display = 'flex';
-            
-            xhr.open('POST', '/upload');
-            xhr.send(formData);
+        xhr.addEventListener('error', () => {
+          showAlert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.', 'error');
+          loadingOverlay.style.display = 'none';
         });
-
-        // Handle Delete
-        deleteBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            if (!confirm('هل أنت متأكد أنك تريد حذف المنيو؟ لا يمكن التراجع عن هذا الإجراء.')) {
-                return;
-            }
-
-            loadingText.innerText = 'جاري حذف المنيو...';
-            progressBar.style.width = '0%';
-            progressPercentage.innerText = '0%';
-            loadingOverlay.style.display = 'flex';
-
-            // Simulate progress for delete action
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
-                progressPercentage.innerText = progress + '%';
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    
-                    // Perform fetch after simulation
-                    fetch('/delete-menu')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                loadingText.innerText = 'اكتمل الحذف!';
-                                setTimeout(() => window.location.reload(), 1000);
-                            } else {
-                                throw new Error(data.message || 'فشل الحذف');
-                            }
-                        })
-                        .catch(error => {
-                            alert('حدث خطأ: ' + error.message);
-                            loadingOverlay.style.display = 'none';
-                        });
-                }
-            }, 50);
-        });
+        
+        loadingText.innerText = 'جاري رفع المنيو...';
+        progressBar.style.width = '0%';
+        progressPercentage.innerText = '0%';
+        loadingOverlay.style.display = 'flex';
+        
+        xhr.open('POST', '/upload');
+        xhr.send(formData);
+      });
     });
   </script>
 </body>
@@ -723,9 +697,7 @@ module.exports = {
 
   // قالب صفحة المنيو
   menu: (data) => {
-    // استخدام URL الـ Blob مع إضافة الإصدار لتجنب الكاش
     const menuUrl = data.menuExists ? `${data.menuUrl}?v=${data.version}` : '';
-
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -910,7 +882,7 @@ module.exports = {
       text-decoration: none;
       transition: all 0.2s;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      width: auto; /* Allow buttons to size to content */
+      width: auto;
     }
     
     .btn-primary {
@@ -1030,7 +1002,6 @@ module.exports = {
 </head>
 <body>
   ${data.menuExists ? `
-    <!-- Top Bar -->
     <div class="top-bar">
        <div class="action-buttons">
         <a href="${menuUrl}" class="btn btn-primary" download>
@@ -1061,7 +1032,6 @@ module.exports = {
       </div>
     </div>
     
-    <!-- عارض PDF مخصص -->
     <div class="pdf-viewer-container">
       <div class="pdf-canvas-container" id="pdfContainer">
         <div class="loading-spinner">
@@ -1076,40 +1046,26 @@ module.exports = {
     </div>
     
     <script>
-      // تحديد مسار PDF.js worker
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
       
-      // تحميل وعرض PDF
       async function loadPDF() {
         try {
           const container = document.getElementById('pdfContainer');
-          
-          // تحميل PDF
           const pdf = await pdfjsLib.getDocument('${menuUrl}').promise;
-          
-          // مسح محتوى التحميل
           container.innerHTML = '';
           
-          // عرض كل صفحة
           for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
             const page = await pdf.getPage(pageNum);
-            
-            // إنشاء canvas للصفحة
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            
-            // تحديد حجم العرض
             const viewport = page.getViewport({ scale: 1.5 });
             canvas.height = viewport.height;
             canvas.width = viewport.width;
             canvas.className = 'pdf-page';
-            
-            // رسم الصفحة
             await page.render({
               canvasContext: context,
               viewport: viewport
             }).promise;
-            
             container.appendChild(canvas);
           }
         } catch (error) {
@@ -1119,7 +1075,6 @@ module.exports = {
         }
       }
       
-      // تحميل PDF عند تحميل الصفحة
       document.addEventListener('DOMContentLoaded', loadPDF);
     </script>
   ` : `
