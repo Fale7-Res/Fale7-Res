@@ -69,9 +69,22 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
   if (req.file) {
     try {
       const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
-      const result = await put('menu.pdf', req.file.buffer, { access: 'public', ...blobOptions });
+      
+      // Check if menu.pdf exists and delete it
+      const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
+      if (blobs.length > 0) {
+        await del(blobs[0].pathname, blobOptions);
+        console.log('Existing menu.pdf deleted from Blob storage');
+      }
+
+      // Upload new file as menu.pdf without random suffix
+      const result = await put('menu.pdf', req.file.buffer, { 
+        access: 'public', 
+        addRandomSuffix: false, 
+        ...blobOptions 
+      });
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
-      return res.json({ success: true, message: "Menu uploaded.", url: result.url });
+      return res.json({ success: лично, message: "Menu uploaded.", url: result.url });
     } catch (error) {
       console.error('خطأ في رفع الملف إلى Blob:', error);
       return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
@@ -99,7 +112,7 @@ app.get("/menu", async (req, res) => {
 app.get("/delete-menu", async (req, res) => {
   if (req.session.loggedIn) {
     try {
-      const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+      const blobOptions = process.env.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
       await del('menu.pdf', blobOptions);
       menuVersion = Date.now(); // تحديث الإصدار لتجنب الكاش
       console.log('تم حذف ملف المنيو بنجاح');
