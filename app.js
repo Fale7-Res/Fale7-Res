@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const multer = require("multer");
+const path = require("path");
 const { put, del, list } = require('@vercel/blob');
 
 const app = express();
@@ -37,6 +38,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // إعداد رفع المنيو باستخدام الذاكرة بدلاً من القرص
 const upload = multer({ storage: multer.memoryStorage() });
+
+// توزيع الملفات الثابتة مثل robots.txt و sitemap.xml من مجلد public
+app.use(express.static(path.join(__dirname, "public")));
 
 // المسارات
 app.get("/", (req, res) => res.redirect("/menu"));
@@ -110,8 +114,9 @@ app.get("/menu", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.redirect("/login");
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
 });
 
 // استيراد القوالب من ملف views.js
