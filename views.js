@@ -6,19 +6,7 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- SEO مهم -->
-  <title>مطعم فالح أبو العنبه | منيو مطعم فالح</title>
-  <meta name="description" content="مطعم فالح أبو العنبه يقدم أشهى الأكلات الشرقية. تصفح منيو مطعم فالح وابحث عن أفضل وجباتنا وعروضنا.">
-  <meta name="keywords" content="مطعم فالح, مطعم فالح ابو العنبه, مطعم فالح أبو العنبه, مطعم فالح ابو العنبة, منيو مطعم فالح">
-  
-  <!-- تحسين مشاركة اللينكات على فيسبوك وتويتر -->
-  <meta property="og:title" content="مطعم فالح أبو العنبه">
-  <meta property="og:description" content="منيو مطعم فالح يحتوي على أشهى الأكلات والعروض.">
-  <meta property="og:url" content="https://fale7-res.vercel.app/">
-  <meta property="og:type" content="website">
-  
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="noindex, nofollow">
   
   <title>تسجيل الدخول | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -291,6 +279,7 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -679,6 +668,16 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+  <meta name="description" content="تصفح منيو مطعم فالح أبو العنبه، أشهى المأكولات العراقيه و المشاوي والعروض الخاصة. اكتشف وجباتنا المميزة الآن.">
+  <meta name="keywords" content="مطعم فالح, مطعم فالح ابو العنبه, مطعم فالح أبو العنبه, مطعم فالح ابو العنبة, منيو مطعم فالح">
+
+  <meta property="og:title" content="منيو مطعم فالح أبو العنبه">
+  <meta property="og:description" content="منيو مطعم فالح يحتوي على أشهى الأكلات العراقيه و المشاوي والعروض.">
+  <meta property="og:url" content="https://fale7-res.vercel.app/menu">
+  <meta property="og:type" content="website">
+
+  <meta name="robots" content="index, follow">
+
   <title>منيو المطعم | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
