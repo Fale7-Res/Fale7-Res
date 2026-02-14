@@ -374,6 +374,38 @@ module.exports = {
       border-color: #3b82f6;
       background-color: rgba(59, 130, 246, 0.05);
     }
+
+    .upload-section {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #fff;
+    }
+
+    .upload-section-title {
+      margin: 0 0 0.75rem 0;
+      color: #1e293b;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .inline-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
     
     .upload-icon {
       font-size: 2rem;
@@ -550,19 +582,71 @@ module.exports = {
         <p class="card-subtitle">إدارة منيو المطعم</p>
       </div>
       <div class="card-content">
-        <form id="uploadForm" method="POST" enctype="multipart/form-data">
-          <div class="upload-area">
-            <div class="upload-icon">📄</div>
-            <div class="upload-text" id="uploadText">اسحب وأفلت ملف PDF هنا</div>
-            <div class="upload-hint" id="uploadHint">أو انقر للاختيار من جهازك</div>
-            <input type="file" id="fileInput" name="menu" accept="application/pdf" required class="file-input" />
-          </div>
-          
-          <button type="submit" class="btn btn-primary">
-            <span class="icon">📤</span>
-            رفع المنيو الجديد
-          </button>
-        </form>
+        <section class="upload-section">
+          <h3 class="upload-section-title">المنيو الرئيسي</h3>
+          <form class="upload-form" data-pathname="menu.pdf" data-label="المنيو الرئيسي">
+            <div class="upload-area">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">اسحب وأفلت ملف PDF هنا</div>
+              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <input type="file" name="menu" accept="application/pdf" required class="file-input" />
+            </div>
+            <div class="inline-actions">
+              <button type="submit" class="btn btn-primary">
+                <span class="icon">📤</span>
+                رفع المنيو
+              </button>
+              <button type="button" class="btn btn-danger delete-page-btn" data-page-type="menu">
+                <span class="icon">🗑️</span>
+                حذف المنيو
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="upload-section">
+          <h3 class="upload-section-title">صفحة العروض</h3>
+          <form class="upload-form" data-pathname="offers.pdf" data-label="صفحة العروض">
+            <div class="upload-area">
+              <div class="upload-icon">🎁</div>
+              <div class="upload-text">اسحب وأفلت ملف عروض PDF هنا</div>
+              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <input type="file" name="offers" accept="application/pdf" required class="file-input" />
+            </div>
+            <div class="inline-actions">
+              <button type="submit" class="btn btn-primary">
+                <span class="icon">📤</span>
+                نشر العروض
+              </button>
+              <button type="button" class="btn btn-danger delete-page-btn" data-page-type="offers">
+                <span class="icon">🗑️</span>
+                حذف صفحة العروض
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="upload-section">
+          <h3 class="upload-section-title">صفحة منيو السحور</h3>
+          <form class="upload-form" data-pathname="suhoor.pdf" data-label="منيو السحور">
+            <div class="upload-area">
+              <div class="upload-icon">🌙</div>
+              <div class="upload-text">اسحب وأفلت ملف سحور PDF هنا</div>
+              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <input type="file" name="suhoor" accept="application/pdf" required class="file-input" />
+            </div>
+            <div class="inline-actions">
+              <button type="submit" class="btn btn-primary">
+                <span class="icon">📤</span>
+                نشر منيو السحور
+              </button>
+              <button type="button" class="btn btn-danger delete-page-btn" data-page-type="suhoor">
+                <span class="icon">🗑️</span>
+                حذف صفحة السحور
+              </button>
+            </div>
+          </form>
+        </section>
         
         <div class="actions">
           <a href="/menu" target="_blank" class="btn btn-secondary">
@@ -587,75 +671,109 @@ module.exports = {
     import { upload } from 'https://esm.sh/@vercel/blob/client';
 
     document.addEventListener('DOMContentLoaded', () => {
-        const uploadForm = document.getElementById('uploadForm');
-        const fileInput = document.getElementById('fileInput');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const progressBar = document.getElementById('progressBar');
-        const progressPercentage = document.getElementById('progressPercentage');
-        const uploadText = document.getElementById('uploadText');
-        const uploadHint = document.getElementById('uploadHint');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercentage = document.getElementById('progressPercentage');
 
-        // Display selected file name
+      const forms = document.querySelectorAll('.upload-form');
+      forms.forEach((form) => {
+        const fileInput = form.querySelector('input[type="file"]');
+        const uploadText = form.querySelector('.upload-text');
+        const uploadHint = form.querySelector('.upload-hint');
+        const pathname = form.dataset.pathname;
+        const label = form.dataset.label;
+
         fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                uploadText.textContent = file.name;
-                // Convert bytes to a more readable format (KB or MB)
-                const fileSize = file.size > 1024 * 1024 
-                    ? \`\${(file.size / 1024 / 1024).toFixed(2)} MB\`
-                    : \`\${(file.size / 1024).toFixed(2)} KB\`;
-                uploadHint.textContent = \`حجم الملف: \${fileSize}\`;
-            } else {
-                uploadText.textContent = 'اسحب وأفلت ملف PDF هنا';
-                uploadHint.textContent = 'أو انقر للاختيار من جهازك';
-            }
-        });
-
-        // Handle Upload
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert('الرجاء اختيار ملف أولاً.');
-                return;
-            }
-
+          if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
-            if (file.type !== 'application/pdf') {
-                alert('يرجى رفع ملف PDF فقط.');
-                return;
-            }
-
-            loadingText.innerText = 'جاري رفع المنيو...';
-            progressBar.style.width = '20%';
-            progressPercentage.innerText = '20%';
-            loadingOverlay.style.display = 'flex';
-
-            try {
-                const result = await upload('menu.pdf', file, {
-                    access: 'public',
-                    handleUploadUrl: '/api/blob-upload',
-                    multipart: true,
-                });
-
-                if (!result || !result.url) {
-                    throw new Error('لم يتم استلام رابط الملف بعد الرفع.');
-                }
-
-                progressBar.style.width = '100%';
-                progressPercentage.innerText = '100%';
-                loadingText.innerText = 'اكتمل بنجاح!';
-                setTimeout(() => window.location.reload(), 1000);
-            } catch (error) {
-                console.error('Upload error:', error);
-                const errorMessage = error?.message || 'حدث خطأ أثناء رفع الملف.';
-                alert(errorMessage);
-                loadingOverlay.style.display = 'none';
-                progressBar.style.width = '0%';
-                progressPercentage.innerText = '0%';
-            }
+            uploadText.textContent = file.name;
+            const fileSize = file.size > 1024 * 1024
+              ? ((file.size / 1024 / 1024).toFixed(2) + ' MB')
+              : ((file.size / 1024).toFixed(2) + ' KB');
+            uploadHint.textContent = 'حجم الملف: ' + fileSize;
+          }
         });
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          if (!fileInput.files || fileInput.files.length === 0) {
+            alert('الرجاء اختيار ملف أولاً.');
+            return;
+          }
+
+          const file = fileInput.files[0];
+          if (file.type !== 'application/pdf') {
+            alert('يرجى رفع ملف PDF فقط.');
+            return;
+          }
+
+          loadingText.innerText = 'جاري رفع ' + label + '...';
+          progressBar.style.width = '20%';
+          progressPercentage.innerText = '20%';
+          loadingOverlay.style.display = 'flex';
+
+          try {
+            const result = await upload(pathname, file, {
+              access: 'public',
+              handleUploadUrl: '/api/blob-upload',
+              multipart: true,
+            });
+
+            if (!result || !result.url) {
+              throw new Error('لم يتم استلام رابط الملف بعد الرفع.');
+            }
+
+            progressBar.style.width = '100%';
+            progressPercentage.innerText = '100%';
+            loadingText.innerText = 'اكتمل بنجاح!';
+            setTimeout(() => window.location.reload(), 1000);
+          } catch (error) {
+            console.error('Upload error:', error);
+            const errorMessage = error?.message || 'حدث خطأ أثناء رفع الملف.';
+            alert(errorMessage);
+            loadingOverlay.style.display = 'none';
+            progressBar.style.width = '0%';
+            progressPercentage.innerText = '0%';
+          }
+        });
+      });
+
+      const deleteButtons = document.querySelectorAll('.delete-page-btn');
+      deleteButtons.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const pageType = btn.dataset.pageType;
+          const confirmed = window.confirm('هل أنت متأكد من حذف هذه الصفحة؟');
+          if (!confirmed) return;
+
+          try {
+            loadingOverlay.style.display = 'flex';
+            loadingText.innerText = 'جاري حذف الصفحة...';
+            progressBar.style.width = '30%';
+            progressPercentage.innerText = '30%';
+
+            const response = await fetch('/delete-page', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ pageType }),
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+              throw new Error(data.message || 'حدث خطأ أثناء الحذف.');
+            }
+
+            progressBar.style.width = '100%';
+            progressPercentage.innerText = '100%';
+            loadingText.innerText = 'تم الحذف بنجاح!';
+            setTimeout(() => window.location.reload(), 800);
+          } catch (error) {
+            alert(error.message || 'فشل حذف الصفحة.');
+            loadingOverlay.style.display = 'none';
+          }
+        });
+      });
     });
   </script>
 </body>
@@ -1049,6 +1167,8 @@ module.exports = {
           <span class="icon">🔄</span>
           تحديث
         </a>
+        ${data.offersExists ? `<a href="/offers" class="btn btn-secondary"><span class="icon">🎁</span>العروض</a>` : ''}
+        ${data.suhoorExists ? `<a href="/suhoor" class="btn btn-secondary"><span class="icon">🌙</span>منيو السحور</a>` : ''}
       </div>
       <div class="social-icons">
         <div class="social-icon tiktok">
@@ -1139,6 +1259,72 @@ module.exports = {
   `}
 </body>
 </html>`;
+  },
+
+  // قالب صفحات PDF الإضافية (العروض / السحور)
+  pdfPage: (data) => {
+    const robotsContent = data.pageExists ? 'index, follow' : 'noindex, follow';
+    return `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+  <meta name="robots" content="${robotsContent}">
+  <title>${data.title}</title>
+  <link rel="canonical" href="${data.canonicalUrl}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    body, html { margin:0; padding:0; height:100%; font-family: Inter, Arial, sans-serif; background:#f8fafc; }
+    .top { position:fixed; top:0; left:0; right:0; padding:0.75rem 1rem; background:#fff; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; z-index:5; }
+    .title { font-weight:700; color:#0f172a; }
+    .btn { text-decoration:none; background:#3b82f6; color:#fff; padding:0.45rem 0.8rem; border-radius:8px; font-size:0.85rem; }
+    .container { position:fixed; top:58px; bottom:0; left:0; right:0; overflow:auto; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+    .pdf-page { box-shadow: 0 4px 12px rgba(0,0,0,0.12); border-radius:8px; max-width:100%; }
+    .empty { display:flex; height:100%; align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#475569; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="title">${data.title}</div>
+    <a href="/menu" class="btn">العودة للمنيو</a>
+  </div>
+  ${data.pageExists ? `
+    <div class="container" id="pdfContainer">
+      <p>جاري التحميل...</p>
+    </div>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      async function loadPDF() {
+        const container = document.getElementById('pdfContainer');
+        try {
+          const pdf = await pdfjsLib.getDocument('${data.pageUrl}').promise;
+          container.innerHTML = '';
+          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const viewport = page.getViewport({ scale: 1.5 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            canvas.className = 'pdf-page';
+            await page.render({ canvasContext: context, viewport }).promise;
+            container.appendChild(canvas);
+          }
+        } catch (e) {
+          container.innerHTML = '<div class="empty"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
+        }
+      }
+      document.addEventListener('DOMContentLoaded', loadPDF);
+    </script>
+  ` : `
+    <div class="empty">
+      <h2>${data.emptyTitle || 'هذه الصفحة غير متاحة الآن'}</h2>
+      <p>${data.emptyText || 'يمكنك المتابعة لاحقاً.'}</p>
+    </div>
+  `}
+</body>
+</html>`;
   }
+
 };
 
