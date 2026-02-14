@@ -281,6 +281,7 @@ module.exports = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
+  <script src="https://unpkg.com/@vercel/blob@0.23.4/dist/client.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -611,7 +612,7 @@ module.exports = {
         });
 
         // Handle Upload
-        uploadForm.addEventListener('submit', (e) => {
+        uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             if (!fileInput.files || fileInput.files.length === 0) {
@@ -619,52 +620,40 @@ module.exports = {
                 return;
             }
 
-            const formData = new FormData(uploadForm);
-            const xhr = new XMLHttpRequest();
+            const file = fileInput.files[0];
+            if (file.type !== 'application/pdf') {
+                alert('يرجى رفع ملف PDF فقط.');
+                return;
+            }
 
-            xhr.upload.addEventListener('progress', (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    progressBar.style.width = percentComplete + '%';
-                    progressPercentage.innerText = percentComplete + '%';
-                }
-            });
-
-            xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    loadingText.innerText = 'اكتمل بنجاح!';
-                    progressBar.style.width = '100%';
-                    progressPercentage.innerText = '100%';
-                    setTimeout(() => window.location.reload(), 1000);
-                } else {
-                    let errorMessage = 'حدث خطأ أثناء الرفع.';
-                    try {
-                      const response = JSON.parse(xhr.responseText);
-                      if (response.message) {
-                        errorMessage = response.message;
-                      }
-                    } catch (_) {
-                      if (xhr.responseText) {
-                        errorMessage = xhr.responseText;
-                      }
-                    }
-                    alert(errorMessage);
-                    loadingOverlay.style.display = 'none';
-                }
-            });
-
-            xhr.addEventListener('error', () => {
-                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
-                loadingOverlay.style.display = 'none';
-            });
-            
             loadingText.innerText = 'جاري رفع المنيو...';
-            progressBar.style.width = '0%';
-            progressPercentage.innerText = '0%';
+            progressBar.style.width = '20%';
+            progressPercentage.innerText = '20%';
             loadingOverlay.style.display = 'flex';
-            
-            xhr.open('POST', '/upload');
-            xhr.send(formData);
+
+            try {
+                const result = await window.VercelBlob.upload('menu.pdf', file, {
+                    access: 'public',
+                    handleUploadUrl: '/api/blob-upload',
+                    multipart: true,
+                });
+
+                if (!result || !result.url) {
+                    throw new Error('لم يتم استلام رابط الملف بعد الرفع.');
+                }
+
+                progressBar.style.width = '100%';
+                progressPercentage.innerText = '100%';
+                loadingText.innerText = 'اكتمل بنجاح!';
+                setTimeout(() => window.location.reload(), 1000);
+            } catch (error) {
+                console.error('Upload error:', error);
+                const errorMessage = error?.message || 'حدث خطأ أثناء رفع الملف.';
+                alert(errorMessage);
+                loadingOverlay.style.display = 'none';
+                progressBar.style.width = '0%';
+                progressPercentage.innerText = '0%';
+            }
         });
     });
   </script>

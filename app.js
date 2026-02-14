@@ -3,6 +3,7 @@ const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
 const { put, del, list } = require('@vercel/blob');
+const { handleUpload } = require('@vercel/blob/client');
 
 const app = express();
 
@@ -141,6 +142,33 @@ app.post("/upload", (req, res, next) => {
     }
   }
   res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
+});
+
+app.post('/api/blob-upload', express.json(), async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const jsonResponse = await handleUpload({
+      body: req.body,
+      request: req,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      onBeforeGenerateToken: async () => ({
+        allowedContentTypes: ['application/pdf'],
+        maximumSizeInBytes: 50 * 1024 * 1024,
+        addRandomSuffix: false,
+      }),
+      onUploadCompleted: async () => {
+        menuVersion = Date.now();
+      },
+    });
+
+    return res.status(200).json(jsonResponse);
+  } catch (error) {
+    console.error('خطأ في إنشاء توكن رفع Blob:', error);
+    return res.status(400).json({ error: 'فشل رفع المنيو مباشرة.' });
+  }
 });
 
 app.get("/menu", async (req, res) => {
