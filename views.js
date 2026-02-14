@@ -550,11 +550,11 @@ module.exports = {
         <p class="card-subtitle">إدارة منيو المطعم</p>
       </div>
       <div class="card-content">
-        <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" method="GET">
           <div class="upload-area">
             <div class="upload-icon">📄</div>
             <div class="upload-text" id="uploadText">اسحب وأفلت ملف PDF هنا</div>
-            <div class="upload-hint" id="uploadHint">أو انقر للاختيار من جهازك</div>
+            <div class="upload-hint" id="uploadHint">أو انقر للاختيار من جهازك (حتى 100MB)</div>
             <input type="file" id="fileInput" name="menu" accept="application/pdf" required class="file-input" />
           </div>
           
@@ -584,6 +584,26 @@ module.exports = {
   </div>
 
   <script>
+    window.__blobUploaderReady = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const uploadForm = document.getElementById('uploadForm');
+      if (!uploadForm) return;
+
+      uploadForm.addEventListener('submit', (event) => {
+        if (window.__blobUploaderReady) return;
+
+        event.preventDefault();
+        alert('لم يتم تحميل أداة الرفع بعد. تأكد من الاتصال بالإنترنت ثم حدّث الصفحة.');
+      }, true);
+    });
+  </script>
+
+  <script type="module">
+    import { upload } from 'https://esm.sh/@vercel/blob/client';
+
+    window.__blobUploaderReady = true;
+
     document.addEventListener('DOMContentLoaded', () => {
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
@@ -594,24 +614,21 @@ module.exports = {
         const uploadText = document.getElementById('uploadText');
         const uploadHint = document.getElementById('uploadHint');
 
-        // Display selected file name
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 uploadText.textContent = file.name;
-                // Convert bytes to a more readable format (KB or MB)
-                const fileSize = file.size > 1024 * 1024 
-                    ? \`\${(file.size / 1024 / 1024).toFixed(2)} MB\`
-                    : \`\${(file.size / 1024).toFixed(2)} KB\`;
-                uploadHint.textContent = \`حجم الملف: \${fileSize}\`;
+                const fileSize = file.size > 1024 * 1024
+                    ? ((file.size / 1024 / 1024).toFixed(2) + ' MB')
+                    : ((file.size / 1024).toFixed(2) + ' KB');
+                uploadHint.textContent = 'حجم الملف: ' + fileSize;
             } else {
                 uploadText.textContent = 'اسحب وأفلت ملف PDF هنا';
-                uploadHint.textContent = 'أو انقر للاختيار من جهازك';
+                uploadHint.textContent = 'أو انقر للاختيار من جهازك (حتى 100MB)';
             }
         });
 
-        // Handle Upload
-        uploadForm.addEventListener('submit', (e) => {
+        uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             if (!fileInput.files || fileInput.files.length === 0) {
@@ -619,41 +636,40 @@ module.exports = {
                 return;
             }
 
-            const formData = new FormData(uploadForm);
-            const xhr = new XMLHttpRequest();
-
-            xhr.upload.addEventListener('progress', (event) => {
-                if (event.lengthComputable) {
-                    const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    progressBar.style.width = percentComplete + '%';
-                    progressPercentage.innerText = percentComplete + '%';
-                }
-            });
-
-            xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    loadingText.innerText = 'اكتمل بنجاح!';
-                    progressBar.style.width = '100%';
-                    progressPercentage.innerText = '100%';
-                    setTimeout(() => window.location.reload(), 1000);
-                } else {
-                    alert('حدث خطأ أثناء الرفع: ' + xhr.responseText);
-                    loadingOverlay.style.display = 'none';
-                }
-            });
-
-            xhr.addEventListener('error', () => {
-                alert('فشل الرفع. الرجاء التحقق من اتصالك بالشبكة.');
-                loadingOverlay.style.display = 'none';
-            });
-            
+            const file = fileInput.files[0];
             loadingText.innerText = 'جاري رفع المنيو...';
             progressBar.style.width = '0%';
             progressPercentage.innerText = '0%';
             loadingOverlay.style.display = 'flex';
-            
-            xhr.open('POST', '/upload');
-            xhr.send(formData);
+
+            let currentProgress = 0;
+            const progressTimer = setInterval(() => {
+              if (currentProgress < 90) {
+                currentProgress += 5;
+                progressBar.style.width = currentProgress + '%';
+                progressPercentage.innerText = currentProgress + '%';
+              }
+            }, 300);
+
+            try {
+              await upload('menu.pdf', file, {
+                access: 'public',
+                multipart: true,
+                handleUploadUrl: '/api/blob-upload',
+              });
+
+              clearInterval(progressTimer);
+              loadingText.innerText = 'اكتمل بنجاح!';
+              progressBar.style.width = '100%';
+              progressPercentage.innerText = '100%';
+              setTimeout(() => window.location.reload(), 800);
+            } catch (error) {
+              clearInterval(progressTimer);
+              console.error('Upload failed:', error);
+              const errorMessage = (error && error.message) ? error.message : 'فشل الرفع.';
+              alert('فشل الرفع: ' + errorMessage + '\n\nتأكد أن الملف PDF ثم حاول مرة أخرى.');
+              loadingOverlay.style.display = 'none';
+            }
         });
     });
   </script>
@@ -673,13 +689,13 @@ module.exports = {
 
   <meta property="og:title" content="منيو مطعم فالح أبو العنبه">
   <meta property="og:description" content="منيو مطعم فالح يحتوي على أشهى الأكلات العراقيه و المشاوي والعروض.">
-  <meta property="og:url" content="https://fale7-res.vercel.app/menu">
+  <meta property="og:url" content="https://fale7-res.vercel.app/">
   <meta property="og:type" content="website">
 
   <meta name="robots" content="index, follow">
 
   <title>منيو المطعم | نظام إدارة المنيو</title>
-  <link rel="canonical" href="https://fale7-res.vercel.app/menu">
+  <link rel="canonical" href="https://fale7-res.vercel.app/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -975,6 +991,19 @@ module.exports = {
       }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "مطعم فالح أبو العنبه",
+      "url": "https://fale7-res.vercel.app/",
+      "servesCuisine": "Iraqi",
+      "sameAs": [
+        "https://www.tiktok.com/@fale7_1961?_t=ZS-8x1AmLeHCEc&_r=1",
+        "https://www.facebook.com/share/1FTjzqpHv8/"
+      ]
+    }
+  </script>
 </head>
 <body>
   ${data.menuExists ? `
