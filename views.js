@@ -667,9 +667,9 @@ module.exports = {
     const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/';
     const indexable = data.indexable !== false;
     const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
-    const metaTitle = 'منيو مطعم فالح أبو العنبه | أفضل سندوتشات ومشاوي في 6 أكتوبر';
-    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) في 6 أكتوبر. منيو سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية. اطلب الآن أو زرنا في الفرع.';
-    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر';
+    const metaTitle = 'منيو مطعم فالح أبو العنبه | سندوتشات ومشاوي عراقية في 6 أكتوبر';
+    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) من أفضل مطاعم 6 أكتوبر في مصر، يقدم سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية ومشاوي عراقية. مناسب للباحثين في مصر والعراق.';
+    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -691,11 +691,13 @@ module.exports = {
   <title>${metaTitle}</title>
   <link rel="canonical" href="${canonicalUrl}">
   <meta name="language" content="ar">
+  <meta name="geo.country" content="EG, IQ">
   <meta name="geo.region" content="EG-GZ">
   <meta name="geo.placename" content="6 أكتوبر, الجيزة">
   <meta name="geo.position" content="29.9753;30.9445">
   <meta name="ICBM" content="29.9753, 30.9445">
   <link rel="alternate" hreflang="ar-eg" href="https://fale7-res.vercel.app/">
+  <link rel="alternate" hreflang="ar-iq" href="https://fale7-res.vercel.app/">
   <link rel="alternate" hreflang="x-default" href="https://fale7-res.vercel.app/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -710,6 +712,22 @@ module.exports = {
     "alternateName": "Fale7",
     "image": "https://fale7-res.vercel.app/nbvnb1.png",
     "url": "https://fale7-res.vercel.app/",
+    "telephone": ["+201000602832", "+201144741115"],
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+201112595678",
+      "contactType": "customer service",
+      "areaServed": ["EG", "IQ"],
+      "availableLanguage": ["ar"]
+    }],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "EG",
+      "addressRegion": "الجيزة",
+      "addressLocality": "6 أكتوبر",
+      "streetAddress": "الحي السابع - شارع مكة المكرمة - بالقرب من سنتر الأردنية"
+    },
+    "areaServed": ["EG", "IQ"],
     "openingHoursSpecification": [{
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],
@@ -717,6 +735,7 @@ module.exports = {
       "closes": "03:00"
     }],
     "servesCuisine": ["عراقي", "مشاوي", "سندوتشات", "فلافل"],
+    "hasMap": "https://maps.app.goo.gl/K38LYo9oSC2Myd119",
     "menu": "https://fale7-res.vercel.app/",
     "sameAs": [
       "https://www.tiktok.com/@fale7_1961",
