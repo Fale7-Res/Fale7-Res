@@ -67,10 +67,10 @@ const getMenuViewData = async () => {
 app.get("/", async (req, res) => {
   try {
     const menuData = await getMenuViewData();
-    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/" }));
+    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/", indexable: true }));
   } catch (error) {
     console.error('خطأ في التحقق من Blob:', error);
-    res.send(views.menu({ menuExists: false, canonicalUrl: "https://fale7-res.vercel.app/" }));
+    res.send(views.menu({ menuExists: false, canonicalUrl: "https://fale7-res.vercel.app/", indexable: true }));
   }
 });
 
@@ -182,14 +182,8 @@ app.post('/api/blob-upload', express.json(), async (req, res) => {
   }
 });
 
-app.get("/menu", async (req, res) => {
-  try {
-    const menuData = await getMenuViewData();
-    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/menu" }));
-  } catch (error) {
-    console.error('خطأ في التحقق من Blob:', error);
-    res.send(views.menu({ menuExists: false, canonicalUrl: "https://fale7-res.vercel.app/menu" }));
-  }
+app.get("/menu", (req, res) => {
+  res.redirect(301, "/");
 });
 
 app.get("/logout", (req, res) => {

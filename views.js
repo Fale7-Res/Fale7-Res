@@ -565,7 +565,7 @@ module.exports = {
         </form>
         
         <div class="actions">
-          <a href="/menu" target="_blank" class="btn btn-secondary">
+          <a href="/" target="_blank" class="btn btn-secondary">
             <span class="icon">📋</span>
             صفحة المستخدم
           </a>
@@ -664,29 +664,75 @@ module.exports = {
 
   // قالب صفحة المنيو
   menu: (data) => {
-    const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/menu';
+    const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/';
+    const indexable = data.indexable !== false;
+    const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
+    const metaTitle = 'منيو مطعم فالح أبو العنبه | أفضل سندوتشات ومشاوي في 6 أكتوبر';
+    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) في 6 أكتوبر - الحي السابع، شارع مكة المكرمة. منيو سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية. اطلب الآن أو زرنا في الفرع.';
+    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <meta name="description" content="تصفح منيو مطعم فالح أبو العنبه، أشهى المأكولات العراقيه و المشاوي والعروض الخاصة. اكتشف وجباتنا المميزة الآن.">
-  <meta name="keywords" content="مطعم فالح, مطعم فالح ابو العنبه, مطعم فالح أبو العنبه, مطعم فالح ابو العنبة, منيو مطعم فالح">
+  <meta name="description" content="${metaDescription}">
+  <meta name="keywords" content="${metaKeywords}">
 
-  <meta property="og:title" content="منيو مطعم فالح أبو العنبه">
-  <meta property="og:description" content="منيو مطعم فالح يحتوي على أشهى الأكلات العراقيه و المشاوي والعروض.">
+  <meta property="og:title" content="${metaTitle}">
+  <meta property="og:description" content="${metaDescription}">
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_EG">
+  <meta property="og:site_name" content="فالح أبو العنبه | Fale7">
+  <meta property="og:image" content="https://fale7-res.vercel.app/nbvnb1.png">
 
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="${robotsContent}">
 
-  <title>منيو مطعم فالح أبو العنبه | Falih Restaurant Menu</title>
+  <title>${metaTitle}</title>
   <link rel="canonical" href="${canonicalUrl}">
+  <meta name="language" content="ar">
+  <meta name="geo.region" content="EG-GZ">
+  <meta name="geo.placename" content="6 أكتوبر, الجيزة">
+  <meta name="geo.position" content="29.9753;30.9445">
+  <meta name="ICBM" content="29.9753, 30.9445">
+  <link rel="alternate" hreflang="ar-eg" href="https://fale7-res.vercel.app/">
+  <link rel="alternate" hreflang="x-default" href="https://fale7-res.vercel.app/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "فالح أبو العنبه",
+    "alternateName": "Fale7",
+    "image": "https://fale7-res.vercel.app/nbvnb1.png",
+    "url": "https://fale7-res.vercel.app/",
+    "telephone": ["+201000602832", "+201144741115"],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "EG",
+      "addressRegion": "الجيزة",
+      "addressLocality": "6 أكتوبر",
+      "streetAddress": "الحي السابع - شارع مكة المكرمة - بالقرب من سنتر الأردنية"
+    },
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "07:00",
+      "closes": "03:00"
+    }],
+    "servesCuisine": ["عراقي", "مشاوي", "سندوتشات", "فلافل"],
+    "menu": "https://fale7-res.vercel.app/",
+    "sameAs": [
+      "https://www.tiktok.com/@fale7_1961",
+      "https://www.facebook.com/profile.php?id=100063865183387",
+      "https://maps.app.goo.gl/K38LYo9oSC2Myd119"
+    ]
+  }
+  </script>
   <style>
     :root {
       --background: 0 0% 100%;
@@ -788,9 +834,36 @@ module.exports = {
       box-shadow: 0 8px 20px rgba(52, 183, 241, 0.4);
     }
     
+
+    .contact-strip {
+      position: fixed;
+      top: 92px;
+      left: 0;
+      right: 0;
+      z-index: 25;
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255,255,255,0.95);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+    }
+
+    .contact-strip a {
+      text-decoration: none;
+      color: #1f2937;
+      background: #f8fafc;
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
     .pdf-viewer-container {
       position: fixed;
-      top: 90px;
+      top: 136px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -956,7 +1029,7 @@ module.exports = {
       }
       
       .pdf-viewer-container {
-        top: 80px;
+        top: 126px;
       }
       
       .btn {
@@ -1011,6 +1084,12 @@ module.exports = {
       </div>
     </div>
     
+
+    <div class="contact-strip" aria-label="معلومات التواصل">
+      <a href="tel:01000602832">📞 01000602832</a>
+      <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">📍 العنوان</a>
+      <a href="tel:01112595678">📝 شكاوى ومقترحات</a>
+    </div>
     <!-- عارض PDF مخصص -->
     <div class="pdf-viewer-container">
       <div class="pdf-canvas-container" id="pdfContainer">
@@ -1077,6 +1156,8 @@ module.exports = {
       <div class="no-menu-icon">📋</div>
       <h2 class="no-menu-title">المنيو غير متوفر حالياً</h2>
       <p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.</p>
+      <p class="no-menu-text">📍 الجيزة - 6 أكتوبر - الحي السابع - شارع مكة المكرمة</p>
+      <p class="no-menu-text">📞 01000602832 - 01144741115</p>
     </div>
   `}
 </body>
