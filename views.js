@@ -6,6 +6,7 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/nbvnb1.png">
   <meta name="robots" content="noindex, nofollow">
   
   <title>تسجيل الدخول | نظام إدارة المنيو</title>
@@ -279,6 +280,7 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/nbvnb1.png">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -793,6 +795,7 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+  <link rel="icon" type="image/png" href="/nbvnb1.png">
   <meta name="description" content="${metaDescription}">
   <meta name="keywords" content="${metaKeywords}">
 
@@ -1269,6 +1272,7 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+  <link rel="icon" type="image/png" href="/nbvnb1.png">
   <meta name="robots" content="${robotsContent}">
   <title>${data.title}</title>
   <link rel="canonical" href="${data.canonicalUrl}">
