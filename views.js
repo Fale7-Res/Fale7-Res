@@ -281,7 +281,6 @@ module.exports = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
-  <script src="https://unpkg.com/@vercel/blob@0.23.4/dist/client.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -584,7 +583,9 @@ module.exports = {
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { upload } from 'https://esm.sh/@vercel/blob/client';
+
     document.addEventListener('DOMContentLoaded', () => {
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
@@ -632,7 +633,7 @@ module.exports = {
             loadingOverlay.style.display = 'flex';
 
             try {
-                const result = await window.VercelBlob.upload('menu.pdf', file, {
+                const result = await upload('menu.pdf', file, {
                     access: 'public',
                     handleUploadUrl: '/api/blob-upload',
                     multipart: true,
