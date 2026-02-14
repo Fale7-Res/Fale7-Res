@@ -150,15 +150,26 @@ app.post('/api/blob-upload', express.json(), async (req, res) => {
   }
 
   try {
+    const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+
     const jsonResponse = await handleUpload({
       body: req.body,
       request: req,
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      onBeforeGenerateToken: async () => ({
-        allowedContentTypes: ['application/pdf'],
-        maximumSizeInBytes: 50 * 1024 * 1024,
-        addRandomSuffix: false,
-      }),
+      onBeforeGenerateToken: async (pathname) => {
+        // عند استخدام اسم ثابت (menu.pdf) يجب حذف الملف السابق أولًا لتجنب خطأ "already exists"
+        const { blobs } = await list({ prefix: pathname, limit: 5, ...blobOptions });
+        if (blobs.length > 0) {
+          await Promise.all(blobs.map((blob) => del(blob.pathname, blobOptions)));
+          console.log(`Deleted ${blobs.length} existing blob(s) for ${pathname} before upload`);
+        }
+
+        return {
+          allowedContentTypes: ['application/pdf'],
+          maximumSizeInBytes: 50 * 1024 * 1024,
+          addRandomSuffix: false,
+        };
+      },
       onUploadCompleted: async () => {
         menuVersion = Date.now();
       },
