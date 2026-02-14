@@ -37,13 +37,41 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 
 // إعداد رفع المنيو باستخدام الذاكرة بدلاً من القرص
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    // السماح برفع ملفات PDF كبيرة نسبيًا
+    fileSize: 50 * 1024 * 1024,
+  },
+});
 
 // توزيع الملفات الثابتة مثل robots.txt و sitemap.xml من مجلد public
 app.use(express.static(path.join(__dirname, "public")));
 
+const getMenuViewData = async () => {
+  const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+  const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
+
+  if (blobs.length > 0) {
+    return {
+      menuExists: true,
+      menuUrl: `${blobs[0].url}?v=${menuVersion}`,
+    };
+  }
+
+  return { menuExists: false };
+};
+
 // المسارات
-app.get("/", (req, res) => res.redirect("/menu"));
+app.get("/", async (req, res) => {
+  try {
+    const menuData = await getMenuViewData();
+    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/" }));
+  } catch (error) {
+    console.error('خطأ في التحقق من Blob:', error);
+    res.send(views.menu({ menuExists: false, canonicalUrl: "https://fale7-res.vercel.app/" }));
+  }
+});
 
 app.get("/login", (req, res) => {
   res.send(views.login({ error: null }));
@@ -66,7 +94,25 @@ app.get("/admin", (req, res) => {
   }
 });
 
-app.post("/upload", upload.single("menu"), async (req, res) => {
+app.post("/upload", (req, res, next) => {
+  upload.single("menu")(req, res, (error) => {
+    if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        success: false,
+        message: 'حجم ملف المنيو كبير جدًا. الحد الأقصى 50MB.',
+      });
+    }
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'تعذر قراءة الملف المرفوع. تأكد أنه PDF صالح.',
+      });
+    }
+
+    next();
+  });
+}, async (req, res) => {
   if (!req.session.loggedIn) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -99,17 +145,11 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
 
 app.get("/menu", async (req, res) => {
   try {
-    const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
-    const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
-    if (blobs.length > 0) {
-      const menuUrl = `${blobs[0].url}?v=${menuVersion}`;
-      res.send(views.menu({ menuExists: true, menuUrl }));
-    } else {
-      res.send(views.menu({ menuExists: false }));
-    }
+    const menuData = await getMenuViewData();
+    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/menu" }));
   } catch (error) {
     console.error('خطأ في التحقق من Blob:', error);
-    res.send(views.menu({ menuExists: false }));
+    res.send(views.menu({ menuExists: false, canonicalUrl: "https://fale7-res.vercel.app/menu" }));
   }
 });
 

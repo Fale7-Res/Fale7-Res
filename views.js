@@ -637,7 +637,18 @@ module.exports = {
                     progressPercentage.innerText = '100%';
                     setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    alert('حدث خطأ أثناء الرفع: ' + xhr.responseText);
+                    let errorMessage = 'حدث خطأ أثناء الرفع.';
+                    try {
+                      const response = JSON.parse(xhr.responseText);
+                      if (response.message) {
+                        errorMessage = response.message;
+                      }
+                    } catch (_) {
+                      if (xhr.responseText) {
+                        errorMessage = xhr.responseText;
+                      }
+                    }
+                    alert(errorMessage);
                     loadingOverlay.style.display = 'none';
                 }
             });
@@ -663,6 +674,7 @@ module.exports = {
 
   // قالب صفحة المنيو
   menu: (data) => {
+    const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/menu';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -673,13 +685,13 @@ module.exports = {
 
   <meta property="og:title" content="منيو مطعم فالح أبو العنبه">
   <meta property="og:description" content="منيو مطعم فالح يحتوي على أشهى الأكلات العراقيه و المشاوي والعروض.">
-  <meta property="og:url" content="https://fale7-res.vercel.app/menu">
+  <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:type" content="website">
 
   <meta name="robots" content="index, follow">
 
-  <title>منيو المطعم | نظام إدارة المنيو</title>
-  <link rel="canonical" href="https://fale7-res.vercel.app/menu">
+  <title>منيو مطعم فالح أبو العنبه | Falih Restaurant Menu</title>
+  <link rel="canonical" href="${canonicalUrl}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
