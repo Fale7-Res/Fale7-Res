@@ -3,7 +3,6 @@ const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
 const { put, del, list } = require('@vercel/blob');
-const { handleUpload } = require('@vercel/blob/client');
 
 const app = express();
 
@@ -36,7 +35,6 @@ app.use(session({
 
 // استقبال بيانات POST
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 // إعداد رفع المنيو باستخدام الذاكرة بدلاً من القرص
 const upload = multer({ storage: multer.memoryStorage() });
@@ -45,9 +43,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.use(express.static(path.join(__dirname, "public")));
 
 // المسارات
-app.get("/", async (req, res) => {
-  await renderMenuPage(res);
-});
+app.get("/", (req, res) => res.redirect("/menu"));
 
 app.get("/login", (req, res) => {
   res.send(views.login({ error: null }));
@@ -101,52 +97,21 @@ app.post("/upload", upload.single("menu"), async (req, res) => {
   res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
 });
 
-app.post('/api/blob-upload', async (req, res) => {
-  if (!req.session.loggedIn) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  try {
-    const jsonResponse = await handleUpload({
-      body: req.body,
-      request: req,
-      onBeforeGenerateToken: async () => ({
-        allowedContentTypes: ['application/pdf'],
-        addRandomSuffix: false,
-        maximumSizeInBytes: 100 * 1024 * 1024,
-      }),
-      onUploadCompleted: async () => {
-        menuVersion = Date.now();
-      },
-    });
-
-    return res.status(200).json(jsonResponse);
-  } catch (error) {
-    console.error('خطأ في رفع الملف المباشر إلى Blob:', error);
-    return res.status(400).json({ error: 'Upload failed' });
-  }
-});
-
 app.get("/menu", async (req, res) => {
-  await renderMenuPage(res);
-});
-
-async function renderMenuPage(res) {
   try {
     const blobOptions = process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
     const { blobs } = await list({ prefix: 'menu.pdf', limit: 1, ...blobOptions });
     if (blobs.length > 0) {
       const menuUrl = `${blobs[0].url}?v=${menuVersion}`;
       res.send(views.menu({ menuExists: true, menuUrl }));
-      return;
+    } else {
+      res.send(views.menu({ menuExists: false }));
     }
-
-    res.send(views.menu({ menuExists: false }));
   } catch (error) {
     console.error('خطأ في التحقق من Blob:', error);
     res.send(views.menu({ menuExists: false }));
   }
-}
+});
 
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
