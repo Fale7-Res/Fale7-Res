@@ -1120,37 +1120,51 @@ module.exports = {
     
     @media (max-width: 640px) {
       .top-bar {
-        padding: 0.75rem;
+        padding: 0.625rem;
+        gap: 0.625rem;
+        flex-direction: column;
+        align-items: stretch;
       }
       .social-icons {
-        gap: 1rem;
+        gap: 0.75rem;
+        justify-content: center;
       }
       .action-buttons {
         gap: 0.5rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        padding-bottom: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .action-buttons::-webkit-scrollbar {
+        display: none;
       }
       .social-icon span {
-        height: 45px;
-        width: 45px;
-        font-size: 18px;
+        height: 42px;
+        width: 42px;
+        font-size: 16px;
       }
-      
+
       .pdf-viewer-container {
-        top: 80px;
+        top: 132px;
       }
-      
+
       .btn {
+        flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
       }
-      
+
       .no-menu-icon {
         font-size: 3rem;
       }
-      
+
       .no-menu-title {
         font-size: 1.25rem;
       }
-      
+
       .no-menu-text {
         font-size: 0.875rem;
       }
@@ -1479,12 +1493,33 @@ module.exports = {
     @media (min-width: 768px) { .mobile-hint { display:none; } }
 
     @media (max-width: 640px) {
-      .top-bar { padding: 0.75rem; }
-      .social-icons { gap: 1rem; }
-      .action-buttons { gap: 0.5rem; }
-      .social-icon span { height: 45px; width: 45px; font-size: 18px; }
-      .pdf-viewer-container { top: 80px; }
-      .btn { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+      .top-bar {
+        padding: 0.625rem;
+        gap: 0.625rem;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .social-icons {
+        gap: 0.75rem;
+        justify-content: center;
+      }
+      .action-buttons {
+        gap: 0.5rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        padding-bottom: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .action-buttons::-webkit-scrollbar { display: none; }
+      .social-icon span { height: 42px; width: 42px; font-size: 16px; }
+      .pdf-viewer-container { top: 132px; }
+      .btn {
+        flex: 0 0 auto;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
