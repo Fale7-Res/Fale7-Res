@@ -269,6 +269,10 @@ module.exports = {
       });
     });
   </script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>`;
   },
@@ -612,7 +616,7 @@ module.exports = {
             <div class="upload-area">
               <div class="upload-icon">🎁</div>
               <div class="upload-text">اسحب وأفلت ملف عروض PDF هنا</div>
-              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <div class="upload-hint">أو ان����ر للاختيار من جهازك</div>
               <input type="file" name="offers" accept="application/pdf" required class="file-input" />
             </div>
             <div class="inline-actions">
@@ -632,7 +636,7 @@ module.exports = {
           <h3 class="upload-section-title">صفحة منيو السحور</h3>
           <form class="upload-form" data-pathname="suhoor.pdf" data-label="منيو السحور">
             <div class="upload-area">
-              <div class="upload-icon">🌙</div>
+              <div class="upload-icon">���</div>
               <div class="upload-text">اسحب وأفلت ملف سحور PDF هنا</div>
               <div class="upload-hint">أو انقر للاختيار من جهازك</div>
               <input type="file" name="suhoor" accept="application/pdf" required class="file-input" />
@@ -778,6 +782,10 @@ module.exports = {
       });
     });
   </script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>`;
   },
@@ -789,7 +797,7 @@ module.exports = {
     const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
     const metaTitle = 'منيو مطعم فالح أبو العنبه | سندوتشات ومشاوي عراقية في 6 أكتوبر';
     const metaDescription = 'مطعم فالح أبو العنبه (Fale7) من أفضل مطاعم 6 أكتوبر في مصر، يقدم سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية ومشاوي عراقية. مناسب للباحثين في مصر والعراق.';
-    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
+    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فا��ح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1260,6 +1268,10 @@ module.exports = {
       <p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.</p>
     </div>
   `}
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>`;
   },
@@ -1567,6 +1579,10 @@ module.exports = {
       <p>${data.emptyText || 'يمكنك المتابعة لاحقاً.'}</p>
     </div>
   `}
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>`;
   }
