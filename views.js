@@ -1266,36 +1266,277 @@ module.exports = {
 
   // قالب صفحات PDF الإضافية (العروض / السحور)
   pdfPage: (data) => {
-    const robotsContent = data.pageExists ? 'index, follow' : 'noindex, follow';
+    const robotsContent = data.pageExists ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
+    const metaDescription = data.metaDescription || 'صفحة المنيو والعروض الخاصة بمطعم فالح أبو العنبه.';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
   <link rel="icon" type="image/png" href="/nbvnb1.png">
+  <meta name="description" content="${metaDescription}">
+  <meta property="og:title" content="${data.title}">
+  <meta property="og:description" content="${metaDescription}">
+  <meta property="og:url" content="${data.canonicalUrl}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_EG">
+  <meta property="og:image" content="https://fale7-res.vercel.app/nbvnb1.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${data.title}">
+  <meta name="twitter:description" content="${metaDescription}">
+  <meta name="twitter:image" content="https://fale7-res.vercel.app/nbvnb1.png">
   <meta name="robots" content="${robotsContent}">
   <title>${data.title}</title>
   <link rel="canonical" href="${data.canonicalUrl}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
-    body, html { margin:0; padding:0; height:100%; font-family: Inter, Arial, sans-serif; background:#f8fafc; }
-    .top { position:fixed; top:0; left:0; right:0; padding:0.75rem 1rem; background:#fff; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; z-index:5; }
-    .title { font-weight:700; color:#0f172a; }
-    .btn { text-decoration:none; background:#3b82f6; color:#fff; padding:0.45rem 0.8rem; border-radius:8px; font-size:0.85rem; }
-    .container { position:fixed; top:58px; bottom:0; left:0; right:0; overflow:auto; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
-    .pdf-page { box-shadow: 0 4px 12px rgba(0,0,0,0.12); border-radius:8px; max-width:100%; }
-    .empty { display:flex; height:100%; align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#475569; }
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 0 0% 3.9%;
+      --border: 0 0% 89.8%;
+      --radius: 0.5rem;
+    }
+
+    * { box-sizing: border-box; }
+
+    body, html {
+      margin:0;
+      padding:0;
+      height:100%;
+      background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: hsl(var(--foreground));
+      overflow: hidden;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .social-icon {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .social-icon a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .social-icon span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      width: 50px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      font-size: 20px;
+      color: #666;
+    }
+
+    .social-icon.tiktok:hover span {
+      background: #000000;
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .social-icon.facebook:hover span {
+      background: #3b5998;
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(59, 89, 152, 0.4);
+    }
+
+    .social-icon.location:hover span {
+      background: #34b7f1;
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(52, 183, 241, 0.4);
+    }
+
+    .pdf-viewer-container {
+      position: fixed;
+      top: 90px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pdf-canvas-container {
+      flex: 1;
+      overflow: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .pdf-page {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      border-radius: 8px;
+      max-width:100%;
+      height: auto;
+    }
+
+    .loading-spinner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      gap: 1rem;
+      color: #475569;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .empty { display:flex; height:100%; align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#475569; padding: 1rem; }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      width: auto;
+    }
+
+    .btn-primary { background:#3b82f6; color:white; }
+    .btn-primary:hover { background:#2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+    .btn-secondary { background:white; color:#3b82f6; border:1px solid #3b82f6; }
+    .btn-secondary:hover { background:rgba(59,130,246,0.05); transform: translateY(-1px); }
+
+    .mobile-hint {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    @media (min-width: 768px) { .mobile-hint { display:none; } }
+
+    @media (max-width: 640px) {
+      .top-bar { padding: 0.75rem; }
+      .social-icons { gap: 1rem; }
+      .action-buttons { gap: 0.5rem; }
+      .social-icon span { height: 45px; width: 45px; font-size: 18px; }
+      .pdf-viewer-container { top: 80px; }
+      .btn { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="top">
-    <div class="title">${data.title}</div>
-    <a href="/menu" class="btn">العودة للمنيو</a>
-  </div>
-  ${data.pageExists ? `
-    <div class="container" id="pdfContainer">
-      <p>جاري التحميل...</p>
+  <div class="top-bar">
+    <div class="action-buttons">
+      ${data.menuUrl ? `
+        <a href="${data.menuUrl}" class="btn btn-primary" download>
+          <span>📥</span>
+          تحميل
+        </a>
+      ` : ''}
+      <a href="javascript:location.reload(true)" class="btn btn-secondary">
+        <span>🔄</span>
+        تحديث
+      </a>
+      ${data.offersExists && data.pageType !== 'offers' ? `<a href="/offers" class="btn btn-secondary"><span>🎁</span>العروض</a>` : ''}
+      ${data.suhoorExists && data.pageType !== 'suhoor' ? `<a href="/suhoor" class="btn btn-secondary"><span>🌙</span>منيو السحور</a>` : ''}
+      <a href="/menu" class="btn btn-secondary">
+        <span>🏠</span>
+        المنيو الرئيسي
+      </a>
     </div>
+    <div class="social-icons">
+      <div class="social-icon tiktok">
+        <a href="https://www.tiktok.com/@fale7_1961" target="_blank">
+          <span><i class="fab fa-tiktok"></i></span>
+        </a>
+      </div>
+      <div class="social-icon facebook">
+        <a href="https://www.facebook.com/profile.php?id=100063865183387" target="_blank">
+          <span><i class="fab fa-facebook-f"></i></span>
+        </a>
+      </div>
+      <div class="social-icon location">
+        <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank">
+          <span><i class="fas fa-map-marker-alt"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  ${data.pageExists ? `
+    <div class="pdf-viewer-container">
+      <div class="pdf-canvas-container" id="pdfContainer">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>جاري التحميل...</p>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
     <script>
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
       async function loadPDF() {
@@ -1315,7 +1556,7 @@ module.exports = {
             container.appendChild(canvas);
           }
         } catch (e) {
-          container.innerHTML = '<div class="empty"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
+          container.innerHTML = '<div class=\"empty\"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
         }
       }
       document.addEventListener('DOMContentLoaded', loadPDF);
@@ -1329,5 +1570,6 @@ module.exports = {
 </body>
 </html>`;
   }
+
 
 };
