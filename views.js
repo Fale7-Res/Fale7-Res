@@ -663,7 +663,7 @@ module.exports = {
         </a>
         
         <div class="debug-info">
-          @Developed by Mohamed
+          Developed by Mohamed
         </div>
       </div>
     </div>
