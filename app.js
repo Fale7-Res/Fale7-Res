@@ -257,12 +257,20 @@ app.get("/menu", async (req, res) => {
 
 app.get('/offers', async (req, res) => {
   try {
-    const offersData = await getPageData(STATIC_PAGE_FILES.offers);
+    const [offersData, menuData] = await Promise.all([
+      getPageData(STATIC_PAGE_FILES.offers),
+      getMenuViewData(),
+    ]);
     res.send(views.pdfPage({
       title: 'عروض فالح أبو العنبه',
       canonicalUrl: 'https://fale7-res.vercel.app/offers',
       pageExists: offersData.exists,
       pageUrl: offersData.url,
+      menuUrl: menuData.menuUrl,
+      offersExists: menuData.offersExists,
+      suhoorExists: menuData.suhoorExists,
+      pageType: 'offers',
+      metaDescription: 'تابع أحدث عروض مطعم فالح أبو العنبه في 6 أكتوبر، مصر، مع تحديثات مستمرة للعروض المتاحة.',
       emptyTitle: 'لا توجد عروض متاحة حالياً',
       emptyText: 'يمكنك متابعة الصفحة لاحقاً لمعرفة أحدث العروض.',
     }));
@@ -272,6 +280,10 @@ app.get('/offers', async (req, res) => {
       title: 'عروض فالح أبو العنبه',
       canonicalUrl: 'https://fale7-res.vercel.app/offers',
       pageExists: false,
+      offersExists: false,
+      suhoorExists: false,
+      pageType: 'offers',
+      metaDescription: 'تابع أحدث عروض مطعم فالح أبو العنبه في 6 أكتوبر، مصر، مع تحديثات مستمرة للعروض المتاحة.',
       emptyTitle: 'لا توجد عروض متاحة حالياً',
       emptyText: 'يمكنك متابعة الصفحة لاحقاً لمعرفة أحدث العروض.',
     }));
@@ -280,12 +292,20 @@ app.get('/offers', async (req, res) => {
 
 app.get('/suhoor', async (req, res) => {
   try {
-    const suhoorData = await getPageData(STATIC_PAGE_FILES.suhoor);
+    const [suhoorData, menuData] = await Promise.all([
+      getPageData(STATIC_PAGE_FILES.suhoor),
+      getMenuViewData(),
+    ]);
     res.send(views.pdfPage({
       title: 'منيو السحور | فالح أبو العنبه',
       canonicalUrl: 'https://fale7-res.vercel.app/suhoor',
       pageExists: suhoorData.exists,
       pageUrl: suhoorData.url,
+      menuUrl: menuData.menuUrl,
+      offersExists: menuData.offersExists,
+      suhoorExists: menuData.suhoorExists,
+      pageType: 'suhoor',
+      metaDescription: 'منيو السحور في مطعم فالح أبو العنبه: اختيارات متنوعة مناسبة لفترة السحور مع تحديثات مستمرة.',
       emptyTitle: 'منيو السحور غير متوفر حالياً',
       emptyText: 'سيتم نشر منيو السحور هنا عند التفعيل من لوحة التحكم.',
     }));
@@ -295,6 +315,10 @@ app.get('/suhoor', async (req, res) => {
       title: 'منيو السحور | فالح أبو العنبه',
       canonicalUrl: 'https://fale7-res.vercel.app/suhoor',
       pageExists: false,
+      offersExists: false,
+      suhoorExists: false,
+      pageType: 'suhoor',
+      metaDescription: 'منيو السحور في مطعم فالح أبو العنبه: اختيارات متنوعة مناسبة لفترة السحور مع تحديثات مستمرة.',
       emptyTitle: 'منيو السحور غير متوفر حالياً',
       emptyText: 'سيتم نشر منيو السحور هنا عند التفعيل من لوحة التحكم.',
     }));
