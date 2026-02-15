@@ -209,6 +209,10 @@ module.exports = {
       }
     }
   </style>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div class="card">
@@ -564,6 +568,10 @@ module.exports = {
       }
     }
   </style>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div id="loadingOverlay">
@@ -612,7 +620,7 @@ module.exports = {
             <div class="upload-area">
               <div class="upload-icon">🎁</div>
               <div class="upload-text">اسحب وأفلت ملف عروض PDF هنا</div>
-              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <div class="upload-hint">أو ان����ر للاختيار من جهازك</div>
               <input type="file" name="offers" accept="application/pdf" required class="file-input" />
             </div>
             <div class="inline-actions">
@@ -788,8 +796,8 @@ module.exports = {
     const indexable = data.indexable !== false;
     const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
     const metaTitle = 'منيو مطعم فالح أبو العنبه | سندوتشات ومشاوي عراقية في 6 أكتوبر';
-    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) من أفضل مطاعم 6 أكتوبر في مصر، يقدم سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية ومشاوي عراقية. مناسب للباحثين في مصر والعراق.';
-    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
+    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) من أفضل مطاع�� 6 أكتوبر في مصر، يقدم سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية ومشاوي عراقية. مناسب للباحثين في مصر والعراق.';
+    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم ���الح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1156,6 +1164,10 @@ module.exports = {
       }
     }
   </style>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   ${data.menuExists ? `
@@ -1487,6 +1499,10 @@ module.exports = {
       .btn { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
     }
   </style>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div class="top-bar">
