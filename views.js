@@ -336,6 +336,11 @@ module.exports = {
       --input: 0 0% 89.8%;
       --ring: 0 0% 3.9%;
       --radius: 0.5rem;
+      --safe-top: env(safe-area-inset-top);
+      --safe-right: env(safe-area-inset-right);
+      --safe-bottom: env(safe-area-inset-bottom);
+      --safe-left: env(safe-area-inset-left);
+      --header-offset: 96px;
     }
     
     * {
@@ -933,8 +938,18 @@ module.exports = {
       --input: 0 0% 89.8%;
       --ring: 0 0% 3.9%;
       --radius: 0.5rem;
+      --safe-top: env(safe-area-inset-top);
+      --safe-right: env(safe-area-inset-right);
+      --safe-bottom: env(safe-area-inset-bottom);
+      --safe-left: env(safe-area-inset-left);
+      --header-offset: 96px;
     }
     
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -966,11 +981,14 @@ module.exports = {
       justify-content: space-between;
       align-items: center;
       gap: 0.75rem;
+      direction: rtl;
     }
     
     .social-icons {
       display: flex;
       gap: clamp(0.5rem, 2vw, 1.25rem);
+      order: 2;
+      flex: 0 0 auto;
     }
 
     .social-icon {
@@ -1021,7 +1039,7 @@ module.exports = {
 
     .pdf-viewer-container {
       position: fixed;
-      top: calc(92px + var(--safe-top));
+      top: var(--header-offset);
       left: 0;
       right: 0;
       bottom: 0;
@@ -1076,9 +1094,20 @@ module.exports = {
     .action-buttons {
       display: flex;
       flex-direction: row;
-      gap: 1rem;
-      max-width: 100%;
+      gap: 0.5rem;
+      max-width: calc(100% - 150px);
       min-width: 0;
+      order: 1;
+      justify-content: flex-start;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .action-buttons::-webkit-scrollbar {
+      display: none;
     }
     
     .btn {
@@ -1168,49 +1197,21 @@ module.exports = {
       backdrop-filter: blur(10px);
     }
     
-    @media (min-width: 768px) {
-      .mobile-hint {
-        display: none;
-      }
-    }
-    
     @media (max-width: 640px) {
       .top-bar {
         padding: calc(0.625rem + var(--safe-top)) calc(0.625rem + var(--safe-right)) 0.625rem calc(0.625rem + var(--safe-left));
         gap: 0.625rem;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
       }
       .social-icons {
         gap: 0.75rem;
-        justify-content: flex-start;
-        flex-shrink: 0;
       }
       .action-buttons {
-        gap: 0.5rem;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        padding-bottom: 0;
-        justify-content: flex-end;
-        flex: 1;
-        min-width: 0;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      .action-buttons::-webkit-scrollbar {
-        display: none;
+        max-width: calc(100% - 128px);
       }
       .social-icon span {
         height: 42px;
         width: 42px;
         font-size: 16px;
-      }
-
-      .pdf-viewer-container {
-        top: calc(90px + var(--safe-top));
       }
 
       .btn {
@@ -1290,6 +1291,13 @@ module.exports = {
     <script>
       // تحديد مسار PDF.js worker
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+      function syncHeaderOffset() {
+        const topBar = document.querySelector('.top-bar');
+        if (!topBar) return;
+        const height = Math.ceil(topBar.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--header-offset', height + 'px');
+      }
       
       // تحميل وعرض PDF
       async function loadPDF() {
@@ -1332,7 +1340,12 @@ module.exports = {
       }
       
       // تحميل PDF عند تحميل الصفحة
-      document.addEventListener('DOMContentLoaded', loadPDF);
+      document.addEventListener('DOMContentLoaded', () => {
+        syncHeaderOffset();
+        loadPDF();
+      });
+      window.addEventListener('resize', syncHeaderOffset);
+      window.addEventListener('orientationchange', syncHeaderOffset);
     </script>
   ` : `
     <div class="no-menu">
@@ -1384,6 +1397,7 @@ module.exports = {
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
+      --header-offset: 96px;
     }
 
     * { box-sizing: border-box; }
@@ -1420,11 +1434,14 @@ module.exports = {
       justify-content: space-between;
       align-items: center;
       gap: 0.75rem;
+      direction: rtl;
     }
 
     .social-icons {
       display: flex;
       gap: clamp(0.5rem, 2vw, 1.25rem);
+      order: 2;
+      flex: 0 0 auto;
     }
 
     .social-icon {
@@ -1474,7 +1491,7 @@ module.exports = {
 
     .pdf-viewer-container {
       position: fixed;
-      top: calc(92px + var(--safe-top));
+      top: var(--header-offset);
       left: 0;
       right: 0;
       bottom: 0;
@@ -1532,9 +1549,20 @@ module.exports = {
     .action-buttons {
       display: flex;
       flex-direction: row;
-      gap: 1rem;
-      max-width: 100%;
+      gap: 0.5rem;
+      max-width: calc(100% - 150px);
       min-width: 0;
+      order: 1;
+      justify-content: flex-start;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .action-buttons::-webkit-scrollbar {
+      display: none;
     }
 
     .btn {
@@ -1574,37 +1602,18 @@ module.exports = {
       backdrop-filter: blur(10px);
     }
 
-    @media (min-width: 768px) { .mobile-hint { display:none; } }
-
     @media (max-width: 640px) {
       .top-bar {
         padding: calc(0.625rem + var(--safe-top)) calc(0.625rem + var(--safe-right)) 0.625rem calc(0.625rem + var(--safe-left));
         gap: 0.625rem;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
       }
       .social-icons {
         gap: 0.75rem;
-        justify-content: flex-start;
-        flex-shrink: 0;
       }
       .action-buttons {
-        gap: 0.5rem;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        padding-bottom: 0;
-        justify-content: flex-end;
-        flex: 1;
-        min-width: 0;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
+        max-width: calc(100% - 128px);
       }
-      .action-buttons::-webkit-scrollbar { display: none; }
       .social-icon span { height: 42px; width: 42px; font-size: 16px; }
-      .pdf-viewer-container { top: calc(90px + var(--safe-top)); }
       .btn {
         flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
@@ -1667,6 +1676,12 @@ module.exports = {
     <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
     <script>
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      function syncHeaderOffset() {
+        const topBar = document.querySelector('.top-bar');
+        if (!topBar) return;
+        const height = Math.ceil(topBar.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--header-offset', height + 'px');
+      }
       async function loadPDF() {
         const container = document.getElementById('pdfContainer');
         try {
@@ -1687,7 +1702,12 @@ module.exports = {
           container.innerHTML = '<div class=\"empty\"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
         }
       }
-      document.addEventListener('DOMContentLoaded', loadPDF);
+      document.addEventListener('DOMContentLoaded', () => {
+        syncHeaderOffset();
+        loadPDF();
+      });
+      window.addEventListener('resize', syncHeaderOffset);
+      window.addEventListener('orientationchange', syncHeaderOffset);
     </script>
   ` : `
     <div class="empty">
