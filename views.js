@@ -1122,9 +1122,7 @@ module.exports = {
     </div>
   </div>
 
-  <script type="module">
-    import { upload } from 'https://esm.sh/@vercel/blob/client';
-
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
       const loadingOverlay = document.getElementById('loadingOverlay');
       const loadingText = document.getElementById('loadingText');
@@ -1136,7 +1134,8 @@ module.exports = {
         const fileInput = form.querySelector('input[type="file"]');
         const uploadText = form.querySelector('.upload-text');
         const uploadHint = form.querySelector('.upload-hint');
-        const pathname = form.dataset.pathname;
+        const pathname = form.dataset.pathname || 'menu.pdf';
+        const pageType = pathname.replace(/\.pdf$/i, '');
         const label = form.dataset.label;
 
         fileInput.addEventListener('change', () => {
@@ -1146,57 +1145,81 @@ module.exports = {
             const fileSize = file.size > 1024 * 1024
               ? ((file.size / 1024 / 1024).toFixed(2) + ' MB')
               : ((file.size / 1024).toFixed(2) + ' KB');
-            uploadHint.textContent = 'حجم الملف: ' + fileSize;
+            uploadHint.textContent = 'File size: ' + fileSize;
           }
         });
 
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', (e) => {
           e.preventDefault();
 
           if (!fileInput.files || fileInput.files.length === 0) {
-            alert('الرجاء اختيار ملف أولاً.');
+            alert('Please choose a file first.');
             return;
           }
 
           const file = fileInput.files[0];
           if (file.type !== 'application/pdf') {
-            alert('يرجى رفع ملف PDF فقط.');
+            alert('Please upload a PDF file only.');
             return;
           }
 
-          loadingText.innerText = 'جاري رفع ' + label + '...';
-          progressBar.style.width = '20%';
-          progressPercentage.innerText = '20%';
-          loadingOverlay.style.display = 'flex';
+          const formData = new FormData();
+          formData.append('menu', file);
+          formData.append('pageType', pageType);
 
-          try {
-            const result = await upload(pathname, file, {
-              access: 'public',
-              handleUploadUrl: '/api/blob-upload',
-              multipart: true,
-            });
+          const xhr = new XMLHttpRequest();
 
-            if (!result || !result.url) {
-              throw new Error('لم يتم استلام رابط الملف بعد الرفع.');
+          xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) {
+              const percentComplete = Math.round((event.loaded / event.total) * 100);
+              progressBar.style.width = percentComplete + '%';
+              progressPercentage.innerText = percentComplete + '%';
+            }
+          });
+
+          xhr.addEventListener('load', () => {
+            let data = null;
+            try {
+              data = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+            } catch (_) {
+              data = null;
             }
 
-            progressBar.style.width = '100%';
-            progressPercentage.innerText = '100%';
-            loadingText.innerText = 'اكتمل بنجاح!';
-            setTimeout(() => window.location.reload(), 1000);
-          } catch (error) {
-            console.error('Upload error:', error);
-            const errorMessage = error?.message || 'حدث خطأ أثناء رفع الملف.';
-            if (errorMessage.includes('retrieve the client token') || errorMessage.includes('Unauthorized')) {
-              alert('انتهت جلسة تسجيل الدخول. سجل الدخول مرة أخرى.');
+            if (xhr.status === 401) {
+              alert('Your login session has expired. Please login again.');
               window.location.href = '/login';
               return;
             }
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+              progressBar.style.width = '100%';
+              progressPercentage.innerText = '100%';
+              loadingText.innerText = 'Completed successfully!';
+              setTimeout(() => window.location.reload(), 900);
+              return;
+            }
+
+            const errorMessage = (data && (data.message || data.error)) || 'An error occurred while uploading.';
             alert(errorMessage);
             loadingOverlay.style.display = 'none';
             progressBar.style.width = '0%';
             progressPercentage.innerText = '0%';
-          }
+          });
+
+          xhr.addEventListener('error', () => {
+            alert('Upload failed. Please check your network connection.');
+            loadingOverlay.style.display = 'none';
+            progressBar.style.width = '0%';
+            progressPercentage.innerText = '0%';
+          });
+
+          loadingText.innerText = 'Uploading ' + label + '...';
+          progressBar.style.width = '0%';
+          progressPercentage.innerText = '0%';
+          loadingOverlay.style.display = 'flex';
+
+          xhr.open('POST', '/upload');
+          xhr.send(formData);
         });
       });
 
@@ -1204,12 +1227,12 @@ module.exports = {
       deleteButtons.forEach((btn) => {
         btn.addEventListener('click', async () => {
           const pageType = btn.dataset.pageType;
-          const confirmed = window.confirm('هل أنت متأكد من حذف هذه الصفحة؟');
+          const confirmed = window.confirm('Are you sure you want to delete this page?');
           if (!confirmed) return;
 
           try {
             loadingOverlay.style.display = 'flex';
-            loadingText.innerText = 'جاري حذف الصفحة...';
+            loadingText.innerText = 'Deleting page...';
             progressBar.style.width = '30%';
             progressPercentage.innerText = '30%';
 
@@ -1221,15 +1244,15 @@ module.exports = {
 
             const data = await response.json();
             if (!response.ok || !data.success) {
-              throw new Error(data.message || 'حدث خطأ أثناء الحذف.');
+              throw new Error(data.message || 'An error occurred while deleting.');
             }
 
             progressBar.style.width = '100%';
             progressPercentage.innerText = '100%';
-            loadingText.innerText = 'تم الحذف بنجاح!';
+            loadingText.innerText = 'Deleted successfully!';
             setTimeout(() => window.location.reload(), 800);
           } catch (error) {
-            alert(error.message || 'فشل حذف الصفحة.');
+            alert(error.message || 'Failed to delete page.');
             loadingOverlay.style.display = 'none';
           }
         });

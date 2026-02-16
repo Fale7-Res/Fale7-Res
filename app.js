@@ -4,7 +4,6 @@ const multer = require("multer");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const { put, del, list } = require('@vercel/blob');
-const { handleUpload } = require('@vercel/blob/client');
 require("dotenv").config();
 
 const app = express();
@@ -143,11 +142,9 @@ const getPageData = async (pathname) => {
     return { exists: false, url: null };
   }
 
-  const blobUrl = blob.downloadUrl || blob.url;
-
   return {
     exists: true,
-    url: withCacheVersion(blobUrl),
+    url: withCacheVersion(blob.url),
   };
 };
 
@@ -244,71 +241,35 @@ app.post("/upload", (req, res, next) => {
   }
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return res.status(500).json({ success: false, message: "BLOB_READ_WRITE_TOKEN غير موجودة في متغيرات البيئة." });
+    return res.status(500).json({ success: false, message: "BLOB_READ_WRITE_TOKEN is missing in environment variables." });
+  }
+
+  const pageType = req.body.pageType || 'menu';
+  const pathname = STATIC_PAGE_FILES[pageType];
+  if (!pathname) {
+    return res.status(400).json({ success: false, message: "Invalid page type." });
   }
 
   try {
     const blobOptions = getBlobOptions();
 
-    const existingMenu = await getBlobByPathname(STATIC_PAGE_FILES.menu);
-    if (existingMenu) {
-      await del(existingMenu.pathname, blobOptions);
-      console.log('Existing menu.pdf deleted from Blob storage');
+    const existingBlob = await getBlobByPathname(pathname);
+    if (existingBlob) {
+      await del(existingBlob.pathname, blobOptions);
+      console.log(`Existing ${pathname} deleted from Blob storage`);
     }
 
-    const result = await put(STATIC_PAGE_FILES.menu, req.file.buffer, {
+    const result = await put(pathname, req.file.buffer, {
       access: 'public',
       addRandomSuffix: false,
       ...blobOptions,
     });
 
     menuVersion = Date.now();
-    return res.json({ success: true, message: "Menu uploaded.", url: result.url });
+    return res.json({ success: true, message: "Page uploaded.", url: result.url });
   } catch (error) {
     console.error('خطأ في رفع الملف إلى Blob:', error);
     return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
-  }
-});
-
-app.post('/api/blob-upload', async (req, res) => {
-  if (!isAuthenticated(req)) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return res.status(500).json({ error: 'Missing BLOB_READ_WRITE_TOKEN environment variable.' });
-  }
-
-  try {
-    const uploadBody = { ...req.body, access: 'public' };
-
-    const jsonResponse = await handleUpload({
-      body: uploadBody,
-      request: req,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-      onBeforeGenerateToken: async (pathname) => {
-        if (!Object.values(STATIC_PAGE_FILES).includes(pathname)) {
-          throw new Error('Pathname غير مسموح للرفع.');
-        }
-
-        await deleteBlobByPathname(pathname);
-
-        return {
-          access: 'public',
-          allowedContentTypes: ['application/pdf'],
-          maximumSizeInBytes: 50 * 1024 * 1024,
-          addRandomSuffix: false,
-        };
-      },
-      onUploadCompleted: async () => {
-        menuVersion = Date.now();
-      },
-    });
-
-    return res.status(200).json(jsonResponse);
-  } catch (error) {
-    console.error('خطأ في إنشاء توكن رفع Blob:', error);
-    return res.status(400).json({ error: 'فشل رفع الملف مباشرة.' });
   }
 });
 
