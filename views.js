@@ -1242,7 +1242,7 @@ module.exports = {
     const indexable = data.indexable !== false;
     const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
     const metaTitle = 'فالح أبو العنبه | منيو سندوتشات ومشاوي عراقية في 6 أكتوبر';
-    const metaDescription = 'مطعم فالح أبو العنبه في 6 أكتوبر (الحي السابع): منيو سندوتشات ومشاوي عراقية وبطاطس وفلافل. اطلب الآن أو تواصل على 01000602832.';
+    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) في الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية. منيو سندوتشات ومشاوي عراقية وبطاطس وفلافل. اتصل: 01000602832 / 01144741115. للشكاوى: 01112595678.';
     const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -1266,7 +1266,7 @@ module.exports = {
   <title>${metaTitle}</title>
   <link rel="canonical" href="${canonicalUrl}">
   <meta name="language" content="ar">
-  <meta name="geo.country" content="EG, IQ">
+  <meta name="geo.country" content="EG">
   <meta name="geo.region" content="EG-GZ">
   <meta name="geo.placename" content="6 أكتوبر, الجيزة">
   <meta name="geo.position" content="29.9753;30.9445">
@@ -1411,13 +1411,13 @@ module.exports = {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: clamp(38px, 4vw, 48px);
-      width: clamp(38px, 4vw, 48px);
+      height: clamp(40px, 4.2vw, 50px);
+      width: clamp(40px, 4.2vw, 50px);
       background: white;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
-      font-size: clamp(14px, 3vw, 20px);
+      font-size: clamp(15px, 2.8vw, 20px);
       color: #666;
       flex-shrink: 0;
     }
@@ -1470,16 +1470,19 @@ module.exports = {
 
     .seo-section{
       width:100%;
-      max-width:900px;
+      max-width:860px;
       margin: 0.75rem auto 1.5rem;
-      padding: 1rem;
+      padding: 0.85rem 0.9rem;
       background:#fff;
       border:1px solid rgba(0,0,0,0.08);
       border-radius:12px;
-      line-height:1.9;
-      color:#334155;
+      font-size: 0.85rem;
+      line-height:1.7;
+      color:#475569;
     }
-    .seo-section h2{ margin:0 0 0.75rem; font-size:1.1rem; }
+    .seo-section h2{ margin:0 0 0.6rem; font-size:1rem; color: #334155; }
+    .seo-section p { margin: 0 0 0.55rem; }
+    .seo-section p:last-child { margin-bottom: 0; }
     
     .pdf-page {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -1647,9 +1650,9 @@ module.exports = {
       }
       
       .social-icon span {
-        height: clamp(36px, 3vw, 44px);
-        width: clamp(36px, 3vw, 44px);
-        font-size: clamp(12px, 2.5vw, 16px);
+        height: clamp(40px, 5.6vw, 46px);
+        width: clamp(40px, 5.6vw, 46px);
+        font-size: clamp(15px, 3.4vw, 17px);
       }
       
       .pdf-canvas-container {
@@ -1693,9 +1696,19 @@ module.exports = {
       }
       
       .social-icon span {
-        height: clamp(34px, 2.5vw, 40px);
-        width: clamp(34px, 2.5vw, 40px);
-        font-size: clamp(11px, 2vw, 14px);
+        height: clamp(40px, 10vw, 44px);
+        width: clamp(40px, 10vw, 44px);
+        font-size: clamp(14px, 4.2vw, 16px);
+      }
+
+      .seo-section {
+        font-size: 0.8rem;
+        line-height: 1.65;
+        padding: 0.75rem 0.8rem;
+      }
+
+      .seo-section h2 {
+        font-size: 0.95rem;
       }
       
       .pdf-canvas-container {
@@ -1747,9 +1760,9 @@ module.exports = {
       }
       
       .social-icon span {
-        height: 32px;
-        width: 32px;
-        font-size: 10px;
+        height: 40px;
+        width: 40px;
+        font-size: 16px;
       }
       
       .pdf-canvas-container {
@@ -1786,9 +1799,9 @@ module.exports = {
       }
       
       .social-icon span {
-        height: 36px;
-        width: 36px;
-        font-size: 14px;
+        height: 38px;
+        width: 38px;
+        font-size: 15px;
       }
       
       .pdf-canvas-container {
@@ -1831,9 +1844,9 @@ module.exports = {
       }
       
       .social-icon span {
-        height: 32px;
-        width: 32px;
-        font-size: 12px;
+        height: 36px;
+        width: 36px;
+        font-size: 14px;
       }
       
       .pdf-canvas-container {
@@ -1903,7 +1916,8 @@ module.exports = {
           <p>يمكنك مشاهدة المنيو كاملًا عبر الموقع أو زيارة صفحات المطعم الرسمية على تيك توك وفيسبوك لمعرفة أحدث العروض.</p>
 
           <p><strong>العنوان:</strong> الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية</p>
-          <p><strong>رقم الهاتف:</strong> 01000602832</p>
+          <p><strong>رقم الهاتف:</strong> 01000602832 / 01144741115</p>
+          <p><strong>للشكاوى والمقترحات:</strong> 01112595678</p>
           <p><strong>صفحة تيك توك:</strong> fale7_1961</p>
           <p><strong>الموقع على الخريطة:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
         </section>
@@ -1940,7 +1954,8 @@ module.exports = {
         const baseViewport = page.getViewport({ scale: 1 });
         const padding = getContainerHorizontalPadding(container);
         const containerWidth = Math.max(1, container.clientWidth - padding);
-        return Math.min(2.0, Math.max(1.0, containerWidth / baseViewport.width));
+        const rawScale = containerWidth / baseViewport.width;
+        return Math.min(2.0, Math.max(0.6, rawScale));
       }
 
       async function renderAllPages() {
@@ -2127,13 +2142,13 @@ module.exports = {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: clamp(38px, 4vw, 48px);
-      width: clamp(38px, 4vw, 48px);
+      height: clamp(40px, 4.2vw, 50px);
+      width: clamp(40px, 4.2vw, 50px);
       background: white;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
-      font-size: clamp(14px, 3vw, 20px);
+      font-size: clamp(15px, 2.8vw, 20px);
       color: #666;
       flex-shrink: 0;
     }
@@ -2327,9 +2342,9 @@ module.exports = {
       }
 
       .social-icon span {
-        height: clamp(36px, 3vw, 44px);
-        width: clamp(36px, 3vw, 44px);
-        font-size: clamp(12px, 2.5vw, 16px);
+        height: clamp(40px, 5.6vw, 46px);
+        width: clamp(40px, 5.6vw, 46px);
+        font-size: clamp(15px, 3.4vw, 17px);
       }
 
       .pdf-canvas-container {
@@ -2371,9 +2386,9 @@ module.exports = {
       }
 
       .social-icon span {
-        height: clamp(34px, 2.5vw, 40px);
-        width: clamp(34px, 2.5vw, 40px);
-        font-size: clamp(11px, 2vw, 14px);
+        height: clamp(40px, 10vw, 44px);
+        width: clamp(40px, 10vw, 44px);
+        font-size: clamp(14px, 4.2vw, 16px);
       }
 
       .pdf-canvas-container {
@@ -2423,9 +2438,9 @@ module.exports = {
       }
 
       .social-icon span {
-        height: 32px;
-        width: 32px;
-        font-size: 10px;
+        height: 40px;
+        width: 40px;
+        font-size: 16px;
       }
 
       .pdf-canvas-container {
@@ -2470,9 +2485,9 @@ module.exports = {
       }
 
       .social-icon span {
-        height: 36px;
-        width: 36px;
-        font-size: 14px;
+        height: 38px;
+        width: 38px;
+        font-size: 15px;
       }
 
       .pdf-canvas-container {
@@ -2503,9 +2518,9 @@ module.exports = {
       }
 
       .social-icon span {
-        height: 32px;
-        width: 32px;
-        font-size: 12px;
+        height: 36px;
+        width: 36px;
+        font-size: 14px;
       }
 
       .pdf-canvas-container {
@@ -2591,7 +2606,8 @@ module.exports = {
         const baseViewport = page.getViewport({ scale: 1 });
         const padding = getContainerHorizontalPadding(container);
         const containerWidth = Math.max(1, container.clientWidth - padding);
-        return Math.min(2.0, Math.max(1.0, containerWidth / baseViewport.width));
+        const rawScale = containerWidth / baseViewport.width;
+        return Math.min(2.0, Math.max(0.6, rawScale));
       }
 
       async function renderAllPages() {
