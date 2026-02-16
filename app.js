@@ -2,7 +2,6 @@
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const { put, del, list } = require('@vercel/blob');
 const { handleUpload } = require('@vercel/blob/client');
@@ -42,37 +41,23 @@ const COOKIE_SECRET = process.env.COOKIE_SECRET;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const SITE_URL = 'https://fale7-res.vercel.app';
 const PUBLIC_DIR = path.join(__dirname, 'public');
-const LOGO_FILE_PATHS = [
-  path.join(PUBLIC_DIR, 'Logo.png'),
-  path.join(PUBLIC_DIR, 'logo.png'),
-];
-const resolveLogoPath = () => LOGO_FILE_PATHS.find((filePath) => fs.existsSync(filePath));
 const AUTH_CONFIG_READY = Boolean(SESSION_SECRET && COOKIE_SECRET && ADMIN_PASSWORD);
 
 if (!AUTH_CONFIG_READY) {
   console.warn('Admin authentication env vars are missing. Public pages and static assets will still work.');
 }
 
-app.get('/Logo.png', (req, res, next) => {
-  const logoPath = resolveLogoPath();
-  if (!logoPath) {
-    return next();
-  }
-
-  res.sendFile(logoPath);
-});
-
-app.get('/favicon.ico', (req, res) => {
-  const logoPath = resolveLogoPath();
-  if (!logoPath) {
-    return res.status(204).end();
-  }
-
-  res.sendFile(logoPath);
-});
-
 // Static assets should be served before auth checks/routes.
 app.use(express.static(PUBLIC_DIR));
+
+// Browser fallback requests for root favicon paths.
+app.get('/favicon.ico', (req, res) => {
+  res.redirect(301, '/assets/favicon.ico');
+});
+
+app.get('/favicon.png', (req, res) => {
+  res.redirect(301, '/assets/favicon.png');
+});
 
 const getAuthCookieOptions = () => ({
   httpOnly: true,
