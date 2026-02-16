@@ -1785,12 +1785,38 @@ module.exports = {
       }
     }
 
+    function stripVersionParam(url){
+      try{
+        const parsed = new URL(url, window.location.origin);
+        parsed.searchParams.delete('v');
+        return parsed.toString();
+      }catch{
+        return url
+          .replace(/([?&])v=[^&]*(&)?/, (_, prefix, suffix) => (prefix === '?' ? (suffix ? '?' : '') : (suffix ? '&' : '')))
+          .replace(/[?&]$/, '');
+      }
+    }
+
     async function loadPDF(){
       const loader = document.getElementById('pageLoader');
+      const sourceUrl = '${data.menuUrl}';
       try{
-        pdfDoc = await pdfjsLib.getDocument('${data.menuUrl}').promise;
+        pdfDoc = await pdfjsLib.getDocument(sourceUrl).promise;
         await renderAllPages(true);
       }catch(err){
+        const errText = String(err?.message || err || '');
+        const isForbidden = errText.includes('403') || err?.status === 403;
+        const fallbackUrl = stripVersionParam(sourceUrl);
+
+        if(isForbidden && fallbackUrl && fallbackUrl !== sourceUrl){
+          try{
+            pdfDoc = await pdfjsLib.getDocument(fallbackUrl).promise;
+            await renderAllPages(true);
+            return;
+          }catch(retryErr){
+            console.error('PDF retry after 403 failed:', retryErr);
+          }
+        }
         console.error('PDF load error:', err);
         const pagesContainer = document.getElementById('pdfPages');
         if(pagesContainer){
@@ -2245,12 +2271,38 @@ module.exports = {
       }
     }
 
+    function stripVersionParam(url){
+      try{
+        const parsed = new URL(url, window.location.origin);
+        parsed.searchParams.delete('v');
+        return parsed.toString();
+      }catch{
+        return url
+          .replace(/([?&])v=[^&]*(&)?/, (_, prefix, suffix) => (prefix === '?' ? (suffix ? '?' : '') : (suffix ? '&' : '')))
+          .replace(/[?&]$/, '');
+      }
+    }
+
     async function loadPDF(){
       const loader = document.getElementById('pageLoader');
+      const sourceUrl = '${data.pageUrl}';
       try{
-        pdfDoc = await pdfjsLib.getDocument('${data.pageUrl}').promise;
+        pdfDoc = await pdfjsLib.getDocument(sourceUrl).promise;
         await renderAllPages(true);
       }catch(e){
+        const errText = String(e?.message || e || '');
+        const isForbidden = errText.includes('403') || e?.status === 403;
+        const fallbackUrl = stripVersionParam(sourceUrl);
+
+        if(isForbidden && fallbackUrl && fallbackUrl !== sourceUrl){
+          try{
+            pdfDoc = await pdfjsLib.getDocument(fallbackUrl).promise;
+            await renderAllPages(true);
+            return;
+          }catch(retryErr){
+            console.error('PDF retry after 403 failed:', retryErr);
+          }
+        }
         console.error(e);
         const pagesContainer = document.getElementById('pdfPages');
         if(pagesContainer){

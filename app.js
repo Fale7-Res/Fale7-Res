@@ -125,15 +125,29 @@ const getBlobByPathname = async (pathname) => {
   return blobs.find((blob) => blob.pathname === pathname) || null;
 };
 
+const withCacheVersion = (rawUrl) => {
+  if (!rawUrl) return null;
+  try {
+    const parsed = new URL(rawUrl);
+    parsed.searchParams.set('v', String(menuVersion));
+    return parsed.toString();
+  } catch {
+    const separator = rawUrl.includes('?') ? '&' : '?';
+    return `${rawUrl}${separator}v=${menuVersion}`;
+  }
+};
+
 const getPageData = async (pathname) => {
   const blob = await getBlobByPathname(pathname);
   if (!blob) {
     return { exists: false, url: null };
   }
 
+  const blobUrl = blob.downloadUrl || blob.url;
+
   return {
     exists: true,
-    url: `${blob.url}?v=${menuVersion}`,
+    url: withCacheVersion(blobUrl),
   };
 };
 
@@ -266,8 +280,10 @@ app.post('/api/blob-upload', async (req, res) => {
   }
 
   try {
+    const uploadBody = { ...req.body, access: 'public' };
+
     const jsonResponse = await handleUpload({
-      body: req.body,
+      body: uploadBody,
       request: req,
       token: process.env.BLOB_READ_WRITE_TOKEN,
       onBeforeGenerateToken: async (pathname) => {
