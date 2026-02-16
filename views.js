@@ -1700,9 +1700,15 @@ module.exports = {
     const TARGET_CSS_WIDTH = 860;
     const RESIZE_DEBOUNCE_MS = 220;
     const MIN_WIDTH_DELTA = 28;
-    const MAX_RENDER_DPR = 3;
-    const MIN_RENDER_DPR = 1.5;
-    const QUALITY_BOOST = 1.2;
+    const DEVICE_MEMORY_GB = navigator.deviceMemory || 8;
+    const CPU_CORES = navigator.hardwareConcurrency || 8;
+    const IS_CONSTRAINED_DEVICE = DEVICE_MEMORY_GB <= 4 || CPU_CORES <= 4;
+    const MAX_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 2.2 : 3;
+    const MIN_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 1.25 : 1.5;
+    const QUALITY_BOOST = IS_CONSTRAINED_DEVICE ? 1.05 : 1.2;
+    const LONG_DOC_THRESHOLD = 8;
+    const LONG_DOC_SCALE_PENALTY = 0.85;
+    const RENDER_BATCH_SIZE = 2;
     let pdfDoc = null;
     let renderToken = 0;
     let isRendering = false;
@@ -1716,9 +1722,18 @@ module.exports = {
       document.documentElement.style.setProperty('--header-offset', h + 'px');
     }
 
+    function pauseForUI(){
+      return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    }
+
     function getRenderConfig(page){
       const dpr = window.devicePixelRatio || 1;
-      const outputScale = Math.min(MAX_RENDER_DPR, Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST));
+      const pageCountPenalty =
+        pdfDoc && pdfDoc.numPages >= LONG_DOC_THRESHOLD ? LONG_DOC_SCALE_PENALTY : 1;
+      const outputScale = Math.min(
+        MAX_RENDER_DPR,
+        Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST * pageCountPenalty),
+      );
       const v1 = page.getViewport({ scale: 1 });
       const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
       const cssScale = viewportWidth / v1.width;
@@ -1746,7 +1761,8 @@ module.exports = {
 
       const current = ++renderToken;
       isRendering = true;
-      const fragment = document.createDocumentFragment();
+      let didSwapPages = false;
+      let renderedCount = 0;
 
       try{
         for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
@@ -1772,14 +1788,27 @@ module.exports = {
 
           await page.render(renderContext).promise;
           page.cleanup();
+          if(current !== renderToken) return;
 
-          fragment.appendChild(canvas);
+          if(!didSwapPages){
+            pagesContainer.innerHTML = '';
+            didSwapPages = true;
+          }
+
+          pagesContainer.appendChild(canvas);
+          renderedCount += 1;
+
+          if(loader && renderedCount === 1){
+            loader.style.display = 'none';
+          }
+
+          if(pageNum % RENDER_BATCH_SIZE === 0){
+            await pauseForUI();
+          }
         }
 
         if(current !== renderToken) return;
 
-        pagesContainer.innerHTML = '';
-        pagesContainer.appendChild(fragment);
         lastRenderViewportWidth = nextViewportWidth;
 
         if(loader) loader.style.display = 'none';
@@ -2164,9 +2193,15 @@ module.exports = {
     const TARGET_CSS_WIDTH = 860;
     const RESIZE_DEBOUNCE_MS = 220;
     const MIN_WIDTH_DELTA = 28;
-    const MAX_RENDER_DPR = 3;
-    const MIN_RENDER_DPR = 1.5;
-    const QUALITY_BOOST = 1.2;
+    const DEVICE_MEMORY_GB = navigator.deviceMemory || 8;
+    const CPU_CORES = navigator.hardwareConcurrency || 8;
+    const IS_CONSTRAINED_DEVICE = DEVICE_MEMORY_GB <= 4 || CPU_CORES <= 4;
+    const MAX_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 2.2 : 3;
+    const MIN_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 1.25 : 1.5;
+    const QUALITY_BOOST = IS_CONSTRAINED_DEVICE ? 1.05 : 1.2;
+    const LONG_DOC_THRESHOLD = 8;
+    const LONG_DOC_SCALE_PENALTY = 0.85;
+    const RENDER_BATCH_SIZE = 2;
     let pdfDoc = null;
     let renderToken = 0;
     let isRendering = false;
@@ -2180,9 +2215,18 @@ module.exports = {
       document.documentElement.style.setProperty('--header-offset', h + 'px');
     }
 
+    function pauseForUI(){
+      return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+    }
+
     function getRenderConfig(page){
       const dpr = window.devicePixelRatio || 1;
-      const outputScale = Math.min(MAX_RENDER_DPR, Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST));
+      const pageCountPenalty =
+        pdfDoc && pdfDoc.numPages >= LONG_DOC_THRESHOLD ? LONG_DOC_SCALE_PENALTY : 1;
+      const outputScale = Math.min(
+        MAX_RENDER_DPR,
+        Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST * pageCountPenalty),
+      );
       const v1 = page.getViewport({ scale: 1 });
       const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
       const cssScale = viewportWidth / v1.width;
@@ -2210,7 +2254,8 @@ module.exports = {
 
       const current = ++renderToken;
       isRendering = true;
-      const fragment = document.createDocumentFragment();
+      let didSwapPages = false;
+      let renderedCount = 0;
 
       try{
         for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
@@ -2236,14 +2281,27 @@ module.exports = {
 
           await page.render(renderContext).promise;
           page.cleanup();
+          if(current !== renderToken) return;
 
-          fragment.appendChild(canvas);
+          if(!didSwapPages){
+            pagesContainer.innerHTML = '';
+            didSwapPages = true;
+          }
+
+          pagesContainer.appendChild(canvas);
+          renderedCount += 1;
+
+          if(loader && renderedCount === 1){
+            loader.style.display = 'none';
+          }
+
+          if(pageNum % RENDER_BATCH_SIZE === 0){
+            await pauseForUI();
+          }
         }
 
         if(current !== renderToken) return;
 
-        pagesContainer.innerHTML = '';
-        pagesContainer.appendChild(fragment);
         lastRenderViewportWidth = nextViewportWidth;
         if(loader) loader.style.display = 'none';
       } finally {
