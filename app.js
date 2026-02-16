@@ -116,7 +116,12 @@ const upload = multer({
   },
 });
 
-const getBlobOptions = () => process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
+const getBlobOptions = () => {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    return { token: process.env.BLOB_READ_WRITE_TOKEN };
+  }
+  return {};
+};
 
 const getBlobByPathname = async (pathname) => {
   try {
@@ -262,15 +267,20 @@ app.post("/upload", (req, res, next) => {
     return res.status(400).json({ success: false, message: "Invalid page type." });
   }
 
+  console.log(`Starting upload for pageType: ${pageType}, pathname: ${pathname}, fileSize: ${req.file.size}`);
+  
   try {
     const blobOptions = getBlobOptions();
+    console.log(`Blob options token present: ${!!blobOptions.token}`);
 
     const existingBlob = await getBlobByPathname(pathname);
     if (existingBlob) {
+      console.log(`Deleting existing blob: ${existingBlob.pathname}`);
       await del(existingBlob.pathname, blobOptions);
       console.log(`Existing ${pathname} deleted from Blob storage`);
     }
 
+    console.log(`Uploading new blob: ${pathname}`);
     const result = await put(pathname, req.file.buffer, {
       access: 'public',
       addRandomSuffix: false,
@@ -278,6 +288,7 @@ app.post("/upload", (req, res, next) => {
     });
 
     menuVersion = Date.now();
+    console.log(`Successfully uploaded: ${pathname}, URL: ${result.url}`);
     return res.json({ success: true, message: "Page uploaded.", url: result.url });
   } catch (error) {
     console.error('خطأ في رفع الملف إلى Blob:', error);
