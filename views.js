@@ -1869,6 +1869,86 @@ module.exports = {
         min-height: clamp(54px, 8vh, 68px);
       }
     }
+
+    /* Legacy appearance sync (mobile) */
+    .top-bar {
+      padding: 1rem;
+    }
+
+    .social-icons {
+      gap: 2rem;
+    }
+
+    .social-icon span {
+      height: 50px;
+      width: 50px;
+      font-size: 20px;
+    }
+
+    .action-buttons {
+      gap: 1rem;
+      max-width: none;
+      overflow: visible;
+      padding-right: 0;
+      flex: 0 1 auto;
+    }
+
+    .btn {
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      min-height: auto;
+    }
+
+    .pdf-viewer-container {
+      top: 90px;
+    }
+
+    .pdf-canvas-container {
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .mobile-hint {
+      bottom: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    @media (min-width: 768px) {
+      .mobile-hint {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .top-bar {
+        padding: 0.75rem;
+      }
+
+      .social-icons {
+        gap: 1rem;
+      }
+
+      .action-buttons {
+        gap: 0.5rem;
+      }
+
+      .social-icon span {
+        height: 45px;
+        width: 45px;
+        font-size: 18px;
+      }
+
+      .pdf-viewer-container {
+        top: 80px;
+      }
+
+      .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1945,36 +2025,18 @@ module.exports = {
         document.documentElement.style.setProperty('--header-offset', height + 'px');
       }
 
-      function getFitScale(page, container) {
-        const viewport = page.getViewport({ scale: 1 });
-        const styles = window.getComputedStyle(container);
-        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
-        const paddingRight = parseFloat(styles.paddingRight) || 0;
-        const totalPadding = paddingLeft + paddingRight;
-
-        // احسب العرض المتاح مع أخذ padding في الحسبان
-        const availableWidth = Math.max(container.clientWidth - totalPadding - 8, 1);
-        const scale = availableWidth / viewport.width;
-
-        // تأكد من عدم تجاوز الصورة العرض المتاح
-        return Math.min(scale, 1.5);
-      }
-
       async function renderAllPages() {
         const pagesContainer = document.getElementById('pdfPages');
         if (!pagesContainer || !pdfDoc) return;
 
         const currentToken = ++renderToken;
         pagesContainer.innerHTML = '';
-        const devicePixelRatio = window.devicePixelRatio || 1;
 
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          // احصل على الحاوية الأم لحساب العرض الصحيح
-          const containerForMeasurement = pagesContainer.parentElement;
-          const scale = getFitScale(page, containerForMeasurement) * devicePixelRatio;
+          const scale = 1.5;
           const viewport = page.getViewport({ scale });
 
           const canvas = document.createElement('canvas');
@@ -1982,10 +2044,6 @@ module.exports = {
           canvas.className = 'pdf-page';
           canvas.width = viewport.width;
           canvas.height = viewport.height;
-
-          // تعيين حجم CSS بدون DPI للعرض الصحيح
-          canvas.style.width = (viewport.width / devicePixelRatio) + 'px';
-          canvas.style.height = (viewport.height / devicePixelRatio) + 'px';
 
           await page.render({
             canvasContext: context,
@@ -2546,6 +2604,86 @@ module.exports = {
         min-height: clamp(54px, 8vh, 68px);
       }
     }
+
+    /* Legacy appearance sync (mobile) */
+    .top-bar {
+      padding: 1rem;
+    }
+
+    .social-icons {
+      gap: 2rem;
+    }
+
+    .social-icon span {
+      height: 50px;
+      width: 50px;
+      font-size: 20px;
+    }
+
+    .action-buttons {
+      gap: 1rem;
+      max-width: none;
+      overflow: visible;
+      padding-right: 0;
+      flex: 0 1 auto;
+    }
+
+    .btn {
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      min-height: auto;
+    }
+
+    .pdf-viewer-container {
+      top: 90px;
+    }
+
+    .pdf-canvas-container {
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .mobile-hint {
+      bottom: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    @media (min-width: 768px) {
+      .mobile-hint {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .top-bar {
+        padding: 0.75rem;
+      }
+
+      .social-icons {
+        gap: 1rem;
+      }
+
+      .action-buttons {
+        gap: 0.5rem;
+      }
+
+      .social-icon span {
+        height: 45px;
+        width: 45px;
+        font-size: 18px;
+      }
+
+      .pdf-viewer-container {
+        top: 80px;
+      }
+
+      .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2600,34 +2738,18 @@ module.exports = {
         document.documentElement.style.setProperty('--header-offset', height + 'px');
       }
 
-      function getFitScale(page, container) {
-        const viewport = page.getViewport({ scale: 1 });
-        const styles = window.getComputedStyle(container);
-        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
-        const paddingRight = parseFloat(styles.paddingRight) || 0;
-        const totalPadding = paddingLeft + paddingRight;
-
-        // احسب العرض المتاح مع أخذ padding في الحسبان
-        const availableWidth = Math.max(container.clientWidth - totalPadding - 8, 1);
-        const scale = availableWidth / viewport.width;
-
-        // تأكد من عدم تجاوز الصورة العرض المتاح
-        return Math.min(scale, 1.5);
-      }
-
       async function renderAllPages() {
         const container = document.getElementById('pdfContainer');
         if (!container || !pdfDoc) return;
 
         const currentToken = ++renderToken;
         container.innerHTML = '';
-        const devicePixelRatio = window.devicePixelRatio || 1;
 
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getFitScale(page, container) * devicePixelRatio;
+          const scale = 1.5;
           const viewport = page.getViewport({ scale });
 
           const canvas = document.createElement('canvas');
@@ -2635,10 +2757,6 @@ module.exports = {
           canvas.className = 'pdf-page';
           canvas.width = viewport.width;
           canvas.height = viewport.height;
-
-          // تعيين حجم CSS بدون DPI للعرض الصحيح
-          canvas.style.width = (viewport.width / devicePixelRatio) + 'px';
-          canvas.style.height = (viewport.height / devicePixelRatio) + 'px';
 
           await page.render({ canvasContext: context, viewport }).promise;
 
