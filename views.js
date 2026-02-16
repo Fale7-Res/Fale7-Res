@@ -34,10 +34,29 @@ module.exports = {
       --input: 0 0% 89.8%;
       --ring: 0 0% 3.9%;
       --radius: 0.5rem;
+      --safe-top: env(safe-area-inset-top);
+      --safe-right: env(safe-area-inset-right);
+      --safe-bottom: env(safe-area-inset-bottom);
+      --safe-left: env(safe-area-inset-left);
     }
     
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
     
     body {
@@ -47,8 +66,9 @@ module.exports = {
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      min-height: 100dvh;
       margin: 0;
-      padding: 1rem;
+      padding: clamp(0.75rem, 2.5vw, 1.5rem);
       color: hsl(var(--foreground));
     }
     
@@ -58,19 +78,19 @@ module.exports = {
       border-radius: var(--radius);
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       width: 100%;
-      max-width: 400px;
+      max-width: min(400px, 100%);
       overflow: hidden;
     }
     
     .card-header {
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       color: white;
-      padding: 2rem;
+      padding: clamp(1.25rem, 3vw, 2rem);
       text-align: center;
     }
     
     .card-title {
-      font-size: 1.5rem;
+      font-size: clamp(1.125rem, 2.6vw, 1.5rem);
       font-weight: 700;
       margin: 0 0 0.5rem 0;
       display: flex;
@@ -86,7 +106,7 @@ module.exports = {
     }
     
     .card-content {
-      padding: 2rem;
+      padding: clamp(1.25rem, 3vw, 2rem);
     }
     
     .form-group {
@@ -112,6 +132,7 @@ module.exports = {
       border: 1px solid hsl(var(--border));
       border-radius: calc(var(--radius) - 2px);
       font-size: 1rem;
+      min-height: 44px;
       background: hsl(var(--background));
       color: hsl(var(--foreground));
       transition: border-color 0.2s, box-shadow 0.2s;
@@ -206,6 +227,15 @@ module.exports = {
       
       .card-title {
         font-size: 1.25rem;
+      }
+    }
+
+    @media (max-height: 700px) and (orientation: landscape) {
+      body {
+        align-items: flex-start;
+      }
+      .card {
+        margin: 0.5rem auto;
       }
     }
   </style>
@@ -316,14 +346,15 @@ module.exports = {
       font-family: 'Inter', Arial, Helvetica, sans-serif;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
       min-height: 100vh;
+      min-height: 100dvh;
       margin: 0;
-      padding: 1rem;
+      padding: clamp(0.75rem, 2.5vw, 1.5rem);
       color: hsl(var(--foreground));
     }
     
     .container {
-      max-width: 600px;
-      margin: 2rem auto;
+      width: min(100%, 720px);
+      margin: clamp(0.75rem, 2.5vw, 2rem) auto;
     }
     
     .card {
@@ -337,7 +368,7 @@ module.exports = {
     .card-header {
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       color: white;
-      padding: 1.5rem;
+      padding: clamp(1.125rem, 2.5vw, 1.5rem);
       text-align: center;
     }
     
@@ -358,7 +389,7 @@ module.exports = {
     }
     
     .card-content {
-      padding: 1.5rem;
+      padding: clamp(1rem, 2.5vw, 1.5rem);
     }
     
     .upload-area {
@@ -395,7 +426,7 @@ module.exports = {
 
     .inline-actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.5rem;
     }
 
@@ -454,6 +485,8 @@ module.exports = {
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
+      min-height: 44px;
+      overflow-wrap: anywhere;
     }
     
     .btn-primary {
@@ -514,6 +547,7 @@ module.exports = {
         flex-direction: column;
         color: white;
         text-align: center;
+        padding: 1rem;
         backdrop-filter: blur(5px);
     }
 
@@ -561,6 +595,15 @@ module.exports = {
       
       .upload-area {
         padding: 1.5rem 1rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .inline-actions {
+        grid-template-columns: 1fr;
+      }
+      .btn {
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -900,10 +943,13 @@ module.exports = {
       margin: 0;
       padding: 0;
       height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
       font-family: 'Inter', Arial, Helvetica, sans-serif;
       color: hsl(var(--foreground));
       overflow: hidden;
+      overscroll-behavior: none;
     }
     
     .top-bar {
@@ -915,15 +961,16 @@ module.exports = {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 1rem;
+      padding: calc(0.75rem + var(--safe-top)) calc(1rem + var(--safe-right)) 0.75rem calc(1rem + var(--safe-left));
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
     }
     
     .social-icons {
       display: flex;
-      gap: 2rem;
+      gap: clamp(0.5rem, 2vw, 1.25rem);
     }
 
     .social-icon {
@@ -940,8 +987,8 @@ module.exports = {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 50px;
-      width: 50px;
+      height: clamp(40px, 5vw, 50px);
+      width: clamp(40px, 5vw, 50px);
       background: white;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -974,7 +1021,7 @@ module.exports = {
 
     .pdf-viewer-container {
       position: fixed;
-      top: 90px;
+      top: calc(92px + var(--safe-top));
       left: 0;
       right: 0;
       bottom: 0;
@@ -1030,6 +1077,8 @@ module.exports = {
       display: flex;
       flex-direction: row;
       gap: 1rem;
+      max-width: 100%;
+      min-width: 0;
     }
     
     .btn {
@@ -1045,6 +1094,8 @@ module.exports = {
       transition: all 0.2s;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       width: auto;
+      white-space: nowrap;
+      min-height: 40px;
     }
     
     .btn-primary {
@@ -1104,7 +1155,7 @@ module.exports = {
     
     .mobile-hint {
       position: fixed;
-      bottom: 1rem;
+      bottom: calc(1rem + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
@@ -1125,7 +1176,7 @@ module.exports = {
     
     @media (max-width: 640px) {
       .top-bar {
-        padding: 0.625rem;
+        padding: calc(0.625rem + var(--safe-top)) calc(0.625rem + var(--safe-right)) 0.625rem calc(0.625rem + var(--safe-left));
         gap: 0.625rem;
         flex-direction: row;
         align-items: center;
@@ -1147,6 +1198,7 @@ module.exports = {
         flex: 1;
         min-width: 0;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
       }
       .action-buttons::-webkit-scrollbar {
         display: none;
@@ -1158,13 +1210,14 @@ module.exports = {
       }
 
       .pdf-viewer-container {
-        top: 90px;
+        top: calc(90px + var(--safe-top));
       }
 
       .btn {
         flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
+        min-height: 36px;
       }
 
       .no-menu-icon {
@@ -1177,6 +1230,18 @@ module.exports = {
 
       .no-menu-text {
         font-size: 0.875rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .social-icon span {
+        height: 36px;
+        width: 36px;
+        font-size: 14px;
+      }
+      .btn {
+        padding: 0.35rem 0.625rem;
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -1315,18 +1380,30 @@ module.exports = {
       --foreground: 0 0% 3.9%;
       --border: 0 0% 89.8%;
       --radius: 0.5rem;
+      --safe-top: env(safe-area-inset-top);
+      --safe-right: env(safe-area-inset-right);
+      --safe-bottom: env(safe-area-inset-bottom);
+      --safe-left: env(safe-area-inset-left);
     }
 
     * { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
 
     body, html {
       margin:0;
       padding:0;
       height:100%;
+      min-height: 100vh;
+      min-height: 100dvh;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
       font-family: 'Inter', Arial, Helvetica, sans-serif;
       color: hsl(var(--foreground));
       overflow: hidden;
+      overscroll-behavior: none;
     }
 
     .top-bar {
@@ -1338,15 +1415,16 @@ module.exports = {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 1rem;
+      padding: calc(0.75rem + var(--safe-top)) calc(1rem + var(--safe-right)) 0.75rem calc(1rem + var(--safe-left));
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
     }
 
     .social-icons {
       display: flex;
-      gap: 2rem;
+      gap: clamp(0.5rem, 2vw, 1.25rem);
     }
 
     .social-icon {
@@ -1363,8 +1441,8 @@ module.exports = {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 50px;
-      width: 50px;
+      height: clamp(40px, 5vw, 50px);
+      width: clamp(40px, 5vw, 50px);
       background: white;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -1396,7 +1474,7 @@ module.exports = {
 
     .pdf-viewer-container {
       position: fixed;
-      top: 90px;
+      top: calc(92px + var(--safe-top));
       left: 0;
       right: 0;
       bottom: 0;
@@ -1455,6 +1533,8 @@ module.exports = {
       display: flex;
       flex-direction: row;
       gap: 1rem;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .btn {
@@ -1470,6 +1550,8 @@ module.exports = {
       transition: all 0.2s;
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
       width: auto;
+      white-space: nowrap;
+      min-height: 40px;
     }
 
     .btn-primary { background:#3b82f6; color:white; }
@@ -1479,7 +1561,7 @@ module.exports = {
 
     .mobile-hint {
       position: fixed;
-      bottom: 1rem;
+      bottom: calc(1rem + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
@@ -1496,7 +1578,7 @@ module.exports = {
 
     @media (max-width: 640px) {
       .top-bar {
-        padding: 0.625rem;
+        padding: calc(0.625rem + var(--safe-top)) calc(0.625rem + var(--safe-right)) 0.625rem calc(0.625rem + var(--safe-left));
         gap: 0.625rem;
         flex-direction: row;
         align-items: center;
@@ -1518,14 +1600,28 @@ module.exports = {
         flex: 1;
         min-width: 0;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
       }
       .action-buttons::-webkit-scrollbar { display: none; }
       .social-icon span { height: 42px; width: 42px; font-size: 16px; }
-      .pdf-viewer-container { top: 90px; }
+      .pdf-viewer-container { top: calc(90px + var(--safe-top)); }
       .btn {
         flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
+        min-height: 36px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .social-icon span {
+        height: 36px;
+        width: 36px;
+        font-size: 14px;
+      }
+      .btn {
+        padding: 0.35rem 0.625rem;
+        font-size: 0.7rem;
       }
     }
   </style>
