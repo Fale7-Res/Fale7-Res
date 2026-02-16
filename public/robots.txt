@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /admin
+Disallow: /upload
+Disallow: /api/
+Sitemap: https://fale7-res.vercel.app/sitemap.xml
