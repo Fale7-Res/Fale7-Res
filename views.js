@@ -1467,6 +1467,19 @@ module.exports = {
       align-items: center;
       gap: 1rem;
     }
+
+    .seo-section{
+      width:100%;
+      max-width:900px;
+      margin: 0.75rem auto 1.5rem;
+      padding: 1rem;
+      background:#fff;
+      border:1px solid rgba(0,0,0,0.08);
+      border-radius:12px;
+      line-height:1.9;
+      color:#334155;
+    }
+    .seo-section h2{ margin:0 0 0.75rem; font-size:1.1rem; }
     
     .pdf-page {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -1873,10 +1886,27 @@ module.exports = {
     <!-- عارض PDF مخصص -->
     <div class="pdf-viewer-container">
       <div class="pdf-canvas-container" id="pdfContainer">
-        <div class="loading-spinner">
-          <div class="spinner"></div>
-          <p>جاري تحميل المنيو...</p>
+        <div id="pdfPages">
+          <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>جاري تحميل المنيو...</p>
+          </div>
         </div>
+
+        <section class="seo-section" id="seoText" aria-label="معلومات المطعم">
+          <h2>معلومات المطعم</h2>
+
+          <p>مطعم فالح أبو العنبه (Fale7) هو مطعم يقدم السندوتشات والمشاوي والفلافل والأكلات العراقية في مدينة 6 أكتوبر بمحافظة الجيزة، تحديدًا في الحي السابع شارع مكة المكرمة بالقرب من سنتر الأردنية.</p>
+          <p>يعمل المطعم يوميًا من الساعة 7 صباحًا حتى 3 صباحًا ويقدم مجموعة متنوعة من السندوتشات والبطاطس والمشاوي العراقية والفلافل العراقية والأكلات السريعة المناسبة لسكان مدينة 6 أكتوبر والمناطق المجاورة.</p>
+
+          <p>يبحث سكان 6 أكتوبر عن مطعم قريب يقدم سندوتشات ومشاوي بطعم مميز، ويعد مطعم فالح من الأماكن المعروفة في الحي السابع للوجبات السريعة والأكل العراقي والمشاوي الطازجة.</p>
+          <p>يمكنك مشاهدة المنيو كاملًا عبر الموقع أو زيارة صفحات المطعم الرسمية على تيك توك وفيسبوك لمعرفة أحدث العروض.</p>
+
+          <p><strong>العنوان:</strong> الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية</p>
+          <p><strong>رقم الهاتف:</strong> 01000602832</p>
+          <p><strong>صفحة تيك توك:</strong> fale7_1961</p>
+          <p><strong>الموقع على الخريطة:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
+        </section>
       </div>
     </div>
     
@@ -1914,17 +1944,17 @@ module.exports = {
       }
 
       async function renderAllPages() {
-        const container = document.getElementById('pdfContainer');
-        if (!container || !pdfDoc) return;
+        const pagesContainer = document.getElementById('pdfPages');
+        if (!pagesContainer || !pdfDoc) return;
 
         const currentToken = ++renderToken;
-        container.innerHTML = '';
+        pagesContainer.innerHTML = '';
 
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getResponsiveScale(page, container);
+          const scale = getResponsiveScale(page, pagesContainer);
           const viewport = page.getViewport({ scale });
           const dpr = window.devicePixelRatio || 1;
 
@@ -1943,19 +1973,20 @@ module.exports = {
           }).promise;
 
           if (currentToken !== renderToken) return;
-          container.appendChild(canvas);
+          pagesContainer.appendChild(canvas);
         }
       }
 
       // تحميل وعرض PDF
       async function loadPDF() {
-        const container = document.getElementById('pdfContainer');
+        const pagesContainer = document.getElementById('pdfPages');
         try {
           pdfDoc = await pdfjsLib.getDocument('${data.menuUrl}').promise;
           await renderAllPages();
         } catch (error) {
           console.error('خطأ في تحميل PDF:', error);
-          container.innerHTML =
+          if (!pagesContainer) return;
+          pagesContainer.innerHTML =
             '<div style="text-align: center; padding: 2rem;"><p>حدث خطأ في تحميل المنيو. يرجى المحاولة مرة أخرى.</p></div>';
         }
       }
