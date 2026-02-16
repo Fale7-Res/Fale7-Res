@@ -6,9 +6,9 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
-  <meta name="application-name" content="فالح أبو العنبه | Fale7">
+  <link rel="icon" type="image/png" href="/Logo.png">
+  <link rel="apple-touch-icon" href="/Logo.png">
+  <meta name="application-name" content="مطعم فالح أبو العنبه">
   <meta name="robots" content="noindex, nofollow">
   
   <title>تسجيل الدخول | نظام إدارة المنيو</title>
@@ -451,9 +451,9 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
-  <meta name="application-name" content="فالح أبو العنبه | Fale7">
+  <link rel="icon" type="image/png" href="/Logo.png">
+  <link rel="apple-touch-icon" href="/Logo.png">
+  <meta name="application-name" content="مطعم فالح أبو العنبه">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1259,9 +1259,11 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
-  <meta name="application-name" content="فالح أبو العنبه | Fale7">
+  <link rel="icon" type="image/png" href="/Logo.png">
+  <link rel="apple-touch-icon" href="/Logo.png">
+  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <meta name="apple-mobile-web-app-title" content="مطعم فالح أبو العنبه">
+  <meta itemprop="name" content="مطعم فالح أبو العنبه">
   <meta name="description" content="${metaDescription}">
   <meta name="keywords" content="${metaKeywords}">
 
@@ -1270,8 +1272,8 @@ module.exports = {
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:site_name" content="فالح أبو العنبه | Fale7">
-  <meta property="og:image" content="https://fale7-res.vercel.app/logo.png">
+  <meta property="og:site_name" content="مطعم فالح أبو العنبه">
+  <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
 
   <meta name="robots" content="${robotsContent}">
 
@@ -1299,8 +1301,8 @@ module.exports = {
     "@type": "Restaurant",
     "name": "فالح أبو العنبه",
     "alternateName": "Fale7",
-    "logo": "https://fale7-res.vercel.app/logo.png",
-    "image": "https://fale7-res.vercel.app/logo.png",
+    "logo": "https://fale7-res.vercel.app/Logo.png",
+    "image": "https://fale7-res.vercel.app/Logo.png",
     "url": "https://fale7-res.vercel.app/",
     "telephone": ["+201000602832", "+201144741115"],
     "contactPoint": [{
@@ -1340,8 +1342,10 @@ module.exports = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "مطعم فالح أبو العنبه",
-    "url": "https://fale7-res.vercel.app/",
-    "logo": "https://fale7-res.vercel.app/logo.png"
+    "url": "https://fale7-res.vercel.app",
+    "logo": "https://fale7-res.vercel.app/Logo.png",
+    "image": "https://fale7-res.vercel.app/Logo.png",
+    "sameAs": []
   }
   </script>
 
@@ -1349,7 +1353,7 @@ module.exports = {
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "فالح أبو العنبه | Fale7",
+    "name": "مطعم فالح أبو العنبه",
     "url": "https://fale7-res.vercel.app/"
   }
   </script>
@@ -1837,21 +1841,21 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
-  <meta name="application-name" content="فالح أبو العنبه | Fale7">
+  <link rel="icon" type="image/png" href="/Logo.png">
+  <link rel="apple-touch-icon" href="/Logo.png">
+  <meta name="application-name" content="مطعم فالح أبو العنبه">
   <meta name="description" content="${metaDescription}">
   <meta property="og:title" content="${data.title}">
   <meta property="og:description" content="${metaDescription}">
   <meta property="og:url" content="${data.canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:site_name" content="فالح أبو العنبه | Fale7">
-  <meta property="og:image" content="https://fale7-res.vercel.app/logo.png">
+  <meta property="og:site_name" content="مطعم فالح أبو العنبه">
+  <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${data.title}">
   <meta name="twitter:description" content="${metaDescription}">
-  <meta name="twitter:image" content="https://fale7-res.vercel.app/logo.png">
+  <meta name="twitter:image" content="https://fale7-res.vercel.app/Logo.png">
   <meta name="robots" content="${robotsContent}">
   <title>${data.title}</title>
   <link rel="canonical" href="${data.canonicalUrl}">
@@ -1866,8 +1870,10 @@ module.exports = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "مطعم فالح أبو العنبه",
-    "url": "https://fale7-res.vercel.app/",
-    "logo": "https://fale7-res.vercel.app/logo.png"
+    "url": "https://fale7-res.vercel.app",
+    "logo": "https://fale7-res.vercel.app/Logo.png",
+    "image": "https://fale7-res.vercel.app/Logo.png",
+    "sameAs": []
   }
   </script>
 

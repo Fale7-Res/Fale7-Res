@@ -2,6 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const { put, del, list } = require('@vercel/blob');
 const { handleUpload } = require('@vercel/blob/client');
@@ -155,6 +156,20 @@ const deleteBlobByPathname = async (pathname) => {
 };
 
 // توزيع الملفات الثابتة من مجلد public (صور، تحقق جوجل، ...إلخ)
+const LOGO_FILE_PATHS = [
+  path.join(__dirname, 'public', 'Logo.png'),
+  path.join(__dirname, 'public', 'logo.png'),
+];
+
+app.get('/Logo.png', (req, res, next) => {
+  const logoPath = LOGO_FILE_PATHS.find((filePath) => fs.existsSync(filePath));
+  if (!logoPath) {
+    return next();
+  }
+
+  res.sendFile(logoPath);
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // المسارات
