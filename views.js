@@ -734,6 +734,11 @@ module.exports = {
           } catch (error) {
             console.error('Upload error:', error);
             const errorMessage = error?.message || 'حدث خطأ أثناء رفع الملف.';
+            if (errorMessage.includes('retrieve the client token') || errorMessage.includes('Unauthorized')) {
+              alert('انتهت جلسة تسجيل الدخول. سجل الدخول مرة أخرى.');
+              window.location.href = '/login';
+              return;
+            }
             alert(errorMessage);
             loadingOverlay.style.display = 'none';
             progressBar.style.width = '0%';

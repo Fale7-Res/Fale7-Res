@@ -2,8 +2,10 @@ const express = require("express");
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const { put, del, list } = require('@vercel/blob');
 const { handleUpload } = require('@vercel/blob/client');
+require("dotenv").config();
 
 const app = express();
 
@@ -32,12 +34,33 @@ const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
 
 const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const AUTH_COOKIE_NAME = 'fale7_admin_auth';
+const COOKIE_SECRET = process.env.COOKIE_SECRET || process.env.SESSION_SECRET || 'change-this-cookie-secret';
+
+const getAuthCookieOptions = () => ({
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: IS_PROD,
+  signed: true,
+  path: '/',
+});
+
+const isAuthenticated = (req) => (
+  Boolean(req.session?.loggedIn) || req.signedCookies?.[AUTH_COOKIE_NAME] === '1'
+);
 
 // إعداد الجلسة
+app.use(cookieParser(COOKIE_SECRET));
 app.use(session({
-  secret: "mySecret",
+  secret: process.env.SESSION_SECRET || "mySecret",
   resave: false,
   saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: IS_PROD,
+  },
 }));
 
 // استقبال بيانات POST
@@ -122,6 +145,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   if (req.body.password === "fale71961") {
     req.session.loggedIn = true;
+    res.cookie(AUTH_COOKIE_NAME, '1', getAuthCookieOptions());
     res.redirect("/admin");
   } else {
     res.send(views.login({ error: "كلمة المرور غير صحيحة" }));
@@ -129,7 +153,7 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/admin", (req, res) => {
-  if (req.session.loggedIn) {
+  if (isAuthenticated(req)) {
     res.send(views.admin());
   } else {
     res.redirect("/login");
@@ -155,12 +179,16 @@ app.post("/upload", (req, res, next) => {
     next();
   });
 }, async (req, res) => {
-  if (!req.session.loggedIn) {
+  if (!isAuthenticated(req)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   if (!req.file) {
     return res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
+  }
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return res.status(500).json({ success: false, message: "BLOB_READ_WRITE_TOKEN غير موجودة في متغيرات البيئة." });
   }
 
   try {
@@ -187,8 +215,12 @@ app.post("/upload", (req, res, next) => {
 });
 
 app.post('/api/blob-upload', async (req, res) => {
-  if (!req.session.loggedIn) {
+  if (!isAuthenticated(req)) {
     return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return res.status(500).json({ error: 'Missing BLOB_READ_WRITE_TOKEN environment variable.' });
   }
 
   try {
@@ -222,7 +254,7 @@ app.post('/api/blob-upload', async (req, res) => {
 });
 
 app.post('/delete-page', async (req, res) => {
-  if (!req.session.loggedIn) {
+  if (!isAuthenticated(req)) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
 
@@ -327,6 +359,7 @@ app.get('/suhoor', async (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
+    res.clearCookie(AUTH_COOKIE_NAME, { path: '/' });
     res.redirect("/login");
   });
 });
