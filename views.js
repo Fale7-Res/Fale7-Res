@@ -1418,6 +1418,12 @@
       gap:clamp(0.28rem, 1vw, 0.6rem);
       flex:0 0 auto;
     }
+    .social-icon a{
+      text-decoration:none;
+      color:inherit;
+      display:block;
+      line-height:0;
+    }
     .social-icon span{
       display:flex;
       align-items:center;
@@ -1858,6 +1864,12 @@
     .btn-secondary:hover{ background:rgba(59,130,246,0.06); transform: translateY(-1px); }
 
     .social-icons{ display:flex; gap:clamp(0.28rem, 1vw, 0.6rem); flex:0 0 auto; }
+    .social-icon a{
+      text-decoration:none;
+      color:inherit;
+      display:block;
+      line-height:0;
+    }
     .social-icon span{
       display:flex; align-items:center; justify-content:center;
       height:clamp(36px, 6vw, 44px); width:clamp(36px, 6vw, 44px); background:#fff; border-radius:50%;
