@@ -1,7 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /menu
+Disallow: /offers
+Disallow: /suhoor
 Disallow: /login
 Disallow: /admin
 Disallow: /upload
+Disallow: /delete-page
 Disallow: /api/
 Sitemap: https://fale7-res.vercel.app/sitemap.xml

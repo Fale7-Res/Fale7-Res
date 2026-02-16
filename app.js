@@ -37,6 +37,7 @@ const HOSTNAME = args.hostname || '0.0.0.0';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const AUTH_COOKIE_NAME = 'fale7_admin_auth';
 const COOKIE_SECRET = process.env.COOKIE_SECRET || process.env.SESSION_SECRET || 'change-this-cookie-secret';
+const SITE_URL = 'https://fale7-res.vercel.app';
 
 const getAuthCookieOptions = () => ({
   httpOnly: true,
@@ -67,6 +68,21 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const privatePath = req.path === '/login'
+    || req.path === '/admin'
+    || req.path === '/upload'
+    || req.path === '/delete-page'
+    || req.path === '/logout'
+    || req.path.startsWith('/api/');
+
+  if (privatePath) {
+    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  }
+
+  next();
+});
+
 // إعداد رفع المنيو باستخدام الذاكرة بدلاً من القرص
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -75,9 +91,6 @@ const upload = multer({
     fileSize: 50 * 1024 * 1024,
   },
 });
-
-// توزيع الملفات الثابتة مثل robots.txt و sitemap.xml من مجلد public
-app.use(express.static(path.join(__dirname, "public")));
 
 const getBlobOptions = () => process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
 
@@ -127,14 +140,19 @@ const deleteBlobByPathname = async (pathname) => {
   return true;
 };
 
+// توزيع الملفات الثابتة من مجلد public (صور، تحقق جوجل، ...إلخ)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // المسارات
 app.get("/", async (req, res) => {
   try {
     const menuData = await getMenuViewData();
-    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/", indexable: true }));
+    res.set('X-Robots-Tag', 'index, follow');
+    res.send(views.menu({ ...menuData, canonicalUrl: `${SITE_URL}/`, indexable: true }));
   } catch (error) {
     console.error('خطأ في التحقق من Blob:', error);
-    res.send(views.menu({ menuExists: false, offersExists: false, suhoorExists: false, canonicalUrl: "https://fale7-res.vercel.app/", indexable: true }));
+    res.set('X-Robots-Tag', 'index, follow');
+    res.send(views.menu({ menuExists: false, offersExists: false, suhoorExists: false, canonicalUrl: `${SITE_URL}/`, indexable: true }));
   }
 });
 
@@ -277,14 +295,9 @@ app.post('/delete-page', async (req, res) => {
   }
 });
 
-app.get("/menu", async (req, res) => {
-  try {
-    const menuData = await getMenuViewData();
-    res.send(views.menu({ ...menuData, canonicalUrl: "https://fale7-res.vercel.app/menu", indexable: true }));
-  } catch (error) {
-    console.error('خطأ في التحقق من Blob:', error);
-    res.send(views.menu({ menuExists: false, offersExists: false, suhoorExists: false, canonicalUrl: "https://fale7-res.vercel.app/menu", indexable: true }));
-  }
+app.get("/menu", (req, res) => {
+  res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  res.redirect(301, "/");
 });
 
 app.get('/offers', async (req, res) => {
@@ -293,28 +306,32 @@ app.get('/offers', async (req, res) => {
       getPageData(STATIC_PAGE_FILES.offers),
       getMenuViewData(),
     ]);
+    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'عروض فالح أبو العنبه',
-      canonicalUrl: 'https://fale7-res.vercel.app/offers',
+      canonicalUrl: `${SITE_URL}/`,
       pageExists: offersData.exists,
       pageUrl: offersData.url,
       menuUrl: menuData.menuUrl,
       offersExists: menuData.offersExists,
       suhoorExists: menuData.suhoorExists,
       pageType: 'offers',
+      indexable: false,
       metaDescription: 'تابع أحدث عروض مطعم فالح أبو العنبه في 6 أكتوبر، مصر، مع تحديثات مستمرة للعروض المتاحة.',
       emptyTitle: 'لا توجد عروض متاحة حالياً',
       emptyText: 'يمكنك متابعة الصفحة لاحقاً لمعرفة أحدث العروض.',
     }));
   } catch (error) {
     console.error('خطأ في تحميل صفحة العروض:', error);
+    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'عروض فالح أبو العنبه',
-      canonicalUrl: 'https://fale7-res.vercel.app/offers',
+      canonicalUrl: `${SITE_URL}/`,
       pageExists: false,
       offersExists: false,
       suhoorExists: false,
       pageType: 'offers',
+      indexable: false,
       metaDescription: 'تابع أحدث عروض مطعم فالح أبو العنبه في 6 أكتوبر، مصر، مع تحديثات مستمرة للعروض المتاحة.',
       emptyTitle: 'لا توجد عروض متاحة حالياً',
       emptyText: 'يمكنك متابعة الصفحة لاحقاً لمعرفة أحدث العروض.',
@@ -328,28 +345,32 @@ app.get('/suhoor', async (req, res) => {
       getPageData(STATIC_PAGE_FILES.suhoor),
       getMenuViewData(),
     ]);
+    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'منيو السحور | فالح أبو العنبه',
-      canonicalUrl: 'https://fale7-res.vercel.app/suhoor',
+      canonicalUrl: `${SITE_URL}/`,
       pageExists: suhoorData.exists,
       pageUrl: suhoorData.url,
       menuUrl: menuData.menuUrl,
       offersExists: menuData.offersExists,
       suhoorExists: menuData.suhoorExists,
       pageType: 'suhoor',
+      indexable: false,
       metaDescription: 'منيو السحور في مطعم فالح أبو العنبه: اختيارات متنوعة مناسبة لفترة السحور مع تحديثات مستمرة.',
       emptyTitle: 'منيو السحور غير متوفر حالياً',
       emptyText: 'سيتم نشر منيو السحور هنا عند التفعيل من لوحة التحكم.',
     }));
   } catch (error) {
     console.error('خطأ في تحميل صفحة السحور:', error);
+    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'منيو السحور | فالح أبو العنبه',
-      canonicalUrl: 'https://fale7-res.vercel.app/suhoor',
+      canonicalUrl: `${SITE_URL}/`,
       pageExists: false,
       offersExists: false,
       suhoorExists: false,
       pageType: 'suhoor',
+      indexable: false,
       metaDescription: 'منيو السحور في مطعم فالح أبو العنبه: اختيارات متنوعة مناسبة لفترة السحور مع تحديثات مستمرة.',
       emptyTitle: 'منيو السحور غير متوفر حالياً',
       emptyText: 'سيتم نشر منيو السحور هنا عند التفعيل من لوحة التحكم.',

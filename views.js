@@ -1241,8 +1241,8 @@ module.exports = {
     const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/';
     const indexable = data.indexable !== false;
     const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
-    const metaTitle = 'منيو مطعم فالح أبو العنبه | سندوتشات ومشاوي عراقية في 6 أكتوبر';
-    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) من أفضل مطاعم 6 أكتوبر في مصر، يقدم سندوتشات ومشاوي وبطاطس وفلافل وأكلات عراقية ومشاوي عراقية. مناسب للباحثين في مصر والعراق.';
+    const metaTitle = 'فالح أبو العنبه | منيو سندوتشات ومشاوي عراقية في 6 أكتوبر';
+    const metaDescription = 'مطعم فالح أبو العنبه في 6 أكتوبر (الحي السابع): منيو سندوتشات ومشاوي عراقية وبطاطس وفلافل. اطلب الآن أو تواصل على 01000602832.';
     const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -1282,9 +1282,11 @@ module.exports = {
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
+    "@id": "https://fale7-res.vercel.app/#restaurant",
     "@type": "Restaurant",
     "name": "فالح أبو العنبه",
     "alternateName": "Fale7",
+    "logo": "https://fale7-res.vercel.app/nbvnb1.png",
     "image": "https://fale7-res.vercel.app/nbvnb1.png",
     "url": "https://fale7-res.vercel.app/",
     "telephone": ["+201000602832", "+201144741115"],
@@ -1292,17 +1294,17 @@ module.exports = {
       "@type": "ContactPoint",
       "telephone": "+201112595678",
       "contactType": "customer service",
-      "areaServed": ["EG", "IQ"],
+      "areaServed": ["EG"],
       "availableLanguage": ["ar"]
     }],
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "EG",
-      "addressRegion": "الجيزة",
+      "addressRegion": "محافظة الجيزة",
       "addressLocality": "6 أكتوبر",
       "streetAddress": "الحي السابع - شارع مكة المكرمة - بالقرب من سنتر الأردنية"
     },
-    "areaServed": ["EG", "IQ"],
+    "areaServed": ["EG"],
     "openingHoursSpecification": [{
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],
@@ -1989,7 +1991,8 @@ module.exports = {
 
   // قالب صفحات PDF الإضافية (العروض / السحور)
   pdfPage: (data) => {
-    const robotsContent = data.pageExists ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
+    const indexable = typeof data.indexable === 'boolean' ? data.indexable : data.pageExists;
+    const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, nofollow';
     const metaDescription = data.metaDescription || 'صفحة المنيو والعروض الخاصة بمطعم فالح أبو العنبه.';
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
