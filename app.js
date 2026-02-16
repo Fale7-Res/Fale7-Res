@@ -36,8 +36,22 @@ const PORT = args.port || process.env.PORT || 3000;
 const HOSTNAME = args.hostname || '0.0.0.0';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const AUTH_COOKIE_NAME = 'fale7_admin_auth';
-const COOKIE_SECRET = process.env.COOKIE_SECRET || process.env.SESSION_SECRET || 'change-this-cookie-secret';
+const SESSION_SECRET = process.env.SESSION_SECRET;
+const COOKIE_SECRET = process.env.COOKIE_SECRET || SESSION_SECRET;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const SITE_URL = 'https://fale7-res.vercel.app';
+
+if (!SESSION_SECRET) {
+  throw new Error('SESSION_SECRET environment variable is required.');
+}
+
+if (!COOKIE_SECRET) {
+  throw new Error('COOKIE_SECRET or SESSION_SECRET environment variable is required.');
+}
+
+if (!ADMIN_PASSWORD) {
+  throw new Error('ADMIN_PASSWORD environment variable is required.');
+}
 
 const getAuthCookieOptions = () => ({
   httpOnly: true,
@@ -54,7 +68,7 @@ const isAuthenticated = (req) => (
 // إعداد الجلسة
 app.use(cookieParser(COOKIE_SECRET));
 app.use(session({
-  secret: process.env.SESSION_SECRET || "mySecret",
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -161,7 +175,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  if (req.body.password === "fale71961") {
+  if (req.body.password === ADMIN_PASSWORD) {
     req.session.loggedIn = true;
     res.cookie(AUTH_COOKIE_NAME, '1', getAuthCookieOptions());
     res.redirect("/admin");

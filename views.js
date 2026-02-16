@@ -6,9 +6,9 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/Logo.png">
-  <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="apple-touch-icon" href="/logo.svg">
+  <meta name="application-name" content="فالح أبو العنبه | Fale7">
   <meta name="robots" content="noindex, nofollow">
   
   <title>تسجيل الدخول | نظام إدارة المنيو</title>
@@ -451,9 +451,9 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/Logo.png">
-  <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="apple-touch-icon" href="/logo.svg">
+  <meta name="application-name" content="فالح أبو العنبه | Fale7">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1259,9 +1259,9 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/png" href="/Logo.png">
-  <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="apple-touch-icon" href="/logo.svg">
+  <meta name="application-name" content="فالح أبو العنبه | Fale7">
   <meta name="description" content="${metaDescription}">
   <meta name="keywords" content="${metaKeywords}">
 
@@ -1270,8 +1270,8 @@ module.exports = {
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:site_name" content="مطعم فالح أبو العنبه">
-  <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
+  <meta property="og:site_name" content="فالح أبو العنبه | Fale7">
+  <meta property="og:image" content="https://fale7-res.vercel.app/logo.svg">
 
   <meta name="robots" content="${robotsContent}">
 
@@ -1299,8 +1299,8 @@ module.exports = {
     "@type": "Restaurant",
     "name": "فالح أبو العنبه",
     "alternateName": "Fale7",
-    "logo": "https://fale7-res.vercel.app/Logo.png",
-    "image": "https://fale7-res.vercel.app/Logo.png",
+    "logo": "https://fale7-res.vercel.app/logo.svg",
+    "image": "https://fale7-res.vercel.app/logo.svg",
     "url": "https://fale7-res.vercel.app/",
     "telephone": ["+201000602832", "+201144741115"],
     "contactPoint": [{
@@ -1341,7 +1341,7 @@ module.exports = {
     "@type": "Organization",
     "name": "مطعم فالح أبو العنبه",
     "url": "https://fale7-res.vercel.app/",
-    "logo": "https://fale7-res.vercel.app/Logo.png"
+    "logo": "https://fale7-res.vercel.app/logo.svg"
   }
   </script>
 
@@ -1349,8 +1349,7 @@ module.exports = {
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "مطعم فالح أبو العنبه",
-    "alternateName": ["Fale7"],
+    "name": "فالح أبو العنبه | Fale7",
     "url": "https://fale7-res.vercel.app/"
   }
   </script>
@@ -1532,41 +1531,41 @@ module.exports = {
     .seo-section{
       width:100%;
       max-width:860px;
-      margin: 0.5rem auto 0.9rem;
-      padding: 0.65rem 0.7rem;
+      margin: 0.35rem auto 0.65rem;
+      padding: 0.5rem 0.55rem;
       background:#fff;
       border:1px solid rgba(0,0,0,0.08);
       border-radius:12px;
-      font-size: 0.74rem;
-      line-height:1.55;
+      font-size: 0.68rem;
+      line-height:1.42;
       color:#475569;
     }
     .seo-section h2{
-      margin:0 0 0.4rem;
-      font-size:0.85rem;
+      margin:0 0 0.28rem;
+      font-size:0.78rem;
       color:#334155;
     }
     .seo-section p{
-      margin: 0 0 0.35rem;
+      margin: 0 0 0.24rem;
     }
     .seo-section p:last-child{
       margin-bottom:0;
     }
     .seo-desc{
-      font-size:12px;
-      line-height:1.5;
-      margin-top:6px;
-      padding:0.55rem 0.6rem;
+      font-size:11px;
+      line-height:1.4;
+      margin-top:4px;
+      padding:0.45rem 0.5rem;
     }
 
     @media (max-width: 420px){
-      .seo-section{ font-size:0.70rem; padding:0.6rem 0.65rem; }
-      .seo-section h2{ font-size:0.82rem; }
-      .seo-section p{ margin-bottom:0.3rem; }
-      .seo-desc{ font-size:11px; line-height:1.45; }
+      .seo-section{ font-size:0.64rem; padding:0.45rem 0.5rem; }
+      .seo-section h2{ font-size:0.74rem; }
+      .seo-section p{ margin-bottom:0.2rem; }
+      .seo-desc{ font-size:10px; line-height:1.32; }
     }
     @media (max-width: 360px){
-      .seo-desc{ font-size:10px; }
+      .seo-desc{ font-size:9px; }
     }
 
     .mobile-hint{
@@ -1695,8 +1694,13 @@ module.exports = {
       'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     const TARGET_CSS_WIDTH = 860;
+    const RESIZE_DEBOUNCE_MS = 220;
+    const MIN_WIDTH_DELTA = 28;
     let pdfDoc = null;
     let renderToken = 0;
+    let isRendering = false;
+    let resizeDebounceTimer = null;
+    let lastRenderViewportWidth = 0;
 
     function syncHeaderOffset(){
       const topBar = document.querySelector('.top-bar');
@@ -1708,51 +1712,71 @@ module.exports = {
     function getRenderScale(page){
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       const v1 = page.getViewport({ scale: 1 });
-      return (TARGET_CSS_WIDTH / v1.width) * dpr;
+      const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
+      return (viewportWidth / v1.width) * dpr;
     }
 
-    async function renderAllPages(){
+    function getViewportWidth(){
+      const container = document.getElementById('pdfContainer');
+      if(container){
+        return Math.round(container.getBoundingClientRect().width);
+      }
+      return Math.round(window.innerWidth || document.documentElement.clientWidth || TARGET_CSS_WIDTH);
+    }
+
+    async function renderAllPages(force = false){
       const pagesContainer = document.getElementById('pdfPages');
       const loader = document.getElementById('pageLoader');
       if(!pagesContainer || !pdfDoc) return;
+      if(isRendering) return;
 
-      const current = ++renderToken;
-
-      const fragment = document.createDocumentFragment();
-
-      for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
-        if(current !== renderToken) return;
-
-        const page = await pdfDoc.getPage(pageNum);
-        const scale = getRenderScale(page);
-        const viewport = page.getViewport({ scale });
-
-        const canvas = document.createElement('canvas');
-        canvas.className = 'pdf-page';
-
-        const ctx = canvas.getContext('2d', { alpha: false });
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        page.cleanup();
-
-        fragment.appendChild(canvas);
+      const nextViewportWidth = getViewportWidth();
+      if(!force && lastRenderViewportWidth && Math.abs(nextViewportWidth - lastRenderViewportWidth) < MIN_WIDTH_DELTA){
+        return;
       }
 
-      if(current !== renderToken) return;
+      const current = ++renderToken;
+      isRendering = true;
+      const fragment = document.createDocumentFragment();
 
-      pagesContainer.innerHTML = '';
-      pagesContainer.appendChild(fragment);
+      try{
+        for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
+          if(current !== renderToken) return;
 
-      if(loader) loader.style.display = 'none';
+          const page = await pdfDoc.getPage(pageNum);
+          const scale = getRenderScale(page);
+          const viewport = page.getViewport({ scale });
+
+          const canvas = document.createElement('canvas');
+          canvas.className = 'pdf-page';
+
+          const ctx = canvas.getContext('2d', { alpha: false });
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+
+          await page.render({ canvasContext: ctx, viewport }).promise;
+          page.cleanup();
+
+          fragment.appendChild(canvas);
+        }
+
+        if(current !== renderToken) return;
+
+        pagesContainer.innerHTML = '';
+        pagesContainer.appendChild(fragment);
+        lastRenderViewportWidth = nextViewportWidth;
+
+        if(loader) loader.style.display = 'none';
+      } finally {
+        isRendering = false;
+      }
     }
 
     async function loadPDF(){
       const loader = document.getElementById('pageLoader');
       try{
         pdfDoc = await pdfjsLib.getDocument('${data.menuUrl}').promise;
-        await renderAllPages();
+        await renderAllPages(true);
       }catch(err){
         console.error('PDF load error:', err);
         const pagesContainer = document.getElementById('pdfPages');
@@ -1764,13 +1788,26 @@ module.exports = {
       }
     }
 
+    function handleViewportChange(){
+      syncHeaderOffset();
+      if(!pdfDoc) return;
+      if(resizeDebounceTimer){
+        clearTimeout(resizeDebounceTimer);
+      }
+      resizeDebounceTimer = setTimeout(() => {
+        if(!isRendering){
+          renderAllPages(false);
+        }
+      }, RESIZE_DEBOUNCE_MS);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       syncHeaderOffset();
       loadPDF();
     });
 
-    window.addEventListener('resize', syncHeaderOffset);
-    window.addEventListener('orientationchange', syncHeaderOffset);
+    window.addEventListener('resize', handleViewportChange);
+    window.addEventListener('orientationchange', handleViewportChange);
   </script>
   `
       : `
@@ -1800,21 +1837,21 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/png" href="/Logo.png">
-  <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="apple-touch-icon" href="/logo.svg">
+  <meta name="application-name" content="فالح أبو العنبه | Fale7">
   <meta name="description" content="${metaDescription}">
   <meta property="og:title" content="${data.title}">
   <meta property="og:description" content="${metaDescription}">
   <meta property="og:url" content="${data.canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:site_name" content="مطعم فالح أبو العنبه">
-  <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
+  <meta property="og:site_name" content="فالح أبو العنبه | Fale7">
+  <meta property="og:image" content="https://fale7-res.vercel.app/logo.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${data.title}">
   <meta name="twitter:description" content="${metaDescription}">
-  <meta name="twitter:image" content="https://fale7-res.vercel.app/Logo.png">
+  <meta name="twitter:image" content="https://fale7-res.vercel.app/logo.svg">
   <meta name="robots" content="${robotsContent}">
   <title>${data.title}</title>
   <link rel="canonical" href="${data.canonicalUrl}">
@@ -1830,17 +1867,7 @@ module.exports = {
     "@type": "Organization",
     "name": "مطعم فالح أبو العنبه",
     "url": "https://fale7-res.vercel.app/",
-    "logo": "https://fale7-res.vercel.app/Logo.png"
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "مطعم فالح أبو العنبه",
-    "alternateName": ["Fale7"],
-    "url": "https://fale7-res.vercel.app/"
+    "logo": "https://fale7-res.vercel.app/logo.svg"
   }
   </script>
 
@@ -2117,8 +2144,13 @@ module.exports = {
       'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     const TARGET_CSS_WIDTH = 860;
+    const RESIZE_DEBOUNCE_MS = 220;
+    const MIN_WIDTH_DELTA = 28;
     let pdfDoc = null;
     let renderToken = 0;
+    let isRendering = false;
+    let resizeDebounceTimer = null;
+    let lastRenderViewportWidth = 0;
 
     function syncHeaderOffset(){
       const topBar = document.querySelector('.top-bar');
@@ -2130,49 +2162,70 @@ module.exports = {
     function getRenderScale(page){
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       const v1 = page.getViewport({ scale: 1 });
-      return (TARGET_CSS_WIDTH / v1.width) * dpr;
+      const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
+      return (viewportWidth / v1.width) * dpr;
     }
 
-    async function renderAllPages(){
+    function getViewportWidth(){
+      const container = document.getElementById('pdfContainer');
+      if(container){
+        return Math.round(container.getBoundingClientRect().width);
+      }
+      return Math.round(window.innerWidth || document.documentElement.clientWidth || TARGET_CSS_WIDTH);
+    }
+
+    async function renderAllPages(force = false){
       const pagesContainer = document.getElementById('pdfPages');
       const loader = document.getElementById('pageLoader');
       if(!pagesContainer || !pdfDoc) return;
+      if(isRendering) return;
 
-      const current = ++renderToken;
-      const fragment = document.createDocumentFragment();
-
-      for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
-        if(current !== renderToken) return;
-
-        const page = await pdfDoc.getPage(pageNum);
-        const scale = getRenderScale(page);
-        const viewport = page.getViewport({ scale });
-
-        const canvas = document.createElement('canvas');
-        canvas.className = 'pdf-page';
-
-        const ctx = canvas.getContext('2d', { alpha: false });
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        page.cleanup();
-
-        fragment.appendChild(canvas);
+      const nextViewportWidth = getViewportWidth();
+      if(!force && lastRenderViewportWidth && Math.abs(nextViewportWidth - lastRenderViewportWidth) < MIN_WIDTH_DELTA){
+        return;
       }
 
-      if(current !== renderToken) return;
+      const current = ++renderToken;
+      isRendering = true;
+      const fragment = document.createDocumentFragment();
 
-      pagesContainer.innerHTML = '';
-      pagesContainer.appendChild(fragment);
-      if(loader) loader.style.display = 'none';
+      try{
+        for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
+          if(current !== renderToken) return;
+
+          const page = await pdfDoc.getPage(pageNum);
+          const scale = getRenderScale(page);
+          const viewport = page.getViewport({ scale });
+
+          const canvas = document.createElement('canvas');
+          canvas.className = 'pdf-page';
+
+          const ctx = canvas.getContext('2d', { alpha: false });
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+
+          await page.render({ canvasContext: ctx, viewport }).promise;
+          page.cleanup();
+
+          fragment.appendChild(canvas);
+        }
+
+        if(current !== renderToken) return;
+
+        pagesContainer.innerHTML = '';
+        pagesContainer.appendChild(fragment);
+        lastRenderViewportWidth = nextViewportWidth;
+        if(loader) loader.style.display = 'none';
+      } finally {
+        isRendering = false;
+      }
     }
 
     async function loadPDF(){
       const loader = document.getElementById('pageLoader');
       try{
         pdfDoc = await pdfjsLib.getDocument('${data.pageUrl}').promise;
-        await renderAllPages();
+        await renderAllPages(true);
       }catch(e){
         console.error(e);
         const pagesContainer = document.getElementById('pdfPages');
@@ -2183,14 +2236,26 @@ module.exports = {
       }
     }
 
+    function handleViewportChange(){
+      syncHeaderOffset();
+      if(!pdfDoc) return;
+      if(resizeDebounceTimer){
+        clearTimeout(resizeDebounceTimer);
+      }
+      resizeDebounceTimer = setTimeout(() => {
+        if(!isRendering){
+          renderAllPages(false);
+        }
+      }, RESIZE_DEBOUNCE_MS);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       syncHeaderOffset();
       loadPDF();
     });
 
-    // ✅ بدون إعادة رسم PDF عند rotate
-    window.addEventListener('resize', syncHeaderOffset);
-    window.addEventListener('orientationchange', syncHeaderOffset);
+    window.addEventListener('resize', handleViewportChange);
+    window.addEventListener('orientationchange', handleViewportChange);
   </script>
   `
       : `
