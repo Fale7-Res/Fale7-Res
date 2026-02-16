@@ -45,27 +45,16 @@ module.exports = {
     }
 
     html {
-      -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
-    html {
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-    }
-
-    html {
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-    }
-    
     body {
       font-family: 'Inter', Arial, Helvetica, sans-serif;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       min-height: 100dvh;
       margin: 0;
       padding: clamp(0.75rem, 2.5vw, 1.5rem);
@@ -169,6 +158,7 @@ module.exports = {
       border-radius: calc(var(--radius) - 2px);
       font-size: 1rem;
       font-weight: 500;
+      min-height: 44px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -340,17 +330,21 @@ module.exports = {
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
-      --header-offset: 96px;
+      --header-offset: 0px;
     }
     
     * {
       box-sizing: border-box;
     }
+
+    html {
+      text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
     
     body {
       font-family: 'Inter', Arial, Helvetica, sans-serif;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
-      min-height: 100vh;
       min-height: 100dvh;
       margin: 0;
       padding: clamp(0.75rem, 2.5vw, 1.5rem);
@@ -455,12 +449,15 @@ module.exports = {
       color: #64748b;
       margin-bottom: 0.5rem;
       font-weight: 500;
-      word-break: break-all;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     
     .upload-hint {
       font-size: 0.875rem;
       color: #94a3b8;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     
     .file-input {
@@ -942,12 +939,12 @@ module.exports = {
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
-      --header-offset: 96px;
+      --header-offset: 0px;
     }
     
     html {
-      -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
     * {
@@ -958,7 +955,6 @@ module.exports = {
       margin: 0;
       padding: 0;
       height: 100%;
-      min-height: 100vh;
       min-height: 100dvh;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
       font-family: 'Inter', Arial, Helvetica, sans-serif;
@@ -1157,7 +1153,7 @@ module.exports = {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100dvh;
       flex-direction: column;
       text-align: center;
       padding: 2rem;
@@ -1218,7 +1214,7 @@ module.exports = {
         flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
-        min-height: 36px;
+        min-height: 40px;
       }
 
       .no-menu-icon {
@@ -1236,8 +1232,8 @@ module.exports = {
 
     @media (max-width: 420px) {
       .social-icon span {
-        height: 36px;
-        width: 36px;
+        height: 40px;
+        width: 40px;
         font-size: 14px;
       }
       .btn {
@@ -1292,51 +1288,86 @@ module.exports = {
       // تحديد مسار PDF.js worker
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+      let pdfDoc = null;
+      let renderToken = 0;
+      let resizeTimer = null;
+
       function syncHeaderOffset() {
         const topBar = document.querySelector('.top-bar');
         if (!topBar) return;
         const height = Math.ceil(topBar.getBoundingClientRect().height);
         document.documentElement.style.setProperty('--header-offset', height + 'px');
       }
-      
+
+      function getContainerHorizontalPadding(container) {
+        const styles = window.getComputedStyle(container);
+        const left = parseFloat(styles.paddingLeft || '0');
+        const right = parseFloat(styles.paddingRight || '0');
+        return left + right;
+      }
+
+      function getResponsiveScale(page, container) {
+        const baseViewport = page.getViewport({ scale: 1 });
+        const padding = getContainerHorizontalPadding(container);
+        const containerWidth = Math.max(1, container.clientWidth - padding);
+        return Math.min(2.0, Math.max(1.0, containerWidth / baseViewport.width));
+      }
+
+      async function renderAllPages() {
+        const container = document.getElementById('pdfContainer');
+        if (!container || !pdfDoc) return;
+
+        const currentToken = ++renderToken;
+        container.innerHTML = '';
+
+        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+          if (currentToken !== renderToken) return;
+
+          const page = await pdfDoc.getPage(pageNum);
+          const scale = getResponsiveScale(page, container);
+          const viewport = page.getViewport({ scale });
+          const dpr = window.devicePixelRatio || 1;
+
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.className = 'pdf-page';
+          canvas.width = Math.floor(viewport.width * dpr);
+          canvas.height = Math.floor(viewport.height * dpr);
+          canvas.style.width = Math.floor(viewport.width) + 'px';
+          canvas.style.height = Math.floor(viewport.height) + 'px';
+
+          context.setTransform(dpr, 0, 0, dpr, 0, 0);
+          await page.render({
+            canvasContext: context,
+            viewport
+          }).promise;
+
+          if (currentToken !== renderToken) return;
+          container.appendChild(canvas);
+        }
+      }
+
       // تحميل وعرض PDF
       async function loadPDF() {
+        const container = document.getElementById('pdfContainer');
         try {
-          const container = document.getElementById('pdfContainer');
-          
-          // تحميل PDF
-          const pdf = await pdfjsLib.getDocument('${data.menuUrl}').promise;
-          
-          // مسح محتوى التحميل
-          container.innerHTML = '';
-          
-          // عرض كل صفحة
-          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            
-            // إنشاء canvas للصفحة
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            
-            // تحديد حجم العرض
-            const viewport = page.getViewport({ scale: 1.5 });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            canvas.className = 'pdf-page';
-            
-            // رسم الصفحة
-            await page.render({
-              canvasContext: context,
-              viewport: viewport
-            }).promise;
-            
-            container.appendChild(canvas);
-          }
+          pdfDoc = await pdfjsLib.getDocument('${data.menuUrl}').promise;
+          await renderAllPages();
         } catch (error) {
           console.error('خطأ في تحميل PDF:', error);
-          document.getElementById('pdfContainer').innerHTML = 
+          container.innerHTML =
             '<div style="text-align: center; padding: 2rem;"><p>حدث خطأ في تحميل المنيو. يرجى المحاولة مرة أخرى.</p></div>';
         }
+      }
+
+      function handleViewportChange() {
+        syncHeaderOffset();
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (pdfDoc) {
+            renderAllPages();
+          }
+        }, 150);
       }
       
       // تحميل PDF عند تحميل الصفحة
@@ -1344,8 +1375,8 @@ module.exports = {
         syncHeaderOffset();
         loadPDF();
       });
-      window.addEventListener('resize', syncHeaderOffset);
-      window.addEventListener('orientationchange', syncHeaderOffset);
+      window.addEventListener('resize', handleViewportChange);
+      window.addEventListener('orientationchange', handleViewportChange);
     </script>
   ` : `
     <div class="no-menu">
@@ -1397,21 +1428,20 @@ module.exports = {
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
-      --header-offset: 96px;
+      --header-offset: 0px;
     }
 
     * { box-sizing: border-box; }
 
     html {
-      -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
     body, html {
       margin:0;
       padding:0;
       height:100%;
-      min-height: 100vh;
       min-height: 100dvh;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
       font-family: 'Inter', Arial, Helvetica, sans-serif;
@@ -1618,14 +1648,14 @@ module.exports = {
         flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
         font-size: 0.75rem;
-        min-height: 36px;
+        min-height: 40px;
       }
     }
 
     @media (max-width: 420px) {
       .social-icon span {
-        height: 36px;
-        width: 36px;
+        height: 40px;
+        width: 40px;
         font-size: 14px;
       }
       .btn {
@@ -1676,38 +1706,88 @@ module.exports = {
     <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
     <script>
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      let pdfDoc = null;
+      let renderToken = 0;
+      let resizeTimer = null;
+
       function syncHeaderOffset() {
         const topBar = document.querySelector('.top-bar');
         if (!topBar) return;
         const height = Math.ceil(topBar.getBoundingClientRect().height);
         document.documentElement.style.setProperty('--header-offset', height + 'px');
       }
+
+      function getContainerHorizontalPadding(container) {
+        const styles = window.getComputedStyle(container);
+        const left = parseFloat(styles.paddingLeft || '0');
+        const right = parseFloat(styles.paddingRight || '0');
+        return left + right;
+      }
+
+      function getResponsiveScale(page, container) {
+        const baseViewport = page.getViewport({ scale: 1 });
+        const padding = getContainerHorizontalPadding(container);
+        const containerWidth = Math.max(1, container.clientWidth - padding);
+        return Math.min(2.0, Math.max(1.0, containerWidth / baseViewport.width));
+      }
+
+      async function renderAllPages() {
+        const container = document.getElementById('pdfContainer');
+        if (!container || !pdfDoc) return;
+
+        const currentToken = ++renderToken;
+        container.innerHTML = '';
+
+        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+          if (currentToken !== renderToken) return;
+
+          const page = await pdfDoc.getPage(pageNum);
+          const scale = getResponsiveScale(page, container);
+          const viewport = page.getViewport({ scale });
+          const dpr = window.devicePixelRatio || 1;
+
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.className = 'pdf-page';
+          canvas.width = Math.floor(viewport.width * dpr);
+          canvas.height = Math.floor(viewport.height * dpr);
+          canvas.style.width = Math.floor(viewport.width) + 'px';
+          canvas.style.height = Math.floor(viewport.height) + 'px';
+
+          context.setTransform(dpr, 0, 0, dpr, 0, 0);
+          await page.render({ canvasContext: context, viewport }).promise;
+
+          if (currentToken !== renderToken) return;
+          container.appendChild(canvas);
+        }
+      }
+
       async function loadPDF() {
         const container = document.getElementById('pdfContainer');
         try {
-          const pdf = await pdfjsLib.getDocument('${data.pageUrl}').promise;
-          container.innerHTML = '';
-          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const viewport = page.getViewport({ scale: 1.5 });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            canvas.className = 'pdf-page';
-            await page.render({ canvasContext: context, viewport }).promise;
-            container.appendChild(canvas);
-          }
+          pdfDoc = await pdfjsLib.getDocument('${data.pageUrl}').promise;
+          await renderAllPages();
         } catch (e) {
           container.innerHTML = '<div class=\"empty\"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
         }
       }
+
+      function handleViewportChange() {
+        syncHeaderOffset();
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (pdfDoc) {
+            renderAllPages();
+          }
+        }, 150);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         syncHeaderOffset();
         loadPDF();
       });
-      window.addEventListener('resize', syncHeaderOffset);
-      window.addEventListener('orientationchange', syncHeaderOffset);
+      window.addEventListener('resize', handleViewportChange);
+      window.addEventListener('orientationchange', handleViewportChange);
     </script>
   ` : `
     <div class="empty">
