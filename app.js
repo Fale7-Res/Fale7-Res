@@ -161,10 +161,21 @@ const LOGO_FILE_PATHS = [
   path.join(__dirname, 'public', 'logo.png'),
 ];
 
+const resolveLogoPath = () => LOGO_FILE_PATHS.find((filePath) => fs.existsSync(filePath));
+
 app.get('/Logo.png', (req, res, next) => {
-  const logoPath = LOGO_FILE_PATHS.find((filePath) => fs.existsSync(filePath));
+  const logoPath = resolveLogoPath();
   if (!logoPath) {
     return next();
+  }
+
+  res.sendFile(logoPath);
+});
+
+app.get('/favicon.ico', (req, res) => {
+  const logoPath = resolveLogoPath();
+  if (!logoPath) {
+    return res.status(204).end();
   }
 
   res.sendFile(logoPath);
