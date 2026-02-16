@@ -1461,11 +1461,11 @@ module.exports = {
     .pdf-canvas-container {
       flex: 1;
       overflow: auto;
-      padding: 1rem;
+      padding: clamp(0.5rem, 1.5vw, 1rem);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
+      gap: clamp(0.5rem, 1.5vw, 0.75rem);
     }
 
     .seo-section{
@@ -1489,6 +1489,8 @@ module.exports = {
       border-radius: 8px;
       max-width: 100%;
       height: auto;
+      width: auto;
+      display: block;
     }
     
     .loading-spinner {
@@ -1945,8 +1947,17 @@ module.exports = {
 
       function getFitScale(page, container) {
         const viewport = page.getViewport({ scale: 1 });
-        const containerWidth = container.clientWidth;
-        return containerWidth / viewport.width;
+        const styles = window.getComputedStyle(container);
+        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+        const paddingRight = parseFloat(styles.paddingRight) || 0;
+        const totalPadding = paddingLeft + paddingRight;
+
+        // احسب العرض المتاح مع أخذ padding في الحسبان
+        const availableWidth = Math.max(container.clientWidth - totalPadding - 8, 1);
+        const scale = availableWidth / viewport.width;
+
+        // تأكد من عدم تجاوز الصورة العرض المتاح
+        return Math.min(scale, 1.5);
       }
 
       async function renderAllPages() {
@@ -1955,12 +1966,15 @@ module.exports = {
 
         const currentToken = ++renderToken;
         pagesContainer.innerHTML = '';
+        const devicePixelRatio = window.devicePixelRatio || 1;
 
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getFitScale(page, pagesContainer);
+          // احصل على الحاوية الأم لحساب العرض الصحيح
+          const containerForMeasurement = pagesContainer.parentElement;
+          const scale = getFitScale(page, containerForMeasurement) * devicePixelRatio;
           const viewport = page.getViewport({ scale });
 
           const canvas = document.createElement('canvas');
@@ -1968,6 +1982,10 @@ module.exports = {
           canvas.className = 'pdf-page';
           canvas.width = viewport.width;
           canvas.height = viewport.height;
+
+          // تعيين حجم CSS بدون DPI للعرض الصحيح
+          canvas.style.width = (viewport.width / devicePixelRatio) + 'px';
+          canvas.style.height = (viewport.height / devicePixelRatio) + 'px';
 
           await page.render({
             canvasContext: context,
@@ -2584,8 +2602,17 @@ module.exports = {
 
       function getFitScale(page, container) {
         const viewport = page.getViewport({ scale: 1 });
-        const containerWidth = container.clientWidth;
-        return containerWidth / viewport.width;
+        const styles = window.getComputedStyle(container);
+        const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+        const paddingRight = parseFloat(styles.paddingRight) || 0;
+        const totalPadding = paddingLeft + paddingRight;
+
+        // احسب العرض المتاح مع أخذ padding في الحسبان
+        const availableWidth = Math.max(container.clientWidth - totalPadding - 8, 1);
+        const scale = availableWidth / viewport.width;
+
+        // تأكد من عدم تجاوز الصورة العرض المتاح
+        return Math.min(scale, 1.5);
       }
 
       async function renderAllPages() {
@@ -2594,12 +2621,13 @@ module.exports = {
 
         const currentToken = ++renderToken;
         container.innerHTML = '';
+        const devicePixelRatio = window.devicePixelRatio || 1;
 
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getFitScale(page, container);
+          const scale = getFitScale(page, container) * devicePixelRatio;
           const viewport = page.getViewport({ scale });
 
           const canvas = document.createElement('canvas');
@@ -2607,6 +2635,10 @@ module.exports = {
           canvas.className = 'pdf-page';
           canvas.width = viewport.width;
           canvas.height = viewport.height;
+
+          // تعيين حجم CSS بدون DPI للعرض الصحيح
+          canvas.style.width = (viewport.width / devicePixelRatio) + 'px';
+          canvas.style.height = (viewport.height / devicePixelRatio) + 'px';
 
           await page.render({ canvasContext: context, viewport }).promise;
 
