@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/nbvnb1.png">
+  <link rel="icon" type="image/png" href="/Logo.png">
   <meta name="robots" content="noindex, nofollow">
   
   <title>تسجيل الدخول | نظام إدارة المنيو</title>
@@ -449,7 +449,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="/nbvnb1.png">
+  <link rel="icon" type="image/png" href="/Logo.png">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1255,7 +1255,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/png" href="/nbvnb1.png">
+  <link rel="icon" type="image/png" href="/Logo.png">
   <meta name="description" content="${metaDescription}">
   <meta name="keywords" content="${metaKeywords}">
 
@@ -1265,7 +1265,7 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
   <meta property="og:site_name" content="فالح أبو العنبه | Fale7">
-  <meta property="og:image" content="https://fale7-res.vercel.app/nbvnb1.png">
+  <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
 
   <meta name="robots" content="${robotsContent}">
 
@@ -1293,8 +1293,8 @@
     "@type": "Restaurant",
     "name": "فالح أبو العنبه",
     "alternateName": "Fale7",
-    "logo": "https://fale7-res.vercel.app/nbvnb1.png",
-    "image": "https://fale7-res.vercel.app/nbvnb1.png",
+    "logo": "https://fale7-res.vercel.app/Logo.png",
+    "image": "https://fale7-res.vercel.app/Logo.png",
     "url": "https://fale7-res.vercel.app/",
     "telephone": ["+201000602832", "+201144741115"],
     "contactPoint": [{
@@ -1326,6 +1326,26 @@
       "https://www.facebook.com/profile.php?id=100063865183387",
       "https://maps.app.goo.gl/K38LYo9oSC2Myd119"
     ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "فالح أبو العنبه | Fale7",
+    "alternateName": ["Fale7", "فالح", "مطعم فالح أبو العنبه"],
+    "url": "https://fale7-res.vercel.app/",
+    "inLanguage": "ar-EG",
+    "publisher": {
+      "@type": "Organization",
+      "name": "فالح أبو العنبه | Fale7",
+      "url": "https://fale7-res.vercel.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://fale7-res.vercel.app/Logo.png"
+      }
+    }
   }
   </script>
 
@@ -1760,18 +1780,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/png" href="/nbvnb1.png">
+  <link rel="icon" type="image/png" href="/Logo.png">
   <meta name="description" content="${metaDescription}">
   <meta property="og:title" content="${data.title}">
   <meta property="og:description" content="${metaDescription}">
   <meta property="og:url" content="${data.canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:image" content="https://fale7-res.vercel.app/nbvnb1.png">
+  <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${data.title}">
   <meta name="twitter:description" content="${metaDescription}">
-  <meta name="twitter:image" content="https://fale7-res.vercel.app/nbvnb1.png">
+  <meta name="twitter:image" content="https://fale7-res.vercel.app/Logo.png">
   <meta name="robots" content="${robotsContent}">
   <title>${data.title}</title>
   <link rel="canonical" href="${data.canonicalUrl}">
@@ -1780,6 +1800,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "فالح أبو العنبه | Fale7",
+    "alternateName": ["Fale7", "فالح", "مطعم فالح أبو العنبه"],
+    "url": "https://fale7-res.vercel.app/",
+    "inLanguage": "ar-EG",
+    "publisher": {
+      "@type": "Organization",
+      "name": "فالح أبو العنبه | Fale7",
+      "url": "https://fale7-res.vercel.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://fale7-res.vercel.app/Logo.png"
+      }
+    }
+  }
+  </script>
 
   <style>
     :root{
@@ -2137,4 +2177,5 @@
 </html>`;
   }
 };
+
 
