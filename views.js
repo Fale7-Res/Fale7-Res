@@ -1122,13 +1122,14 @@ module.exports = {
       .top-bar {
         padding: 0.625rem;
         gap: 0.625rem;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
       }
       .social-icons {
         gap: 0.75rem;
-        justify-content: center;
-        order: -1;
+        justify-content: flex-start;
+        flex-shrink: 0;
       }
       .action-buttons {
         gap: 0.5rem;
@@ -1136,7 +1137,10 @@ module.exports = {
         overflow-y: hidden;
         flex-wrap: nowrap;
         white-space: nowrap;
-        padding-bottom: 0.25rem;
+        padding-bottom: 0;
+        justify-content: flex-end;
+        flex: 1;
+        min-width: 0;
         -webkit-overflow-scrolling: touch;
       }
       .action-buttons::-webkit-scrollbar {
@@ -1149,7 +1153,7 @@ module.exports = {
       }
 
       .pdf-viewer-container {
-        top: 132px;
+        top: 90px;
       }
 
       .btn {
@@ -1489,13 +1493,14 @@ module.exports = {
       .top-bar {
         padding: 0.625rem;
         gap: 0.625rem;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
       }
       .social-icons {
         gap: 0.75rem;
-        justify-content: center;
-        order: -1;
+        justify-content: flex-start;
+        flex-shrink: 0;
       }
       .action-buttons {
         gap: 0.5rem;
@@ -1503,12 +1508,15 @@ module.exports = {
         overflow-y: hidden;
         flex-wrap: nowrap;
         white-space: nowrap;
-        padding-bottom: 0.25rem;
+        padding-bottom: 0;
+        justify-content: flex-end;
+        flex: 1;
+        min-width: 0;
         -webkit-overflow-scrolling: touch;
       }
       .action-buttons::-webkit-scrollbar { display: none; }
       .social-icon span { height: 42px; width: 42px; font-size: 16px; }
-      .pdf-viewer-container { top: 132px; }
+      .pdf-viewer-container { top: 90px; }
       .btn {
         flex: 0 0 auto;
         padding: 0.375rem 0.75rem;
