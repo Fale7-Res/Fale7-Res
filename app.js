@@ -111,17 +111,22 @@ app.use((req, res, next) => {
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    // السماح برفع ملفات PDF كبيرة نسبيًا
-    fileSize: 50 * 1024 * 1024,
+    // السماح برفع ملفات PDF كبيرة نسبيًا (200MB)
+    fileSize: 200 * 1024 * 1024,
   },
 });
 
 const getBlobOptions = () => process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {};
 
 const getBlobByPathname = async (pathname) => {
-  const blobOptions = getBlobOptions();
-  const { blobs } = await list({ prefix: pathname, limit: 10, ...blobOptions });
-  return blobs.find((blob) => blob.pathname === pathname) || null;
+  try {
+    const blobOptions = getBlobOptions();
+    const { blobs } = await list({ prefix: pathname, limit: 10, ...blobOptions });
+    return blobs.find((blob) => blob.pathname === pathname) || null;
+  } catch (error) {
+    console.error('Error listing blobs:', error.message);
+    throw error;
+  }
 };
 
 const withCacheVersion = (rawUrl) => {
@@ -225,7 +230,7 @@ app.post("/upload", (req, res, next) => {
     if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({
         success: false,
-        message: 'حجم ملف المنيو كبير جدًا. الحد الأقصى 50MB.',
+        message: 'حجم ملف المنيو كبير جدًا. الحد الأقصى 200MB.',
       });
     }
 
@@ -276,6 +281,7 @@ app.post("/upload", (req, res, next) => {
     return res.json({ success: true, message: "Page uploaded.", url: result.url });
   } catch (error) {
     console.error('خطأ في رفع الملف إلى Blob:', error);
+    console.error('Error details:', error.message, error.stack);
     return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
   }
 });
