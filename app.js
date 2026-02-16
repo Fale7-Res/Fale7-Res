@@ -37,7 +37,7 @@ const HOSTNAME = args.hostname || '0.0.0.0';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const AUTH_COOKIE_NAME = 'fale7_admin_auth';
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const COOKIE_SECRET = process.env.COOKIE_SECRET || SESSION_SECRET;
+const COOKIE_SECRET = process.env.COOKIE_SECRET;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const SITE_URL = 'https://fale7-res.vercel.app';
 
@@ -46,7 +46,7 @@ if (!SESSION_SECRET) {
 }
 
 if (!COOKIE_SECRET) {
-  throw new Error('COOKIE_SECRET or SESSION_SECRET environment variable is required.');
+  throw new Error('COOKIE_SECRET environment variable is required.');
 }
 
 if (!ADMIN_PASSWORD) {
