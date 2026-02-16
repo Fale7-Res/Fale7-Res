@@ -1128,6 +1128,7 @@ module.exports = {
       .social-icons {
         gap: 0.75rem;
         justify-content: center;
+        order: -1;
       }
       .action-buttons {
         gap: 0.5rem;
@@ -1176,14 +1177,6 @@ module.exports = {
     <!-- Top Bar -->
     <div class="top-bar">
        <div class="action-buttons">
-        <a href="${data.menuUrl}" class="btn btn-primary" download>
-          <span class="icon">📥</span>
-          تحميل
-        </a>
-        <a href="javascript:location.reload(true)" class="btn btn-secondary">
-          <span class="icon">🔄</span>
-          تحديث
-        </a>
         ${data.offersExists ? `<a href="/offers" class="btn btn-secondary"><span class="icon">🎁</span>العروض</a>` : ''}
         ${data.suhoorExists ? `<a href="/suhoor" class="btn btn-secondary"><span class="icon">🌙</span>منيو السحور</a>` : ''}
       </div>
@@ -1502,6 +1495,7 @@ module.exports = {
       .social-icons {
         gap: 0.75rem;
         justify-content: center;
+        order: -1;
       }
       .action-buttons {
         gap: 0.5rem;
@@ -1526,16 +1520,6 @@ module.exports = {
 <body>
   <div class="top-bar">
     <div class="action-buttons">
-      ${data.menuUrl ? `
-        <a href="${data.menuUrl}" class="btn btn-primary" download>
-          <span>📥</span>
-          تحميل
-        </a>
-      ` : ''}
-      <a href="javascript:location.reload(true)" class="btn btn-secondary">
-        <span>🔄</span>
-        تحديث
-      </a>
       ${data.offersExists && data.pageType !== 'offers' ? `<a href="/offers" class="btn btn-secondary"><span>🎁</span>العروض</a>` : ''}
       ${data.suhoorExists && data.pageType !== 'suhoor' ? `<a href="/suhoor" class="btn btn-secondary"><span>🌙</span>منيو السحور</a>` : ''}
       <a href="/menu" class="btn btn-secondary">
