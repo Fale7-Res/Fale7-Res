@@ -1700,14 +1700,7 @@ module.exports = {
     const TARGET_CSS_WIDTH = 860;
     const RESIZE_DEBOUNCE_MS = 220;
     const MIN_WIDTH_DELTA = 28;
-    const DEVICE_MEMORY_GB = navigator.deviceMemory || 8;
-    const CPU_CORES = navigator.hardwareConcurrency || 8;
-    const IS_CONSTRAINED_DEVICE = DEVICE_MEMORY_GB <= 4 || CPU_CORES <= 4;
-    const MAX_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 2.2 : 3;
-    const MIN_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 1.25 : 1.5;
-    const QUALITY_BOOST = IS_CONSTRAINED_DEVICE ? 1.05 : 1.2;
-    const LONG_DOC_THRESHOLD = 8;
-    const LONG_DOC_SCALE_PENALTY = 0.85;
+    const LEARN_RENDER_SCALE = 1.5;
     const RENDER_BATCH_SIZE = 2;
     let pdfDoc = null;
     let renderToken = 0;
@@ -1726,18 +1719,8 @@ module.exports = {
       return new Promise((resolve) => requestAnimationFrame(() => resolve()));
     }
 
-    function getRenderConfig(page){
-      const dpr = window.devicePixelRatio || 1;
-      const pageCountPenalty =
-        pdfDoc && pdfDoc.numPages >= LONG_DOC_THRESHOLD ? LONG_DOC_SCALE_PENALTY : 1;
-      const outputScale = Math.min(
-        MAX_RENDER_DPR,
-        Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST * pageCountPenalty),
-      );
-      const v1 = page.getViewport({ scale: 1 });
-      const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
-      const cssScale = viewportWidth / v1.width;
-      return { cssScale, outputScale };
+    function getRenderViewport(page){
+      return page.getViewport({ scale: LEARN_RENDER_SCALE });
     }
 
     function getViewportWidth(){
@@ -1769,24 +1752,18 @@ module.exports = {
           if(current !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const { cssScale, outputScale } = getRenderConfig(page);
-          const viewport = page.getViewport({ scale: cssScale });
+          const viewport = getRenderViewport(page);
 
           const canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
 
           const ctx = canvas.getContext('2d', { alpha: false });
-          canvas.width = Math.ceil(viewport.width * outputScale);
-          canvas.height = Math.ceil(viewport.height * outputScale);
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = 'high';
 
-          const renderContext = { canvasContext: ctx, viewport };
-          if(outputScale !== 1){
-            renderContext.transform = [outputScale, 0, 0, outputScale, 0, 0];
-          }
-
-          await page.render(renderContext).promise;
+          await page.render({ canvasContext: ctx, viewport }).promise;
           page.cleanup();
           if(current !== renderToken) return;
 
@@ -2193,14 +2170,7 @@ module.exports = {
     const TARGET_CSS_WIDTH = 860;
     const RESIZE_DEBOUNCE_MS = 220;
     const MIN_WIDTH_DELTA = 28;
-    const DEVICE_MEMORY_GB = navigator.deviceMemory || 8;
-    const CPU_CORES = navigator.hardwareConcurrency || 8;
-    const IS_CONSTRAINED_DEVICE = DEVICE_MEMORY_GB <= 4 || CPU_CORES <= 4;
-    const MAX_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 2.2 : 3;
-    const MIN_RENDER_DPR = IS_CONSTRAINED_DEVICE ? 1.25 : 1.5;
-    const QUALITY_BOOST = IS_CONSTRAINED_DEVICE ? 1.05 : 1.2;
-    const LONG_DOC_THRESHOLD = 8;
-    const LONG_DOC_SCALE_PENALTY = 0.85;
+    const LEARN_RENDER_SCALE = 1.5;
     const RENDER_BATCH_SIZE = 2;
     let pdfDoc = null;
     let renderToken = 0;
@@ -2219,18 +2189,8 @@ module.exports = {
       return new Promise((resolve) => requestAnimationFrame(() => resolve()));
     }
 
-    function getRenderConfig(page){
-      const dpr = window.devicePixelRatio || 1;
-      const pageCountPenalty =
-        pdfDoc && pdfDoc.numPages >= LONG_DOC_THRESHOLD ? LONG_DOC_SCALE_PENALTY : 1;
-      const outputScale = Math.min(
-        MAX_RENDER_DPR,
-        Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST * pageCountPenalty),
-      );
-      const v1 = page.getViewport({ scale: 1 });
-      const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
-      const cssScale = viewportWidth / v1.width;
-      return { cssScale, outputScale };
+    function getRenderViewport(page){
+      return page.getViewport({ scale: LEARN_RENDER_SCALE });
     }
 
     function getViewportWidth(){
@@ -2262,24 +2222,18 @@ module.exports = {
           if(current !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const { cssScale, outputScale } = getRenderConfig(page);
-          const viewport = page.getViewport({ scale: cssScale });
+          const viewport = getRenderViewport(page);
 
           const canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
 
           const ctx = canvas.getContext('2d', { alpha: false });
-          canvas.width = Math.ceil(viewport.width * outputScale);
-          canvas.height = Math.ceil(viewport.height * outputScale);
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = 'high';
 
-          const renderContext = { canvasContext: ctx, viewport };
-          if(outputScale !== 1){
-            renderContext.transform = [outputScale, 0, 0, outputScale, 0, 0];
-          }
-
-          await page.render(renderContext).promise;
+          await page.render({ canvasContext: ctx, viewport }).promise;
           page.cleanup();
           if(current !== renderToken) return;
 
