@@ -86,8 +86,8 @@ if (SESSION_SECRET) {
 }
 
 // استقبال بيانات POST
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
+app.use(express.json({ limit: '200mb' }));
 
 app.use((req, res, next) => {
   const privatePath = req.path === '/login'
