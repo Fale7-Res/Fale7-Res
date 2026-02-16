@@ -1700,6 +1700,9 @@ module.exports = {
     const TARGET_CSS_WIDTH = 860;
     const RESIZE_DEBOUNCE_MS = 220;
     const MIN_WIDTH_DELTA = 28;
+    const MAX_RENDER_DPR = 3;
+    const MIN_RENDER_DPR = 1.5;
+    const QUALITY_BOOST = 1.2;
     let pdfDoc = null;
     let renderToken = 0;
     let isRendering = false;
@@ -1713,11 +1716,13 @@ module.exports = {
       document.documentElement.style.setProperty('--header-offset', h + 'px');
     }
 
-    function getRenderScale(page){
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+    function getRenderConfig(page){
+      const dpr = window.devicePixelRatio || 1;
+      const outputScale = Math.min(MAX_RENDER_DPR, Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST));
       const v1 = page.getViewport({ scale: 1 });
       const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
-      return (viewportWidth / v1.width) * dpr;
+      const cssScale = viewportWidth / v1.width;
+      return { cssScale, outputScale };
     }
 
     function getViewportWidth(){
@@ -1748,17 +1753,24 @@ module.exports = {
           if(current !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getRenderScale(page);
-          const viewport = page.getViewport({ scale });
+          const { cssScale, outputScale } = getRenderConfig(page);
+          const viewport = page.getViewport({ scale: cssScale });
 
           const canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
 
           const ctx = canvas.getContext('2d', { alpha: false });
-          canvas.width = Math.floor(viewport.width);
-          canvas.height = Math.floor(viewport.height);
+          canvas.width = Math.ceil(viewport.width * outputScale);
+          canvas.height = Math.ceil(viewport.height * outputScale);
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
 
-          await page.render({ canvasContext: ctx, viewport }).promise;
+          const renderContext = { canvasContext: ctx, viewport };
+          if(outputScale !== 1){
+            renderContext.transform = [outputScale, 0, 0, outputScale, 0, 0];
+          }
+
+          await page.render(renderContext).promise;
           page.cleanup();
 
           fragment.appendChild(canvas);
@@ -2152,6 +2164,9 @@ module.exports = {
     const TARGET_CSS_WIDTH = 860;
     const RESIZE_DEBOUNCE_MS = 220;
     const MIN_WIDTH_DELTA = 28;
+    const MAX_RENDER_DPR = 3;
+    const MIN_RENDER_DPR = 1.5;
+    const QUALITY_BOOST = 1.2;
     let pdfDoc = null;
     let renderToken = 0;
     let isRendering = false;
@@ -2165,11 +2180,13 @@ module.exports = {
       document.documentElement.style.setProperty('--header-offset', h + 'px');
     }
 
-    function getRenderScale(page){
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+    function getRenderConfig(page){
+      const dpr = window.devicePixelRatio || 1;
+      const outputScale = Math.min(MAX_RENDER_DPR, Math.max(MIN_RENDER_DPR, dpr * QUALITY_BOOST));
       const v1 = page.getViewport({ scale: 1 });
       const viewportWidth = Math.max(320, Math.min(TARGET_CSS_WIDTH, getViewportWidth()));
-      return (viewportWidth / v1.width) * dpr;
+      const cssScale = viewportWidth / v1.width;
+      return { cssScale, outputScale };
     }
 
     function getViewportWidth(){
@@ -2200,17 +2217,24 @@ module.exports = {
           if(current !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getRenderScale(page);
-          const viewport = page.getViewport({ scale });
+          const { cssScale, outputScale } = getRenderConfig(page);
+          const viewport = page.getViewport({ scale: cssScale });
 
           const canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
 
           const ctx = canvas.getContext('2d', { alpha: false });
-          canvas.width = Math.floor(viewport.width);
-          canvas.height = Math.floor(viewport.height);
+          canvas.width = Math.ceil(viewport.width * outputScale);
+          canvas.height = Math.ceil(viewport.height * outputScale);
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
 
-          await page.render({ canvasContext: ctx, viewport }).promise;
+          const renderContext = { canvasContext: ctx, viewport };
+          if(outputScale !== 1){
+            renderContext.transform = [outputScale, 0, 0, outputScale, 0, 0];
+          }
+
+          await page.render(renderContext).promise;
           page.cleanup();
 
           fragment.appendChild(canvas);
