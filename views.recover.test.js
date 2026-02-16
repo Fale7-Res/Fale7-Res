@@ -1,5 +1,5 @@
 module.exports = {
-  // قالب تسجيل الدخول
+  // Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ¨ ÃÂªÃÂ³ÃÂ¬Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¯ÃÂ®Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½
   login: (data) => {
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -8,10 +8,10 @@ module.exports = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/Logo.png">
   <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <meta name="application-name" content="E79E A'D- #(H 'D9F(G">
   <meta name="robots" content="noindex, nofollow">
   
-  <title>تسجيل الدخول | نظام إدارة المنيو</title>
+  <title>ÃÂªÃÂ³ÃÂ¬Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¯ÃÂ®Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ | Ã¯Â¿Â½ ÃÂ¸ÃÂ§Ã¯Â¿Â½& ÃÂ¥ÃÂ¯ÃÂ§ÃÂ±ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -385,10 +385,10 @@ module.exports = {
   <div class="card">
     <div class="card-header">
       <h1 class="card-title">
-        <span class="icon">🔐</span>
-        تسجيل الدخول
+        <span class="icon">Ã¯Â¿Â½xÃ¯Â¿Â½</span>
+        ÃÂªÃÂ³ÃÂ¬Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¯ÃÂ®Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½
       </h1>
-      <p class="card-subtitle">نظام إدارة المنيو</p>
+      <p class="card-subtitle">Ã¯Â¿Â½ ÃÂ¸ÃÂ§Ã¯Â¿Â½& ÃÂ¥ÃÂ¯ÃÂ§ÃÂ±ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½</p>
     </div>
     <div class="card-content">
       ${data.error ? `
@@ -399,14 +399,14 @@ module.exports = {
       
       <form method="POST">
         <div class="form-group">
-          <label for="password" class="form-label">كلمة المرور</label>
+          <label for="password" class="form-label">ÃâÃ¯Â¿Â½Ã¯Â¿Â½&ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±</label>
           <div class="password-container">
             <input 
               type="password" 
               id="password"
               name="password" 
               class="form-input"
-              placeholder="أدخل كلمة المرور" 
+              placeholder="ÃÂ£ÃÂ¯ÃÂ®Ã¯Â¿Â½ ÃâÃ¯Â¿Â½Ã¯Â¿Â½&ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±" 
               required 
               autocomplete="current-password"
             />
@@ -417,8 +417,8 @@ module.exports = {
         </div>
         
         <button type="submit" class="btn btn-primary">
-          <span class="icon">🚪</span>
-          دخول
+          <span class="icon">Ã¯Â¿Â½xaÃ¯Â¿Â½</span>
+          ÃÂ¯ÃÂ®Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½
         </button>
       </form>
     </div>
@@ -430,11 +430,11 @@ module.exports = {
       const passwordInput = document.getElementById('password');
       
       togglePassword.addEventListener('click', function() {
-        // تبديل نوع حقل كلمة المرور
+        // ÃÂªÃÂ¨ÃÂ¯Ã¯Â¿Â½`Ã¯Â¿Â½ Ã¯Â¿Â½ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¹ ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ ÃâÃ¯Â¿Â½Ã¯Â¿Â½&ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
         
-        // تبديل الأيقونة
+        // ÃÂªÃÂ¨ÃÂ¯Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ£Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ©
         this.querySelector('i').classList.toggle('fa-eye');
         this.querySelector('i').classList.toggle('fa-eye-slash');
       });
@@ -444,7 +444,7 @@ module.exports = {
 </html>`;
   },
 
-  // قالب لوحة الإدارة
+  // Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ¨ Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¥ÃÂ¯ÃÂ§ÃÂ±ÃÂ©
   admin: () => {
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -453,9 +453,9 @@ module.exports = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/Logo.png">
   <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <meta name="application-name" content="E79E A'D- #(H 'D9F(G">
   <meta name="robots" content="noindex, nofollow">
-  <title>لوحة التحكم | نظام إدارة المنيو</title>
+  <title>Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂªÃÂ­ÃâÃ¯Â¿Â½& | Ã¯Â¿Â½ ÃÂ¸ÃÂ§Ã¯Â¿Â½& ÃÂ¥ÃÂ¯ÃÂ§ÃÂ±ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1020,7 +1020,7 @@ module.exports = {
 </head>
 <body>
   <div id="loadingOverlay">
-    <p id="loadingText">جاري المعالجة...</p>
+    <p id="loadingText">ÃÂ¬ÃÂ§ÃÂ±Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ¹ÃÂ§Ã¯Â¿Â½ÃÂ¬ÃÂ©...</p>
     <div class="progress-container">
         <div id="progressBar"></div>
     </div>
@@ -1031,73 +1031,73 @@ module.exports = {
     <div class="card">
       <div class="card-header">
         <h1 class="card-title">
-          <span class="icon">⚙️</span>
-          لوحة التحكم
+          <span class="icon">Ã¯Â¿Â½a"Ã¯Â¸Â</span>
+          Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂªÃÂ­ÃâÃ¯Â¿Â½&
         </h1>
-        <p class="card-subtitle">إدارة منيو المطعم</p>
+        <p class="card-subtitle">ÃÂ¥ÃÂ¯ÃÂ§ÃÂ±ÃÂ© Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½&</p>
       </div>
       <div class="card-content">
         <section class="upload-section">
-          <h3 class="upload-section-title">المنيو الرئيسي</h3>
-          <form class="upload-form" data-pathname="menu.pdf" data-label="المنيو الرئيسي">
+          <h3 class="upload-section-title">ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ±ÃÂ¦Ã¯Â¿Â½`ÃÂ³Ã¯Â¿Â½`</h3>
+          <form class="upload-form" data-pathname="menu.pdf" data-label="ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ±ÃÂ¦Ã¯Â¿Â½`ÃÂ³Ã¯Â¿Â½`">
             <div class="upload-area">
-              <div class="upload-icon">📄</div>
-              <div class="upload-text">اسحب وأفلت ملف PDF هنا</div>
-              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <div class="upload-icon">Ã¯Â¿Â½x</div>
+              <div class="upload-text">ÃÂ§ÃÂ³ÃÂ­ÃÂ¨ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ£ÃÂÃ¯Â¿Â½ÃÂª Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ PDF Ã¯Â¿Â½!Ã¯Â¿Â½ ÃÂ§</div>
+              <div class="upload-hint">ÃÂ£Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ Ã¯Â¿Â½ÃÂ± Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§ÃÂ®ÃÂªÃ¯Â¿Â½`ÃÂ§ÃÂ± Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ¬Ã¯Â¿Â½!ÃÂ§ÃÂ²Ãâ</div>
               <input type="file" name="menu" accept="application/pdf" required class="file-input" />
             </div>
             <div class="inline-actions">
               <button type="submit" class="btn btn-primary">
-                <span class="icon">📤</span>
-                رفع المنيو
+                <span class="icon">Ã¯Â¿Â½xÃ¯Â¿Â½</span>
+                ÃÂ±ÃÂÃÂ¹ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½
               </button>
               <button type="button" class="btn btn-danger delete-page-btn" data-page-type="menu">
-                <span class="icon">🗑️</span>
-                حذف المنيو
+                <span class="icon">Ã¯Â¿Â½xÃ¯Â¸Â</span>
+                ÃÂ­ÃÂ°ÃÂ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½
               </button>
             </div>
           </form>
         </section>
 
         <section class="upload-section">
-          <h3 class="upload-section-title">صفحة العروض</h3>
-          <form class="upload-form" data-pathname="offers.pdf" data-label="صفحة العروض">
+          <h3 class="upload-section-title">ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶</h3>
+          <form class="upload-form" data-pathname="offers.pdf" data-label="ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶">
             <div class="upload-area">
-              <div class="upload-icon">🎁</div>
-              <div class="upload-text">اسحب وأفلت ملف عروض PDF هنا</div>
-              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <div class="upload-icon">Ã¯Â¿Â½x}Ã¯Â¿Â½</div>
+              <div class="upload-text">ÃÂ§ÃÂ³ÃÂ­ÃÂ¨ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ£ÃÂÃ¯Â¿Â½ÃÂª Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶ PDF Ã¯Â¿Â½!Ã¯Â¿Â½ ÃÂ§</div>
+              <div class="upload-hint">ÃÂ£Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ Ã¯Â¿Â½ÃÂ± Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§ÃÂ®ÃÂªÃ¯Â¿Â½`ÃÂ§ÃÂ± Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ¬Ã¯Â¿Â½!ÃÂ§ÃÂ²Ãâ</div>
               <input type="file" name="offers" accept="application/pdf" required class="file-input" />
             </div>
             <div class="inline-actions">
               <button type="submit" class="btn btn-primary">
-                <span class="icon">📤</span>
-                نشر العروض
+                <span class="icon">Ã¯Â¿Â½xÃ¯Â¿Â½</span>
+                Ã¯Â¿Â½ ÃÂ´ÃÂ± ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶
               </button>
               <button type="button" class="btn btn-danger delete-page-btn" data-page-type="offers">
-                <span class="icon">🗑️</span>
-                حذف صفحة العروض
+                <span class="icon">Ã¯Â¿Â½xÃ¯Â¸Â</span>
+                ÃÂ­ÃÂ°ÃÂ ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶
               </button>
             </div>
           </form>
         </section>
 
         <section class="upload-section">
-          <h3 class="upload-section-title">صفحة منيو السحور</h3>
-          <form class="upload-form" data-pathname="suhoor.pdf" data-label="منيو السحور">
+          <h3 class="upload-section-title">ÃÂµÃÂÃÂ­ÃÂ© Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±</h3>
+          <form class="upload-form" data-pathname="suhoor.pdf" data-label="Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±">
             <div class="upload-area">
-              <div class="upload-icon">🌙</div>
-              <div class="upload-text">اسحب وأفلت ملف سحور PDF هنا</div>
-              <div class="upload-hint">أو انقر للاختيار من جهازك</div>
+              <div class="upload-icon">Ã¯Â¿Â½xR"</div>
+              <div class="upload-text">ÃÂ§ÃÂ³ÃÂ­ÃÂ¨ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ£ÃÂÃ¯Â¿Â½ÃÂª Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ± PDF Ã¯Â¿Â½!Ã¯Â¿Â½ ÃÂ§</div>
+              <div class="upload-hint">ÃÂ£Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ Ã¯Â¿Â½ÃÂ± Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§ÃÂ®ÃÂªÃ¯Â¿Â½`ÃÂ§ÃÂ± Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ¬Ã¯Â¿Â½!ÃÂ§ÃÂ²Ãâ</div>
               <input type="file" name="suhoor" accept="application/pdf" required class="file-input" />
             </div>
             <div class="inline-actions">
               <button type="submit" class="btn btn-primary">
-                <span class="icon">📤</span>
-                نشر منيو السحور
+                <span class="icon">Ã¯Â¿Â½xÃ¯Â¿Â½</span>
+                Ã¯Â¿Â½ ÃÂ´ÃÂ± Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±
               </button>
               <button type="button" class="btn btn-danger delete-page-btn" data-page-type="suhoor">
-                <span class="icon">🗑️</span>
-                حذف صفحة السحور
+                <span class="icon">Ã¯Â¿Â½xÃ¯Â¸Â</span>
+                ÃÂ­ÃÂ°ÃÂ ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±
               </button>
             </div>
           </form>
@@ -1105,14 +1105,14 @@ module.exports = {
         
         <div class="actions">
           <a href="/menu" target="_blank" class="btn btn-secondary">
-            <span class="icon">📋</span>
-            صفحة المستخدم
+            <span class="icon">Ã¯Â¿Â½x9</span>
+            ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ³ÃÂªÃÂ®ÃÂ¯Ã¯Â¿Â½&
           </a>
         </div>
         
         <a href="/logout" class="btn btn-secondary">
-          <span class="icon">🚪</span>
-          تسجيل الخروج
+          <span class="icon">Ã¯Â¿Â½xaÃ¯Â¿Â½</span>
+          ÃÂªÃÂ³ÃÂ¬Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ®ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¬
         </a>
         
         <div class="debug-info">
@@ -1146,7 +1146,7 @@ module.exports = {
             const fileSize = file.size > 1024 * 1024
               ? ((file.size / 1024 / 1024).toFixed(2) + ' MB')
               : ((file.size / 1024).toFixed(2) + ' KB');
-            uploadHint.textContent = 'حجم الملف: ' + fileSize;
+            uploadHint.textContent = 'ÃÂ­ÃÂ¬Ã¯Â¿Â½& ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ: ' + fileSize;
           }
         });
 
@@ -1154,17 +1154,17 @@ module.exports = {
           e.preventDefault();
 
           if (!fileInput.files || fileInput.files.length === 0) {
-            alert('الرجاء اختيار ملف أولاً.');
+            alert('ÃÂ§Ã¯Â¿Â½ÃÂ±ÃÂ¬ÃÂ§ÃÂ¡ ÃÂ§ÃÂ®ÃÂªÃ¯Â¿Â½`ÃÂ§ÃÂ± Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ ÃÂ£Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½9.');
             return;
           }
 
           const file = fileInput.files[0];
           if (file.type !== 'application/pdf') {
-            alert('يرجى رفع ملف PDF فقط.');
+            alert('Ã¯Â¿Â½`ÃÂ±ÃÂ¬Ã¯Â¿Â½0 ÃÂ±ÃÂÃÂ¹ Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ PDF ÃÂÃ¯Â¿Â½ÃÂ·.');
             return;
           }
 
-          loadingText.innerText = 'جاري رفع ' + label + '...';
+          loadingText.innerText = 'ÃÂ¬ÃÂ§ÃÂ±Ã¯Â¿Â½` ÃÂ±ÃÂÃÂ¹ ' + label + '...';
           progressBar.style.width = '20%';
           progressPercentage.innerText = '20%';
           loadingOverlay.style.display = 'flex';
@@ -1177,18 +1177,18 @@ module.exports = {
             });
 
             if (!result || !result.url) {
-              throw new Error('لم يتم استلام رابط الملف بعد الرفع.');
+              throw new Error('Ã¯Â¿Â½Ã¯Â¿Â½& Ã¯Â¿Â½`ÃÂªÃ¯Â¿Â½& ÃÂ§ÃÂ³ÃÂªÃ¯Â¿Â½ÃÂ§Ã¯Â¿Â½& ÃÂ±ÃÂ§ÃÂ¨ÃÂ· ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ ÃÂ¨ÃÂ¹ÃÂ¯ ÃÂ§Ã¯Â¿Â½ÃÂ±ÃÂÃÂ¹.');
             }
 
             progressBar.style.width = '100%';
             progressPercentage.innerText = '100%';
-            loadingText.innerText = 'اكتمل بنجاح!';
+            loadingText.innerText = 'ÃÂ§ÃâÃÂªÃ¯Â¿Â½&Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½ ÃÂ¬ÃÂ§ÃÂ­!';
             setTimeout(() => window.location.reload(), 1000);
           } catch (error) {
             console.error('Upload error:', error);
-            const errorMessage = error?.message || 'حدث خطأ أثناء رفع الملف.';
+            const errorMessage = error?.message || 'ÃÂ­ÃÂ¯ÃÂ« ÃÂ®ÃÂ·ÃÂ£ ÃÂ£ÃÂ«Ã¯Â¿Â½ ÃÂ§ÃÂ¡ ÃÂ±ÃÂÃÂ¹ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ.';
             if (errorMessage.includes('retrieve the client token') || errorMessage.includes('Unauthorized')) {
-              alert('انتهت جلسة تسجيل الدخول. سجل الدخول مرة أخرى.');
+              alert('ÃÂ§Ã¯Â¿Â½ ÃÂªÃ¯Â¿Â½!ÃÂª ÃÂ¬Ã¯Â¿Â½ÃÂ³ÃÂ© ÃÂªÃÂ³ÃÂ¬Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¯ÃÂ®Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½. ÃÂ³ÃÂ¬Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¯ÃÂ®Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½&ÃÂ±ÃÂ© ÃÂ£ÃÂ®ÃÂ±Ã¯Â¿Â½0.');
               window.location.href = '/login';
               return;
             }
@@ -1204,12 +1204,12 @@ module.exports = {
       deleteButtons.forEach((btn) => {
         btn.addEventListener('click', async () => {
           const pageType = btn.dataset.pageType;
-          const confirmed = window.confirm('هل أنت متأكد من حذف هذه الصفحة؟');
+          const confirmed = window.confirm('Ã¯Â¿Â½!Ã¯Â¿Â½ ÃÂ£Ã¯Â¿Â½ ÃÂª Ã¯Â¿Â½&ÃÂªÃÂ£ÃâÃÂ¯ Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ­ÃÂ°ÃÂ Ã¯Â¿Â½!ÃÂ°Ã¯Â¿Â½! ÃÂ§Ã¯Â¿Â½ÃÂµÃÂÃÂ­ÃÂ©Ã¯Â¿Â½x');
           if (!confirmed) return;
 
           try {
             loadingOverlay.style.display = 'flex';
-            loadingText.innerText = 'جاري حذف الصفحة...';
+            loadingText.innerText = 'ÃÂ¬ÃÂ§ÃÂ±Ã¯Â¿Â½` ÃÂ­ÃÂ°ÃÂ ÃÂ§Ã¯Â¿Â½ÃÂµÃÂÃÂ­ÃÂ©...';
             progressBar.style.width = '30%';
             progressPercentage.innerText = '30%';
 
@@ -1221,15 +1221,15 @@ module.exports = {
 
             const data = await response.json();
             if (!response.ok || !data.success) {
-              throw new Error(data.message || 'حدث خطأ أثناء الحذف.');
+              throw new Error(data.message || 'ÃÂ­ÃÂ¯ÃÂ« ÃÂ®ÃÂ·ÃÂ£ ÃÂ£ÃÂ«Ã¯Â¿Â½ ÃÂ§ÃÂ¡ ÃÂ§Ã¯Â¿Â½ÃÂ­ÃÂ°ÃÂ.');
             }
 
             progressBar.style.width = '100%';
             progressPercentage.innerText = '100%';
-            loadingText.innerText = 'تم الحذف بنجاح!';
+            loadingText.innerText = 'ÃÂªÃ¯Â¿Â½& ÃÂ§Ã¯Â¿Â½ÃÂ­ÃÂ°ÃÂ ÃÂ¨Ã¯Â¿Â½ ÃÂ¬ÃÂ§ÃÂ­!';
             setTimeout(() => window.location.reload(), 800);
           } catch (error) {
-            alert(error.message || 'فشل حذف الصفحة.');
+            alert(error.message || 'ÃÂÃÂ´Ã¯Â¿Â½ ÃÂ­ÃÂ°ÃÂ ÃÂ§Ã¯Â¿Â½ÃÂµÃÂÃÂ­ÃÂ©.');
             loadingOverlay.style.display = 'none';
           }
         });
@@ -1240,7 +1240,7 @@ module.exports = {
 </html>`;
   },
 
-  // قالب صفحة المنيو
+  // Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ¨ ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½
   menu: (data) => {
     const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/';
     const indexable = data.indexable !== false;
@@ -1248,11 +1248,11 @@ module.exports = {
       ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
       : 'noindex, follow';
 
-    const metaTitle = 'فالح أبو العنبه | منيو سندوتشات ومشاوي عراقية في 6 أكتوبر';
+    const metaTitle = 'ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ£ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½! | Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ³Ã¯Â¿Â½ ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃÂ´ÃÂ§ÃÂª Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½` ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ© ÃÂÃ¯Â¿Â½` 6 ÃÂ£ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±';
     const metaDescription =
-      'مطعم فالح أبو العنبه (Fale7) في الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية. منيو سندوتشات ومشاوي عراقية وبطاطس وفلافل. اتصل: 01000602832 / 01144741115. للشكاوى: 01112595678.';
+      'Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ£ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½! (Fale7) ÃÂÃ¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ¬Ã¯Â¿Â½`ÃÂ²ÃÂ© Ã¯Â¿Â½ 6 ÃÂ£ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ± Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ­Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ§ÃÂ¨ÃÂ¹ Ã¯Â¿Â½ ÃÂ´ÃÂ§ÃÂ±ÃÂ¹ Ã¯Â¿Â½&ÃâÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃâÃÂ±Ã¯Â¿Â½&ÃÂ© Ã¯Â¿Â½ ÃÂ¨ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±ÃÂ¨ Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ³Ã¯Â¿Â½ ÃÂªÃÂ± ÃÂ§Ã¯Â¿Â½ÃÂ£ÃÂ±ÃÂ¯Ã¯Â¿Â½ Ã¯Â¿Â½`ÃÂ©. Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ³Ã¯Â¿Â½ ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃÂ´ÃÂ§ÃÂª Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½` ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ© Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ·ÃÂ§ÃÂ·ÃÂ³ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂÃ¯Â¿Â½ÃÂ§ÃÂÃ¯Â¿Â½. ÃÂ§ÃÂªÃÂµÃ¯Â¿Â½: 01000602832 / 01144741115. Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ´ÃâÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½0: 01112595678.';
     const metaKeywords =
-      'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
+      'ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­, ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ§ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½!, Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­, Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ§ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½!, Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­, Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­, Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ§ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½!, Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ§ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½!, ÃÂ³Ã¯Â¿Â½ ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃÂ´ÃÂ§ÃÂª 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½` 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, ÃÂ¨ÃÂ·ÃÂ§ÃÂ·ÃÂ³ 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, ÃÂÃ¯Â¿Â½ÃÂ§ÃÂÃ¯Â¿Â½ 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, ÃÂ§ÃâÃ¯Â¿Â½ÃÂ§ÃÂª ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ©, Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½` ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ©, ÃÂÃ¯Â¿Â½ÃÂ§ÃÂÃ¯Â¿Â½ ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ©, ÃÂ§ÃÂÃÂ¶Ã¯Â¿Â½ Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃ¯Â¿Â½` 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, ÃÂ§ÃÂÃÂ¶Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ·ÃÂ§ÃÂ¹Ã¯Â¿Â½& ÃÂÃ¯Â¿Â½` 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½` ÃÂÃ¯Â¿Â½` Ã¯Â¿Â½&ÃÂµÃÂ±, Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½` ÃÂÃ¯Â¿Â½` 6 ÃÂ§ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±';
 
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -1261,7 +1261,7 @@ module.exports = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
   <link rel="icon" type="image/png" href="/Logo.png">
   <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <meta name="application-name" content="E79E A'D- #(H 'D9F(G">
   <meta name="description" content="${metaDescription}">
   <meta name="keywords" content="${metaKeywords}">
 
@@ -1270,7 +1270,7 @@ module.exports = {
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:site_name" content="مطعم فالح أبو العنبه">
+  <meta property="og:site_name" content="ÙØ·Ø¹Ù ÙØ§ÙØ­ Ø£Ø¨Ù Ø§ÙØ¹ÙØ¨Ù">
   <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
 
   <meta name="robots" content="${robotsContent}">
@@ -1280,7 +1280,7 @@ module.exports = {
   <meta name="language" content="ar">
   <meta name="geo.country" content="EG">
   <meta name="geo.region" content="EG-GZ">
-  <meta name="geo.placename" content="6 أكتوبر, الجيزة">
+  <meta name="geo.placename" content="6 ÃÂ£ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±, ÃÂ§Ã¯Â¿Â½ÃÂ¬Ã¯Â¿Â½`ÃÂ²ÃÂ©">
   <meta name="geo.position" content="29.9753;30.9445">
   <meta name="ICBM" content="29.9753, 30.9445">
   <link rel="alternate" hreflang="ar-eg" href="https://fale7-res.vercel.app/">
@@ -1297,7 +1297,7 @@ module.exports = {
     "@context": "https://schema.org",
     "@id": "https://fale7-res.vercel.app/#restaurant",
     "@type": "Restaurant",
-    "name": "فالح أبو العنبه",
+    "name": "ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ£ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½!",
     "alternateName": "Fale7",
     "logo": "https://fale7-res.vercel.app/Logo.png",
     "image": "https://fale7-res.vercel.app/Logo.png",
@@ -1313,9 +1313,9 @@ module.exports = {
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "EG",
-      "addressRegion": "محافظة الجيزة",
-      "addressLocality": "6 أكتوبر",
-      "streetAddress": "الحي السابع - شارع مكة المكرمة - بالقرب من سنتر الأردنية"
+      "addressRegion": "Ã¯Â¿Â½&ÃÂ­ÃÂ§ÃÂÃÂ¸ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¬Ã¯Â¿Â½`ÃÂ²ÃÂ©",
+      "addressLocality": "6 ÃÂ£ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ±",
+      "streetAddress": "ÃÂ§Ã¯Â¿Â½ÃÂ­Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ§ÃÂ¨ÃÂ¹ - ÃÂ´ÃÂ§ÃÂ±ÃÂ¹ Ã¯Â¿Â½&ÃâÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃâÃÂ±Ã¯Â¿Â½&ÃÂ© - ÃÂ¨ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±ÃÂ¨ Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ³Ã¯Â¿Â½ ÃÂªÃÂ± ÃÂ§Ã¯Â¿Â½ÃÂ£ÃÂ±ÃÂ¯Ã¯Â¿Â½ Ã¯Â¿Â½`ÃÂ©"
     },
     "areaServed": ["EG"],
     "openingHoursSpecification": [{
@@ -1324,7 +1324,7 @@ module.exports = {
       "opens": "07:00",
       "closes": "03:00"
     }],
-    "servesCuisine": ["عراقي", "مشاوي", "سندوتشات", "فلافل"],
+    "servesCuisine": ["ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`", "Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½`", "ÃÂ³Ã¯Â¿Â½ ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃÂ´ÃÂ§ÃÂª", "ÃÂÃ¯Â¿Â½ÃÂ§ÃÂÃ¯Â¿Â½"],
     "hasMap": "https://maps.app.goo.gl/K38LYo9oSC2Myd119",
     "menu": "https://fale7-res.vercel.app/",
     "sameAs": [
@@ -1339,7 +1339,7 @@ module.exports = {
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "مطعم فالح أبو العنبه",
+    "name": "E79E A'D- #(H 'D9F(G",
     "url": "https://fale7-res.vercel.app/",
     "logo": "https://fale7-res.vercel.app/Logo.png"
   }
@@ -1349,9 +1349,19 @@ module.exports = {
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "مطعم فالح أبو العنبه",
+    "name": "ÙØ·Ø¹Ù ÙØ§ÙØ­ Ø£Ø¨Ù Ø§ÙØ¹ÙØ¨Ù",
     "alternateName": ["Fale7"],
-    "url": "https://fale7-res.vercel.app/"
+    "url": "https://fale7-res.vercel.app/",
+    "inLanguage": "ar-EG",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ÙØ·Ø¹Ù ÙØ§ÙØ­ Ø£Ø¨Ù Ø§ÙØ¹ÙØ¨Ù",
+      "url": "https://fale7-res.vercel.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://fale7-res.vercel.app/Logo.png"
+      }
+    }
   }
   </script>
 
@@ -1478,7 +1488,6 @@ module.exports = {
       display:flex;
       flex-direction:column;
     }
-
     .pdf-viewer-container.pdf-wrap{
       min-height:520px;
     }
@@ -1657,8 +1666,8 @@ module.exports = {
       ? `
   <div class="top-bar">
     <div class="action-buttons">
-      ${data.offersExists ? `<a href="/offers" class="btn btn-secondary"><span>🎁</span>العروض</a>` : ''}
-      ${data.suhoorExists ? `<a href="/suhoor" class="btn btn-secondary"><span>🌙</span>منيو السحور</a>` : ''}
+      ${data.offersExists ? `<a href="/offers" class="btn btn-secondary"><span>Ã¯Â¿Â½x}Ã¯Â¿Â½</span>ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶</a>` : ''}
+      ${data.suhoorExists ? `<a href="/suhoor" class="btn btn-secondary"><span>Ã¯Â¿Â½xR"</span>Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±</a>` : ''}
     </div>
     <div class="social-icons">
       <div class="social-icon tiktok"><a href="https://www.tiktok.com/@fale7_1961" target="_blank" rel="noopener"><span><i class="fab fa-tiktok"></i></span></a></div>
@@ -1671,24 +1680,24 @@ module.exports = {
     <div class="pdf-canvas-container" id="pdfContainer">
       <div class="page-loader" id="pageLoader">
         <div class="spinner"></div>
-        <div>جاري تحميل المنيو...</div>
+        <div>ÃÂ¬ÃÂ§ÃÂ±Ã¯Â¿Â½` ÃÂªÃÂ­Ã¯Â¿Â½&Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½...</div>
       </div>
 
       <div id="pdfPages"></div>
 
-      <section class="seo-section seo-desc" id="seoText" aria-label="معلومات المطعم">
-        <h2>معلومات المطعم</h2>
-        <p>مطعم فالح أبو العنبه (Fale7) هو مطعم يقدم السندوتشات والمشاوي والفلافل والأكلات العراقية في مدينة 6 أكتوبر بمحافظة الجيزة، تحديدًا في الحي السابع شارع مكة المكرمة بالقرب من سنتر الأردنية.</p>
-        <p>يعمل المطعم يوميًا من الساعة 7 صباحًا حتى 3 صباحًا ويقدم مجموعة متنوعة من السندوتشات والبطاطس والمشاوي العراقية والفلافل العراقية.</p>
-        <p><strong>العنوان:</strong> الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية</p>
-        <p><strong>رقم الهاتف:</strong> 01000602832 / 01144741115</p>
-        <p><strong>للشكاوى والمقترحات:</strong> 01112595678</p>
-        <p><strong>الموقع على الخريطة:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
+      <section class="seo-section seo-desc" id="seoText" aria-label="Ã¯Â¿Â½&ÃÂ¹Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ§ÃÂª ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½&">
+        <h2>Ã¯Â¿Â½&ÃÂ¹Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ§ÃÂª ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½&</h2>
+        <p>Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ£ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½! (Fale7) Ã¯Â¿Â½!Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& Ã¯Â¿Â½`Ã¯Â¿Â½ÃÂ¯Ã¯Â¿Â½& ÃÂ§Ã¯Â¿Â½ÃÂ³Ã¯Â¿Â½ ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃÂ´ÃÂ§ÃÂª Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½` Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂÃ¯Â¿Â½ÃÂ§ÃÂÃ¯Â¿Â½ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ£ÃâÃ¯Â¿Â½ÃÂ§ÃÂª ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ© ÃÂÃ¯Â¿Â½` Ã¯Â¿Â½&ÃÂ¯Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ© 6 ÃÂ£ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ± ÃÂ¨Ã¯Â¿Â½&ÃÂ­ÃÂ§ÃÂÃÂ¸ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¬Ã¯Â¿Â½`ÃÂ²ÃÂ©Ã¯Â¿Â½R ÃÂªÃÂ­ÃÂ¯Ã¯Â¿Â½`ÃÂ¯Ã¯Â¿Â½9ÃÂ§ ÃÂÃ¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ­Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ§ÃÂ¨ÃÂ¹ ÃÂ´ÃÂ§ÃÂ±ÃÂ¹ Ã¯Â¿Â½&ÃâÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃâÃÂ±Ã¯Â¿Â½&ÃÂ© ÃÂ¨ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±ÃÂ¨ Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ³Ã¯Â¿Â½ ÃÂªÃÂ± ÃÂ§Ã¯Â¿Â½ÃÂ£ÃÂ±ÃÂ¯Ã¯Â¿Â½ Ã¯Â¿Â½`ÃÂ©.</p>
+        <p>Ã¯Â¿Â½`ÃÂ¹Ã¯Â¿Â½&Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½`Ã¯Â¿Â½9ÃÂ§ Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ§ÃÂ¹ÃÂ© 7 ÃÂµÃÂ¨ÃÂ§ÃÂ­Ã¯Â¿Â½9ÃÂ§ ÃÂ­ÃÂªÃ¯Â¿Â½0 3 ÃÂµÃÂ¨ÃÂ§ÃÂ­Ã¯Â¿Â½9ÃÂ§ Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½`Ã¯Â¿Â½ÃÂ¯Ã¯Â¿Â½& Ã¯Â¿Â½&ÃÂ¬Ã¯Â¿Â½&Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¹ÃÂ© Ã¯Â¿Â½&ÃÂªÃ¯Â¿Â½ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¹ÃÂ© Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ§Ã¯Â¿Â½ÃÂ³Ã¯Â¿Â½ ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃÂ´ÃÂ§ÃÂª Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ¨ÃÂ·ÃÂ§ÃÂ·ÃÂ³ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂ´ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ© Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂÃ¯Â¿Â½ÃÂ§ÃÂÃ¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ©.</p>
+        <p><strong>ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ :</strong> ÃÂ§Ã¯Â¿Â½ÃÂ¬Ã¯Â¿Â½`ÃÂ²ÃÂ© Ã¯Â¿Â½ 6 ÃÂ£ÃâÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂ¨ÃÂ± Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ­Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ§ÃÂ¨ÃÂ¹ Ã¯Â¿Â½ ÃÂ´ÃÂ§ÃÂ±ÃÂ¹ Ã¯Â¿Â½&ÃâÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃâÃÂ±Ã¯Â¿Â½&ÃÂ© Ã¯Â¿Â½ ÃÂ¨ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±ÃÂ¨ Ã¯Â¿Â½&Ã¯Â¿Â½  ÃÂ³Ã¯Â¿Â½ ÃÂªÃÂ± ÃÂ§Ã¯Â¿Â½ÃÂ£ÃÂ±ÃÂ¯Ã¯Â¿Â½ Ã¯Â¿Â½`ÃÂ©</p>
+        <p><strong>ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½& ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½!ÃÂ§ÃÂªÃÂ:</strong> 01000602832 / 01144741115</p>
+        <p><strong>Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ´ÃâÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½0 Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂªÃÂ±ÃÂ­ÃÂ§ÃÂª:</strong> 01112595678</p>
+        <p><strong>ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¹ ÃÂ¹Ã¯Â¿Â½Ã¯Â¿Â½0 ÃÂ§Ã¯Â¿Â½ÃÂ®ÃÂ±Ã¯Â¿Â½`ÃÂ·ÃÂ©:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
       </section>
     </div>
   </div>
 
-  <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
+  <div class="mobile-hint">ÃÂ§ÃÂ³ÃÂªÃÂ®ÃÂ¯Ã¯Â¿Â½& ÃÂ¥ÃÂµÃÂ¨ÃÂ¹Ã¯Â¿Â½`Ã¯Â¿Â½  Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃâÃÂ¨Ã¯Â¿Â½`ÃÂ± Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂªÃÂµÃÂºÃ¯Â¿Â½`ÃÂ±</div>
 
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -1758,7 +1767,7 @@ module.exports = {
         const pagesContainer = document.getElementById('pdfPages');
         if(pagesContainer){
           pagesContainer.innerHTML =
-            '<div style="text-align:center;padding:1.25rem;color:#475569">تعذر تحميل المنيو الآن. حاول لاحقًا.</div>';
+            '<div style="text-align:center;padding:1.25rem;color:#475569">ÃÂªÃÂ¹ÃÂ°ÃÂ± ÃÂªÃÂ­Ã¯Â¿Â½&Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¢Ã¯Â¿Â½ . ÃÂ­ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½ÃÂ§ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½9ÃÂ§.</div>';
         }
         if(loader) loader.style.display = 'none';
       }
@@ -1775,16 +1784,16 @@ module.exports = {
   `
       : `
   <div class="no-menu">
-    <div class="no-menu-icon">📋</div>
-    <h2 class="no-menu-title">المنيو غير متوفر حالياً</h2>
-    <p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.</p>
+    <div class="no-menu-icon">Ã¯Â¿Â½x9</div>
+    <h2 class="no-menu-title">ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂºÃ¯Â¿Â½`ÃÂ± Ã¯Â¿Â½&ÃÂªÃ¯Â¿Â½Ã¯Â¿Â½ÃÂÃÂ± ÃÂ­ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½`ÃÂ§Ã¯Â¿Â½9</h2>
+    <p class="no-menu-text">Ã¯Â¿Â½Ã¯Â¿Â½& Ã¯Â¿Â½`ÃÂªÃ¯Â¿Â½& ÃÂ±ÃÂÃÂ¹ Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ¨ÃÂ¹ÃÂ¯Ã¯Â¿Â½R Ã¯Â¿Â½`ÃÂ±ÃÂ¬Ã¯Â¿Â½0 ÃÂ§Ã¯Â¿Â½ÃÂªÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½ÃÂ§ÃÂ­Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½9.</p>
   </div>
   `
   }
 </body>
 </html>`;
   },
-  // قالب صفحات PDF الإضافية (العروض / السحور)
+  // Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ¨ ÃÂµÃÂÃÂ­ÃÂ§ÃÂª PDF ÃÂ§Ã¯Â¿Â½ÃÂ¥ÃÂ¶ÃÂ§ÃÂÃ¯Â¿Â½`ÃÂ© (ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶ / ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±)
   pdfPage: (data) => {
     const indexable =
       typeof data.indexable === 'boolean' ? data.indexable : data.pageExists;
@@ -1793,7 +1802,7 @@ module.exports = {
       ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
       : 'noindex, nofollow';
 
-    const metaDescription = data.metaDescription || 'صفحة المنيو والعروض الخاصة بمطعم فالح أبو العنبه.';
+    const metaDescription = data.metaDescription || 'ÃÂµÃÂÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶ ÃÂ§Ã¯Â¿Â½ÃÂ®ÃÂ§ÃÂµÃÂ© ÃÂ¨Ã¯Â¿Â½&ÃÂ·ÃÂ¹Ã¯Â¿Â½& ÃÂÃÂ§Ã¯Â¿Â½ÃÂ­ ÃÂ£ÃÂ¨Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ¹Ã¯Â¿Â½ ÃÂ¨Ã¯Â¿Â½!.';
 
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -1802,14 +1811,14 @@ module.exports = {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
   <link rel="icon" type="image/png" href="/Logo.png">
   <link rel="apple-touch-icon" href="/Logo.png">
-  <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <meta name="application-name" content="E79E A'D- #(H 'D9F(G">
   <meta name="description" content="${metaDescription}">
   <meta property="og:title" content="${data.title}">
   <meta property="og:description" content="${metaDescription}">
   <meta property="og:url" content="${data.canonicalUrl}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ar_EG">
-  <meta property="og:site_name" content="مطعم فالح أبو العنبه">
+  <meta property="og:site_name" content="ÙØ·Ø¹Ù ÙØ§ÙØ­ Ø£Ø¨Ù Ø§ÙØ¹ÙØ¨Ù">
   <meta property="og:image" content="https://fale7-res.vercel.app/Logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${data.title}">
@@ -1828,7 +1837,7 @@ module.exports = {
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "مطعم فالح أبو العنبه",
+    "name": "E79E A'D- #(H 'D9F(G",
     "url": "https://fale7-res.vercel.app/",
     "logo": "https://fale7-res.vercel.app/Logo.png"
   }
@@ -1838,9 +1847,19 @@ module.exports = {
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "مطعم فالح أبو العنبه",
+    "name": "ÙØ·Ø¹Ù ÙØ§ÙØ­ Ø£Ø¨Ù Ø§ÙØ¹ÙØ¨Ù",
     "alternateName": ["Fale7"],
-    "url": "https://fale7-res.vercel.app/"
+    "url": "https://fale7-res.vercel.app/",
+    "inLanguage": "ar-EG",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ÙØ·Ø¹Ù ÙØ§ÙØ­ Ø£Ø¨Ù Ø§ÙØ¹ÙØ¨Ù",
+      "url": "https://fale7-res.vercel.app/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://fale7-res.vercel.app/Logo.png"
+      }
+    }
   }
   </script>
 
@@ -1955,7 +1974,6 @@ module.exports = {
       display:flex;
       flex-direction:column;
     }
-
     .pdf-viewer-container.pdf-wrap{
       min-height:520px;
     }
@@ -2085,9 +2103,9 @@ module.exports = {
 <body>
   <div class="top-bar">
     <div class="action-buttons">
-      ${data.offersExists && data.pageType !== 'offers' ? `<a href="/offers" class="btn btn-secondary"><span>🎁</span>العروض</a>` : ''}
-      ${data.suhoorExists && data.pageType !== 'suhoor' ? `<a href="/suhoor" class="btn btn-secondary"><span>🌙</span>منيو السحور</a>` : ''}
-      <a href="/menu" class="btn btn-secondary"><span>🏠</span>المنيو الرئيسي</a>
+      ${data.offersExists && data.pageType !== 'offers' ? `<a href="/offers" class="btn btn-secondary"><span>Ã¯Â¿Â½x}Ã¯Â¿Â½</span>ÃÂ§Ã¯Â¿Â½ÃÂ¹ÃÂ±Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ¶</a>` : ''}
+      ${data.suhoorExists && data.pageType !== 'suhoor' ? `<a href="/suhoor" class="btn btn-secondary"><span>Ã¯Â¿Â½xR"</span>Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ³ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ±</a>` : ''}
+      <a href="/menu" class="btn btn-secondary"><span>Ã¯Â¿Â½xÃ¯Â¿Â½Ã¯Â¿Â½</span>ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ Ã¯Â¿Â½`Ã¯Â¿Â½Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½ÃÂ±ÃÂ¦Ã¯Â¿Â½`ÃÂ³Ã¯Â¿Â½`</a>
     </div>
 
     <div class="social-icons">
@@ -2104,13 +2122,13 @@ module.exports = {
     <div class="pdf-canvas-container" id="pdfContainer">
       <div class="page-loader" id="pageLoader">
         <div class="spinner"></div>
-        <div>جاري التحميل...</div>
+        <div>ÃÂ¬ÃÂ§ÃÂ±Ã¯Â¿Â½` ÃÂ§Ã¯Â¿Â½ÃÂªÃÂ­Ã¯Â¿Â½&Ã¯Â¿Â½`Ã¯Â¿Â½...</div>
       </div>
       <div id="pdfPages"></div>
     </div>
   </div>
 
-  <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
+  <div class="mobile-hint">ÃÂ§ÃÂ³ÃÂªÃÂ®ÃÂ¯Ã¯Â¿Â½& ÃÂ¥ÃÂµÃÂ¨ÃÂ¹Ã¯Â¿Â½`Ã¯Â¿Â½  Ã¯Â¿Â½Ã¯Â¿Â½ÃÂªÃâÃÂ¨Ã¯Â¿Â½`ÃÂ± Ã¯Â¿Â½Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½ÃÂªÃÂµÃÂºÃ¯Â¿Â½`ÃÂ±</div>
 
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -2177,7 +2195,7 @@ module.exports = {
         console.error(e);
         const pagesContainer = document.getElementById('pdfPages');
         if(pagesContainer){
-          pagesContainer.innerHTML = '<div class="empty"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
+          pagesContainer.innerHTML = '<div class="empty"><h2>ÃÂªÃÂ¹ÃÂ°ÃÂ± ÃÂªÃÂ­Ã¯Â¿Â½&Ã¯Â¿Â½`Ã¯Â¿Â½ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&Ã¯Â¿Â½ÃÂ</h2><p>ÃÂ­ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½ Ã¯Â¿Â½&ÃÂ±ÃÂ© ÃÂ£ÃÂ®ÃÂ±Ã¯Â¿Â½0 Ã¯Â¿Â½ÃÂ§ÃÂ­Ã¯Â¿Â½Ã¯Â¿Â½9ÃÂ§.</p></div>';
         }
         if(loader) loader.style.display = 'none';
       }
@@ -2188,15 +2206,15 @@ module.exports = {
       loadPDF();
     });
 
-    // ✅ بدون إعادة رسم PDF عند rotate
+    // Ã¯Â¿Â½S& ÃÂ¨ÃÂ¯Ã¯Â¿Â½Ã¯Â¿Â½Ã¯Â¿Â½  ÃÂ¥ÃÂ¹ÃÂ§ÃÂ¯ÃÂ© ÃÂ±ÃÂ³Ã¯Â¿Â½& PDF ÃÂ¹Ã¯Â¿Â½ ÃÂ¯ rotate
     window.addEventListener('resize', syncHeaderOffset);
     window.addEventListener('orientationchange', syncHeaderOffset);
   </script>
   `
       : `
   <div class="empty">
-    <h2>${data.emptyTitle || 'هذه الصفحة غير متاحة الآن'}</h2>
-    <p>${data.emptyText || 'يمكنك المتابعة لاحقاً.'}</p>
+    <h2>${data.emptyTitle || 'Ã¯Â¿Â½!ÃÂ°Ã¯Â¿Â½! ÃÂ§Ã¯Â¿Â½ÃÂµÃÂÃÂ­ÃÂ© ÃÂºÃ¯Â¿Â½`ÃÂ± Ã¯Â¿Â½&ÃÂªÃÂ§ÃÂ­ÃÂ© ÃÂ§Ã¯Â¿Â½ÃÂ¢Ã¯Â¿Â½ '}</h2>
+    <p>${data.emptyText || 'Ã¯Â¿Â½`Ã¯Â¿Â½&ÃâÃ¯Â¿Â½ Ãâ ÃÂ§Ã¯Â¿Â½Ã¯Â¿Â½&ÃÂªÃÂ§ÃÂ¨ÃÂ¹ÃÂ© Ã¯Â¿Â½ÃÂ§ÃÂ­Ã¯Â¿Â½ÃÂ§Ã¯Â¿Â½9.'}</p>
   </div>
   `
   }
