@@ -6,7 +6,8 @@
   "packageManager": "pnpm@10.28.2",
   "scripts": {
     "start": "node app.js",
-    "dev": "node app.js"
+    "dev": "node app.js",
+    "dev:3001": "node app.js --port 3001"
   },
   "dependencies": {
     "@vercel/blob": "^0.23.4",
