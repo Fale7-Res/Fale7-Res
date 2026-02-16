@@ -202,30 +202,179 @@ module.exports = {
       display: inline-block;
     }
     
+    @media (max-width: 768px) {
+      body {
+        padding: clamp(0.5rem, 2vw, 1rem);
+      }
+      
+      .card {
+        max-width: min(90vw, 380px);
+      }
+      
+      .card-header {
+        padding: clamp(1rem, 2.5vw, 1.5rem);
+      }
+      
+      .card-content {
+        padding: clamp(1rem, 2.5vw, 1.5rem);
+      }
+      
+      .card-title {
+        font-size: clamp(1.1rem, 2.5vw, 1.375rem);
+      }
+      
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+      
+      .btn {
+        padding: clamp(0.625rem, 2vw, 0.75rem);
+        font-size: clamp(0.875rem, 2vw, 1rem);
+      }
+    }
+
     @media (max-width: 480px) {
       body {
         padding: 0.5rem;
       }
       
+      .card {
+        max-width: 100%;
+      }
+      
       .card-header {
-        padding: 1.5rem;
+        padding: 1.25rem 1rem;
       }
       
       .card-content {
-        padding: 1.5rem;
+        padding: 1.25rem 1rem;
       }
       
       .card-title {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
+      }
+      
+      .form-label {
+        font-size: 0.8125rem;
+      }
+      
+      .form-input {
+        padding: 0.625rem;
+        font-size: 0.9375rem;
+        min-height: 40px;
+      }
+      
+      .btn {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.875rem;
+        min-height: 40px;
       }
     }
 
-    @media (max-height: 700px) and (orientation: landscape) {
-      body {
-        align-items: flex-start;
+    @media (max-width: 360px) {
+      .card-title {
+        font-size: 1rem;
+        gap: 0.25rem;
       }
+      
+      .form-input {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+      }
+      
+      .btn {
+        font-size: 0.8125rem;
+        padding: 0.5rem;
+      }
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      body {
+        align-items: center;
+        padding: 0.5rem;
+        min-height: 100vh;
+      }
+      
       .card {
-        margin: 0.5rem auto;
+        max-width: min(90vw, 500px);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      
+      .card-header {
+        padding: 0.75rem 1rem;
+      }
+      
+      .card-content {
+        padding: 0.75rem 1rem;
+      }
+      
+      .card-title {
+        font-size: 1.125rem;
+        margin: 0 0 0.25rem 0;
+      }
+      
+      .card-subtitle {
+        font-size: 0.75rem;
+      }
+      
+      .form-group {
+        margin-bottom: 0.75rem;
+      }
+      
+      .form-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem;
+      }
+      
+      .form-input {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        min-height: 38px;
+      }
+      
+      .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        min-height: 38px;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .card {
+        max-height: 95vh;
+      }
+      
+      .card-header {
+        padding: 0.5rem 1rem;
+      }
+      
+      .card-content {
+        padding: 0.5rem 1rem;
+      }
+      
+      .card-title {
+        font-size: 1rem;
+        margin-bottom: 0;
+      }
+      
+      .card-subtitle {
+        font-size: 0.7rem;
+      }
+      
+      .form-group {
+        margin-bottom: 0.6rem;
+      }
+      
+      .form-input {
+        padding: 0.4rem;
+        min-height: 36px;
+      }
+      
+      .btn {
+        min-height: 36px;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -394,12 +543,17 @@ module.exports = {
     .upload-area {
       border: 2px dashed #cbd5e1;
       border-radius: var(--radius);
-      padding: 2rem 1rem;
+      padding: clamp(1rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1rem);
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: clamp(1rem, 2vw, 1.5rem);
       transition: all 0.2s;
       cursor: pointer;
       position: relative;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     
     .upload-area:hover {
@@ -471,24 +625,24 @@ module.exports = {
     }
     
     .btn {
-      display: block;
+      display: flex;
       width: 100%;
-      padding: 0.75rem 1rem;
+      padding: clamp(0.625rem, 2vw, 0.75rem);
       border: none;
       border-radius: calc(var(--radius) - 2px);
-      font-size: 1rem;
+      font-size: clamp(0.875rem, 2vw, 1rem);
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
       text-align: center;
       text-decoration: none;
-      margin-bottom: 1rem;
-      display: flex;
+      margin-bottom: clamp(0.75rem, 2vw, 1rem);
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
       min-height: 44px;
       overflow-wrap: anywhere;
+      flex-wrap: nowrap;
     }
     
     .btn-primary {
@@ -582,30 +736,280 @@ module.exports = {
         font-weight: 500;
     }
     
-    @media (max-width: 640px) {
+    @media (max-width: 1024px) {
       .container {
-        margin: 1rem auto;
+        width: min(100%, 680px);
       }
       
       .card-header {
-        padding: 1.25rem;
+        padding: clamp(1rem, 3vw, 1.5rem);
       }
       
       .card-content {
-        padding: 1.25rem;
-      }
-      
-      .upload-area {
-        padding: 1.5rem 1rem;
+        padding: clamp(1rem, 3vw, 1.5rem);
       }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 768px) {
+      .container {
+        width: min(100%, 600px);
+        margin: clamp(0.5rem, 2vw, 1.5rem) auto;
+      }
+      
+      .upload-area {
+        min-height: 110px;
+      }
+      
+      .card-header {
+        padding: clamp(1rem, 2.5vw, 1.25rem);
+      }
+      
+      .card-content {
+        padding: clamp(1rem, 2.5vw, 1.25rem);
+      }
+      
+      .upload-section {
+        padding: clamp(0.75rem, 2vw, 1rem);
+        margin-bottom: clamp(0.75rem, 2vw, 1rem);
+        border-radius: 8px;
+      }
+      
+      .upload-section-title {
+        font-size: clamp(0.875rem, 2vw, 1rem);
+      }
+      
+      .inline-actions {
+        gap: clamp(0.4rem, 2vw, 0.5rem);
+      }
+      
+      .btn {
+        font-size: clamp(0.75rem, 2vw, 0.875rem);
+        min-height: 42px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 100%;
+        margin: 0.5rem auto;
+      }
+      
+      body {
+        padding: 0.5rem;
+      }
+      
+      .card-header {
+        padding: 1rem 1.5rem;
+      }
+      
+      .card-content {
+        padding: 1rem 1.5rem;
+      }
+      
+      .card-title {
+        font-size: clamp(1.125rem, 4vw, 1.375rem);
+      }
+      
+      .upload-area {
+        padding: 1.25rem 0.75rem;
+        min-height: 100px;
+      }
+      
+      .upload-icon {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .upload-text {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+      
+      .upload-hint {
+        font-size: 0.75rem;
+      }
+      
+      .upload-section {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        border-radius: 6px;
+      }
+      
+      .upload-section-title {
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+      }
+      
       .inline-actions {
         grid-template-columns: 1fr;
+        gap: 0.4rem;
       }
+      
       .btn {
-        font-size: 0.9rem;
+        padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.6rem, 2vw, 0.75rem);
+        font-size: 0.75rem;
+        min-height: 40px;
+        margin-bottom: clamp(0.6rem, 1.5vw, 0.75rem);
+      }
+      
+      .actions {
+        gap: clamp(0.6rem, 1.5vw, 1rem);
+      }
+      
+      .debug-info {
+        font-size: 0.7rem;
+        margin-top: 1rem;
+      }
+      
+      #progressBar {
+        height: 16px;
+      }
+      
+      #progressPercentage {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .card {
+        border-radius: 12px;
+      }
+      
+      .card-title {
+        font-size: 1rem;
+        gap: 0.3rem;
+      }
+      
+      .card-subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .upload-area {
+        padding: 1rem 0.6rem;
+        min-height: 90px;
+      }
+      
+      .upload-icon {
+        font-size: 1.5rem;
+      }
+      
+      .upload-text {
+        font-size: 0.8125rem;
+      }
+      
+      .btn {
+        font-size: 0.7rem;
+        padding: 0.45rem 0.5rem;
+        min-height: 38px;
+      }
+      
+      .inline-actions {
+        gap: 0.3rem;
+      }
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      .container {
+        margin: 0.5rem auto;
+      }
+      
+      .card {
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      
+      .card-header {
+        padding: 0.75rem 1rem;
+      }
+      
+      .card-content {
+        padding: 0.75rem 1rem;
+      }
+      
+      .card-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.2rem;
+      }
+      
+      .upload-section {
+        padding: 0.6rem;
+        margin-bottom: 0.6rem;
+      }
+      
+      .upload-section-title {
+        font-size: 0.75rem;
+        margin-bottom: 0.4rem;
+      }
+      
+      .upload-area {
+        padding: 0.75rem 0.5rem;
+        min-height: 80px;
+        margin-bottom: 0.6rem;
+      }
+      
+      .upload-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+      }
+      
+      .upload-text {
+        font-size: 0.75rem;
+        margin-bottom: 0.15rem;
+      }
+      
+      .upload-hint {
+        font-size: 0.65rem;
+      }
+      
+      .btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.7rem;
+        min-height: 36px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .actions {
+        margin-top: 0.75rem;
+        gap: 0.5rem;
+      }
+      
+      .debug-info {
+        font-size: 0.65rem;
+        margin-top: 0.75rem;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .card-header {
+        padding: 0.5rem 1rem;
+      }
+      
+      .card-content {
+        padding: 0.5rem 1rem;
+      }
+      
+      .card-title {
+        font-size: 1rem;
+        margin-bottom: 0;
+      }
+      
+      .upload-section {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .upload-area {
+        padding: 0.6rem 0.5rem;
+        min-height: 70px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .btn {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.65rem;
+        min-height: 34px;
+        margin-bottom: 0.4rem;
       }
     }
   </style>
@@ -982,33 +1386,38 @@ module.exports = {
     
     .social-icons {
       display: flex;
-      gap: clamp(0.5rem, 2vw, 1.25rem);
+      gap: clamp(0.4rem, 1.5vw, 1rem);
       order: 2;
       flex: 0 0 auto;
+      flex-wrap: nowrap;
+      min-width: 0;
     }
 
     .social-icon {
       position: relative;
       cursor: pointer;
+      flex: 0 0 auto;
     }
     
     .social-icon a {
       text-decoration: none;
       color: inherit;
+      display: block;
     }
     
     .social-icon span {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: clamp(40px, 5vw, 50px);
-      width: clamp(40px, 5vw, 50px);
+      height: clamp(38px, 4vw, 48px);
+      width: clamp(38px, 4vw, 48px);
       background: white;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
-      font-size: 20px;
+      font-size: clamp(14px, 3vw, 20px);
       color: #666;
+      flex-shrink: 0;
     }
     
     .social-icon.tiktok:hover span {
@@ -1090,8 +1499,8 @@ module.exports = {
     .action-buttons {
       display: flex;
       flex-direction: row;
-      gap: 0.5rem;
-      max-width: calc(100% - 150px);
+      gap: clamp(0.4rem, 1.5vw, 0.75rem);
+      max-width: calc(100% - clamp(140px, 32vw, 180px));
       min-width: 0;
       order: 1;
       justify-content: flex-start;
@@ -1100,6 +1509,8 @@ module.exports = {
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      flex: 1 1 auto;
+      padding-right: 0.5rem;
     }
 
     .action-buttons::-webkit-scrollbar {
@@ -1110,17 +1521,22 @@ module.exports = {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
+      gap: 0.35rem;
+      padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
       border-radius: calc(var(--radius) - 2px);
-      font-size: 0.875rem;
+      font-size: clamp(0.7rem, 1.8vw, 0.875rem);
       font-weight: 500;
       text-decoration: none;
       transition: all 0.2s;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       width: auto;
       white-space: nowrap;
-      min-height: 40px;
+      min-height: clamp(38px, 4vw, 44px);
+      flex: 0 0 auto;
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .btn-primary {
@@ -1193,52 +1609,234 @@ module.exports = {
       backdrop-filter: blur(10px);
     }
     
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .top-bar {
-        padding: calc(0.625rem + var(--safe-top)) calc(0.625rem + var(--safe-right)) 0.625rem calc(0.625rem + var(--safe-left));
-        gap: 0.625rem;
+        padding: calc(0.625rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.625rem calc(0.75rem + var(--safe-left));
+        gap: clamp(0.4rem, 1.5vw, 0.625rem);
+        min-height: clamp(56px, 8vh, 70px);
       }
-      .social-icons {
-        gap: 0.75rem;
-      }
+      
       .action-buttons {
-        max-width: calc(100% - 128px);
+        max-width: calc(100% - clamp(120px, 28vw, 160px));
+        gap: clamp(0.3rem, 1vw, 0.5rem);
       }
-      .social-icon span {
-        height: 42px;
-        width: 42px;
-        font-size: 16px;
-      }
-
+      
       .btn {
-        flex: 0 0 auto;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.75rem;
-        min-height: 40px;
+        padding: clamp(0.35rem, 1vw, 0.45rem) clamp(0.5rem, 1.5vw, 0.75rem);
+        font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+        min-height: clamp(36px, 3vw, 40px);
       }
-
-      .no-menu-icon {
-        font-size: 3rem;
+      
+      .social-icons {
+        gap: clamp(0.3rem, 1vw, 0.75rem);
       }
-
-      .no-menu-title {
-        font-size: 1.25rem;
+      
+      .social-icon span {
+        height: clamp(36px, 3vw, 44px);
+        width: clamp(36px, 3vw, 44px);
+        font-size: clamp(12px, 2.5vw, 16px);
       }
-
-      .no-menu-text {
-        font-size: 0.875rem;
+      
+      .pdf-canvas-container {
+        padding: clamp(0.75rem, 2vw, 1rem);
+        gap: clamp(0.6rem, 2vw, 1rem);
+      }
+      
+      .mobile-hint {
+        font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+        padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.75rem, 2vw, 1rem);
+        bottom: calc(clamp(0.75rem, 1.5vw, 1rem) + var(--safe-bottom));
       }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 480px) {
+      .top-bar {
+        padding: calc(0.5rem + var(--safe-top)) calc(0.5rem + var(--safe-right)) 0.5rem calc(0.5rem + var(--safe-left));
+        gap: 0.4rem;
+        min-height: clamp(52px, 7vh, 64px);
+      }
+      
+      .action-buttons {
+        max-width: calc(100% - clamp(110px, 26vw, 140px));
+        padding-right: 0.3rem;
+      }
+      
+      .btn {
+        padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.45rem, 1.2vw, 0.6rem);
+        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+        min-height: clamp(34px, 2.8vw, 38px);
+        gap: 0.25rem;
+      }
+      
+      .btn-primary:hover,
+      .btn-secondary:hover {
+        transform: translateY(-0.5px);
+      }
+      
+      .social-icons {
+        gap: clamp(0.25rem, 0.8vw, 0.5rem);
+      }
+      
       .social-icon span {
-        height: 40px;
-        width: 40px;
+        height: clamp(34px, 2.5vw, 40px);
+        width: clamp(34px, 2.5vw, 40px);
+        font-size: clamp(11px, 2vw, 14px);
+      }
+      
+      .pdf-canvas-container {
+        padding: clamp(0.5rem, 1.5vw, 0.75rem);
+        gap: clamp(0.5rem, 1.5vw, 0.75rem);
+      }
+      
+      .pdf-page {
+        border-radius: 6px;
+      }
+      
+      .mobile-hint {
+        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+        padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.75rem);
+        bottom: calc(clamp(0.5rem, 1vw, 0.75rem) + var(--safe-bottom));
+      }
+      
+      .loading-spinner {
+        height: 150px;
+      }
+      
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3b82f6;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .top-bar {
+        min-height: clamp(48px, 6vh, 56px);
+        padding: calc(0.4rem + var(--safe-top)) calc(0.4rem + var(--safe-right)) 0.4rem calc(0.4rem + var(--safe-left));
+      }
+      
+      .action-buttons {
+        max-width: calc(100% - 100px);
+      }
+      
+      .btn {
+        padding: 0.3rem 0.4rem;
+        font-size: 0.6rem;
+        min-height: 32px;
+        gap: 0.2rem;
+      }
+      
+      .btn .icon {
+        font-size: 0.8em;
+      }
+      
+      .social-icon span {
+        height: 32px;
+        width: 32px;
+        font-size: 10px;
+      }
+      
+      .pdf-canvas-container {
+        padding: 0.4rem;
+        gap: 0.4rem;
+      }
+      
+      .mobile-hint {
+        font-size: 0.6rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      .top-bar {
+        min-height: clamp(48px, 10vh, 70px);
+        padding: calc(0.5rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.5rem calc(0.75rem + var(--safe-left));
+        gap: 0.5rem;
+      }
+      
+      .action-buttons {
+        max-width: calc(100% - clamp(120px, 25vw, 150px));
+        gap: 0.4rem;
+      }
+      
+      .btn {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.7rem;
+        min-height: 36px;
+      }
+      
+      .social-icons {
+        gap: clamp(0.3rem, 1vw, 0.5rem);
+      }
+      
+      .social-icon span {
+        height: 36px;
+        width: 36px;
         font-size: 14px;
       }
+      
+      .pdf-canvas-container {
+        padding: clamp(0.5rem, 1.5vw, 0.75rem);
+        gap: clamp(0.5rem, 1.5vw, 0.75rem);
+      }
+      
+      .mobile-hint {
+        font-size: 0.65rem;
+        bottom: calc(0.5rem + var(--safe-bottom));
+      }
+      
+      .no-menu-icon {
+        font-size: clamp(2rem, 10vh, 3rem);
+      }
+      
+      .no-menu-title {
+        font-size: clamp(1rem, 4vw, 1.25rem);
+      }
+      
+      .no-menu-text {
+        font-size: clamp(0.75rem, 2vw, 0.875rem);
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .top-bar {
+        min-height: clamp(44px, 8vh, 56px);
+        padding: calc(0.4rem + var(--safe-top)) calc(0.6rem + var(--safe-right)) 0.4rem calc(0.6rem + var(--safe-left));
+      }
+      
+      .action-buttons {
+        gap: 0.3rem;
+      }
+      
       .btn {
-        padding: 0.35rem 0.625rem;
-        font-size: 0.7rem;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.65rem;
+        min-height: 32px;
+      }
+      
+      .social-icon span {
+        height: 32px;
+        width: 32px;
+        font-size: 12px;
+      }
+      
+      .pdf-canvas-container {
+        padding: 0.4rem;
+        gap: 0.4rem;
+      }
+      
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #3b82f6;
+      }
+    }
+
+    @media (max-width: 640px) and (orientation: portrait) {
+      .top-bar {
+        min-height: clamp(54px, 8vh, 68px);
       }
     }
   </style>
@@ -1463,39 +2061,47 @@ module.exports = {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.75rem;
+      gap: clamp(0.5rem, 2vw, 0.75rem);
       direction: rtl;
+      flex-wrap: nowrap;
+      min-height: clamp(60px, 10vh, 80px);
+      overflow: hidden;
     }
 
     .social-icons {
       display: flex;
-      gap: clamp(0.5rem, 2vw, 1.25rem);
+      gap: clamp(0.4rem, 1.5vw, 1rem);
       order: 2;
       flex: 0 0 auto;
+      flex-wrap: nowrap;
+      min-width: 0;
     }
 
     .social-icon {
       position: relative;
       cursor: pointer;
+      flex: 0 0 auto;
     }
 
     .social-icon a {
       text-decoration: none;
       color: inherit;
+      display: block;
     }
 
     .social-icon span {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: clamp(40px, 5vw, 50px);
-      width: clamp(40px, 5vw, 50px);
+      height: clamp(38px, 4vw, 48px);
+      width: clamp(38px, 4vw, 48px);
       background: white;
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       transition: all 0.3s ease;
-      font-size: 20px;
+      font-size: clamp(14px, 3vw, 20px);
       color: #666;
+      flex-shrink: 0;
     }
 
     .social-icon.tiktok:hover span {
@@ -1519,6 +2125,54 @@ module.exports = {
       box-shadow: 0 8px 20px rgba(52, 183, 241, 0.4);
     }
 
+    .action-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: clamp(0.4rem, 1.5vw, 0.75rem);
+      max-width: calc(100% - clamp(140px, 32vw, 180px));
+      min-width: 0;
+      order: 1;
+      justify-content: flex-start;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      flex: 1 1 auto;
+      padding-right: 0.5rem;
+    }
+
+    .action-buttons::-webkit-scrollbar {
+      display: none;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
+      border-radius: calc(var(--radius) - 2px);
+      font-size: clamp(0.7rem, 1.8vw, 0.875rem);
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      width: auto;
+      white-space: nowrap;
+      min-height: clamp(38px, 4vw, 44px);
+      flex: 0 0 auto;
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-primary { background:#3b82f6; color:white; }
+    .btn-primary:hover { background:#2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+    .btn-secondary { background:white; color:#3b82f6; border:1px solid #3b82f6; }
+    .btn-secondary:hover { background:rgba(59,130,246,0.05); transform: translateY(-1px); }
+
     .pdf-viewer-container {
       position: fixed;
       top: var(--header-offset);
@@ -1536,18 +2190,19 @@ module.exports = {
     .pdf-canvas-container {
       flex: 1;
       overflow: auto;
-      padding: 1rem;
+      padding: clamp(0.75rem, 2vw, 1rem);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
+      gap: clamp(0.75rem, 2vw, 1rem);
     }
 
     .pdf-page {
       box-shadow: 0 4px 12px rgba(0,0,0,0.12);
       border-radius: 8px;
-      max-width:100%;
+      max-width: 100%;
       height: auto;
+      width: auto;
     }
 
     .loading-spinner {
@@ -1555,112 +2210,286 @@ module.exports = {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 200px;
-      gap: 1rem;
+      height: clamp(150px, 30vh, 200px);
+      gap: clamp(0.75rem, 2vw, 1rem);
       color: #475569;
+      padding: 1rem;
     }
 
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3b82f6;
+      width: clamp(32px, 5vw, 40px);
+      height: clamp(32px, 5vw, 40px);
+      border: clamp(2px, 0.5vw, 4px) solid #f3f3f3;
+      border-top: clamp(2px, 0.5vw, 4px) solid #3b82f6;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
 
-    .empty { display:flex; height:100%; align-items:center; justify-content:center; flex-direction:column; text-align:center; color:#475569; padding: 1rem; }
+    .empty {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      color: #475569;
+      padding: clamp(1rem, 3vw, 2rem);
+    }
+
+    .empty h2 {
+      font-size: clamp(1.125rem, 3vw, 1.5rem);
+      margin: 0 0 0.75rem 0;
+    }
+
+    .empty p {
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      max-width: 300px;
+    }
 
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-      gap: 0.5rem;
-      max-width: calc(100% - 150px);
-      min-width: 0;
-      order: 1;
-      justify-content: flex-start;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .action-buttons::-webkit-scrollbar {
-      display: none;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: calc(var(--radius) - 2px);
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-      width: auto;
-      white-space: nowrap;
-      min-height: 40px;
-    }
-
-    .btn-primary { background:#3b82f6; color:white; }
-    .btn-primary:hover { background:#2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
-    .btn-secondary { background:white; color:#3b82f6; border:1px solid #3b82f6; }
-    .btn-secondary:hover { background:rgba(59,130,246,0.05); transform: translateY(-1px); }
-
     .mobile-hint {
       position: fixed;
-      bottom: calc(1rem + var(--safe-bottom));
+      bottom: calc(clamp(0.75rem, 1.5vw, 1rem) + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%);
       z-index: 20;
       background: rgba(0, 0, 0, 0.7);
       color: white;
-      padding: 0.5rem 1rem;
+      padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.75rem, 2vw, 1rem);
       border-radius: 20px;
-      font-size: 0.75rem;
+      font-size: clamp(0.65rem, 1.5vw, 0.75rem);
       text-align: center;
       backdrop-filter: blur(10px);
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .top-bar {
-        padding: calc(0.625rem + var(--safe-top)) calc(0.625rem + var(--safe-right)) 0.625rem calc(0.625rem + var(--safe-left));
-        gap: 0.625rem;
+        padding: calc(0.625rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.625rem calc(0.75rem + var(--safe-left));
+        gap: clamp(0.4rem, 1.5vw, 0.625rem);
+        min-height: clamp(56px, 8vh, 70px);
       }
-      .social-icons {
-        gap: 0.75rem;
-      }
+
       .action-buttons {
-        max-width: calc(100% - 128px);
+        max-width: calc(100% - clamp(120px, 28vw, 160px));
+        gap: clamp(0.3rem, 1vw, 0.5rem);
       }
-      .social-icon span { height: 42px; width: 42px; font-size: 16px; }
+
       .btn {
-        flex: 0 0 auto;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.75rem;
-        min-height: 40px;
+        padding: clamp(0.35rem, 1vw, 0.45rem) clamp(0.5rem, 1.5vw, 0.75rem);
+        font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+        min-height: clamp(36px, 3vw, 40px);
+      }
+
+      .social-icons {
+        gap: clamp(0.3rem, 1vw, 0.75rem);
+      }
+
+      .social-icon span {
+        height: clamp(36px, 3vw, 44px);
+        width: clamp(36px, 3vw, 44px);
+        font-size: clamp(12px, 2.5vw, 16px);
+      }
+
+      .pdf-canvas-container {
+        padding: clamp(0.6rem, 1.5vw, 0.85rem);
+        gap: clamp(0.6rem, 1.5vw, 0.85rem);
+      }
+
+      .mobile-hint {
+        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
       }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 480px) {
+      .top-bar {
+        padding: calc(0.5rem + var(--safe-top)) calc(0.5rem + var(--safe-right)) 0.5rem calc(0.5rem + var(--safe-left));
+        gap: 0.4rem;
+        min-height: clamp(52px, 7vh, 64px);
+      }
+
+      .action-buttons {
+        max-width: calc(100% - clamp(110px, 26vw, 140px));
+        padding-right: 0.3rem;
+      }
+
+      .btn {
+        padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.45rem, 1.2vw, 0.6rem);
+        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+        min-height: clamp(34px, 2.8vw, 38px);
+        gap: 0.25rem;
+      }
+
+      .btn-primary:hover,
+      .btn-secondary:hover {
+        transform: translateY(-0.5px);
+      }
+
+      .social-icons {
+        gap: clamp(0.25rem, 0.8vw, 0.5rem);
+      }
+
       .social-icon span {
-        height: 40px;
-        width: 40px;
+        height: clamp(34px, 2.5vw, 40px);
+        width: clamp(34px, 2.5vw, 40px);
+        font-size: clamp(11px, 2vw, 14px);
+      }
+
+      .pdf-canvas-container {
+        padding: clamp(0.5rem, 1.5vw, 0.75rem);
+        gap: clamp(0.5rem, 1.5vw, 0.75rem);
+      }
+
+      .pdf-page {
+        border-radius: 6px;
+      }
+
+      .mobile-hint {
+        font-size: clamp(0.55rem, 1vw, 0.65rem);
+      }
+
+      .loading-spinner {
+        height: 140px;
+      }
+
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3b82f6;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .top-bar {
+        min-height: clamp(48px, 6vh, 56px);
+        padding: calc(0.4rem + var(--safe-top)) calc(0.4rem + var(--safe-right)) 0.4rem calc(0.4rem + var(--safe-left));
+      }
+
+      .action-buttons {
+        max-width: calc(100% - 100px);
+      }
+
+      .btn {
+        padding: 0.3rem 0.4rem;
+        font-size: 0.6rem;
+        min-height: 32px;
+        gap: 0.2rem;
+      }
+
+      .btn .icon {
+        font-size: 0.8em;
+      }
+
+      .social-icon span {
+        height: 32px;
+        width: 32px;
+        font-size: 10px;
+      }
+
+      .pdf-canvas-container {
+        padding: 0.4rem;
+        gap: 0.4rem;
+      }
+
+      .mobile-hint {
+        font-size: 0.55rem;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .empty h2 {
+        font-size: 1rem;
+      }
+
+      .empty p {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-height: 600px) and (orientation: landscape) {
+      .top-bar {
+        min-height: clamp(48px, 10vh, 70px);
+        padding: calc(0.5rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.5rem calc(0.75rem + var(--safe-left));
+        gap: 0.5rem;
+      }
+
+      .action-buttons {
+        max-width: calc(100% - clamp(120px, 25vw, 150px));
+        gap: 0.4rem;
+      }
+
+      .btn {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.7rem;
+        min-height: 36px;
+      }
+
+      .social-icons {
+        gap: clamp(0.3rem, 1vw, 0.5rem);
+      }
+
+      .social-icon span {
+        height: 36px;
+        width: 36px;
         font-size: 14px;
       }
+
+      .pdf-canvas-container {
+        padding: clamp(0.4rem, 1vw, 0.6rem);
+        gap: clamp(0.4rem, 1vw, 0.6rem);
+      }
+
+      .mobile-hint {
+        font-size: 0.6rem;
+        bottom: calc(0.4rem + var(--safe-bottom));
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .top-bar {
+        min-height: clamp(44px, 8vh, 56px);
+        padding: calc(0.4rem + var(--safe-top)) calc(0.6rem + var(--safe-right)) 0.4rem calc(0.6rem + var(--safe-left));
+      }
+
+      .action-buttons {
+        gap: 0.3rem;
+      }
+
       .btn {
-        padding: 0.35rem 0.625rem;
-        font-size: 0.7rem;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.65rem;
+        min-height: 32px;
+      }
+
+      .social-icon span {
+        height: 32px;
+        width: 32px;
+        font-size: 12px;
+      }
+
+      .pdf-canvas-container {
+        padding: 0.35rem;
+        gap: 0.35rem;
+      }
+
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #3b82f6;
+      }
+    }
+
+    @media (max-width: 640px) and (orientation: portrait) {
+      .top-bar {
+        min-height: clamp(54px, 8vh, 68px);
       }
     }
   </style>
