@@ -294,6 +294,7 @@ app.post('/api/blob-upload', async (req, res) => {
         await deleteBlobByPathname(pathname);
 
         return {
+          access: 'public',
           allowedContentTypes: ['application/pdf'],
           maximumSizeInBytes: 50 * 1024 * 1024,
           addRandomSuffix: false,
