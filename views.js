@@ -1943,19 +1943,10 @@ module.exports = {
         document.documentElement.style.setProperty('--header-offset', height + 'px');
       }
 
-      function getContainerHorizontalPadding(container) {
-        const styles = window.getComputedStyle(container);
-        const left = parseFloat(styles.paddingLeft || '0');
-        const right = parseFloat(styles.paddingRight || '0');
-        return left + right;
-      }
-
-      function getResponsiveScale(page, container) {
-        const baseViewport = page.getViewport({ scale: 1 });
-        const padding = getContainerHorizontalPadding(container);
-        const containerWidth = Math.max(1, container.clientWidth - padding);
-        const rawScale = containerWidth / baseViewport.width;
-        return Math.min(2.0, Math.max(0.6, rawScale));
+      function getFitScale(page, container) {
+        const viewport = page.getViewport({ scale: 1 });
+        const containerWidth = container.clientWidth;
+        return containerWidth / viewport.width;
       }
 
       async function renderAllPages() {
@@ -1969,19 +1960,15 @@ module.exports = {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getResponsiveScale(page, pagesContainer);
+          const scale = getFitScale(page, pagesContainer);
           const viewport = page.getViewport({ scale });
-          const dpr = window.devicePixelRatio || 1;
 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
           canvas.className = 'pdf-page';
-          canvas.width = Math.floor(viewport.width * dpr);
-          canvas.height = Math.floor(viewport.height * dpr);
-          canvas.style.width = Math.floor(viewport.width) + 'px';
-          canvas.style.height = Math.floor(viewport.height) + 'px';
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
 
-          context.setTransform(dpr, 0, 0, dpr, 0, 0);
           await page.render({
             canvasContext: context,
             viewport
@@ -2595,19 +2582,10 @@ module.exports = {
         document.documentElement.style.setProperty('--header-offset', height + 'px');
       }
 
-      function getContainerHorizontalPadding(container) {
-        const styles = window.getComputedStyle(container);
-        const left = parseFloat(styles.paddingLeft || '0');
-        const right = parseFloat(styles.paddingRight || '0');
-        return left + right;
-      }
-
-      function getResponsiveScale(page, container) {
-        const baseViewport = page.getViewport({ scale: 1 });
-        const padding = getContainerHorizontalPadding(container);
-        const containerWidth = Math.max(1, container.clientWidth - padding);
-        const rawScale = containerWidth / baseViewport.width;
-        return Math.min(2.0, Math.max(0.6, rawScale));
+      function getFitScale(page, container) {
+        const viewport = page.getViewport({ scale: 1 });
+        const containerWidth = container.clientWidth;
+        return containerWidth / viewport.width;
       }
 
       async function renderAllPages() {
@@ -2621,19 +2599,15 @@ module.exports = {
           if (currentToken !== renderToken) return;
 
           const page = await pdfDoc.getPage(pageNum);
-          const scale = getResponsiveScale(page, container);
+          const scale = getFitScale(page, container);
           const viewport = page.getViewport({ scale });
-          const dpr = window.devicePixelRatio || 1;
 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
           canvas.className = 'pdf-page';
-          canvas.width = Math.floor(viewport.width * dpr);
-          canvas.height = Math.floor(viewport.height * dpr);
-          canvas.style.width = Math.floor(viewport.width) + 'px';
-          canvas.style.height = Math.floor(viewport.height) + 'px';
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
 
-          context.setTransform(dpr, 0, 0, dpr, 0, 0);
           await page.render({ canvasContext: context, viewport }).promise;
 
           if (currentToken !== renderToken) return;
