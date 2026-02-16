@@ -142,9 +142,16 @@ const getPageData = async (pathname) => {
     return { exists: false, url: null };
   }
 
+  // Determine the pageType from the pathname
+  let pageType = 'menu';
+  if (pathname === STATIC_PAGE_FILES.offers) pageType = 'offers';
+  if (pathname === STATIC_PAGE_FILES.suhoor) pageType = 'suhoor';
+
+  // Return a proxy URL that the server will handle
+  const proxyUrl = `/api/pdf/${pageType}?v=${menuVersion}`;
   return {
     exists: true,
-    url: withCacheVersion(blob.url),
+    url: proxyUrl,
   };
 };
 
@@ -385,6 +392,46 @@ app.get("/logout", (req, res) => {
     res.clearCookie(AUTH_COOKIE_NAME, { path: '/' });
     res.redirect("/login");
   });
+});
+
+// API endpoint to serve PDFs (proxies through server to handle auth)
+app.get("/api/pdf/:pageType", async (req, res) => {
+  try {
+    const { pageType } = req.params;
+    const pathname = STATIC_PAGE_FILES[pageType];
+    
+    if (!pathname) {
+      return res.status(404).json({ error: "Page type not found" });
+    }
+    
+    const blob = await getBlobByPathname(pathname);
+    if (!blob) {
+      return res.status(404).json({ error: "PDF not found" });
+    }
+    
+    // Set response headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${pathname}"`);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    
+    // Fetch and stream the blob
+    const fetchResponse = await fetch(blob.url);
+    
+    if (!fetchResponse.ok) {
+      console.error(`Blob fetch failed: ${fetchResponse.status} ${fetchResponse.statusText} for URL: ${blob.url}`);
+      res.status(fetchResponse.status);
+      res.send(`Error fetching PDF: ${fetchResponse.statusText}`);
+      return;
+    }
+    
+    // Stream the response body directly to the client
+    const buffer = await fetchResponse.arrayBuffer();
+    res.send(Buffer.from(buffer));
+  } catch (error) {
+    console.error('PDF proxy error:', error.message);
+    res.status(500);
+    res.json({ error: "Failed to load PDF", details: error.message });
+  }
 });
 
 // استيراد القوالب من ملف views.js
