@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
   // قالب تسجيل الدخول
   login: (data) => {
     return `<!DOCTYPE html>
@@ -1240,10 +1240,16 @@ module.exports = {
   menu: (data) => {
     const canonicalUrl = data.canonicalUrl || 'https://fale7-res.vercel.app/';
     const indexable = data.indexable !== false;
-    const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, follow';
+    const robotsContent = indexable
+      ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+      : 'noindex, follow';
+
     const metaTitle = 'فالح أبو العنبه | منيو سندوتشات ومشاوي عراقية في 6 أكتوبر';
-    const metaDescription = 'مطعم فالح أبو العنبه (Fale7) في الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية. منيو سندوتشات ومشاوي عراقية وبطاطس وفلافل. اتصل: 01000602832 / 01144741115. للشكاوى: 01112595678.';
-    const metaKeywords = 'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
+    const metaDescription =
+      'مطعم فالح أبو العنبه (Fale7) في الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية. منيو سندوتشات ومشاوي عراقية وبطاطس وفلافل. اتصل: 01000602832 / 01144741115. للشكاوى: 01112595678.';
+    const metaKeywords =
+      'فالح, فالح ابو العنبه, مطعم فالح, مطعم فالح ابو العنبه, منيو فالح, منيو مطعم فالح, منيو فالح ابو العنبه, منيو مطعم فالح ابو العنبه, سندوتشات 6 اكتوبر, مشاوي 6 اكتوبر, بطاطس 6 اكتوبر, فلافل 6 اكتوبر, اكلات عراقية, مشاوي عراقية, فلافل عراقية, افضل مطعم في 6 اكتوبر, افضل المطاعم في 6 اكتوبر, مطعم عراقي في مصر, مطعم عراقي في 6 اكتوبر';
+
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1279,6 +1285,7 @@ module.exports = {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -1321,788 +1328,427 @@ module.exports = {
     ]
   }
   </script>
+
   <style>
-    :root {
-      --background: 0 0% 100%;
+    :root{
       --foreground: 0 0% 3.9%;
-      --card: 0 0% 100%;
-      --card-foreground: 0 0% 3.9%;
-      --primary: 0 0% 9%;
-      --primary-foreground: 0 0% 98%;
-      --secondary: 0 0% 96.1%;
-      --secondary-foreground: 0 0% 9%;
-      --muted: 0 0% 96.1%;
-      --muted-foreground: 0 0% 45.1%;
-      --accent: 0 0% 96.1%;
-      --accent-foreground: 0 0% 9%;
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 0 0% 98%;
       --border: 0 0% 89.8%;
-      --input: 0 0% 89.8%;
-      --ring: 0 0% 3.9%;
       --radius: 0.5rem;
       --safe-top: env(safe-area-inset-top);
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
       --header-offset: 0px;
-    }
-    
-    html {
-      text-size-adjust: 100%;
-      -webkit-text-size-adjust: 100%;
+      --page-max: 860px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-    
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      min-height: 100dvh;
+    *{ box-sizing:border-box; }
+    html{ text-size-adjust:100%; -webkit-text-size-adjust:100%; }
+
+    body, html{
+      margin:0; padding:0;
+      height:100%;
+      min-height:100dvh;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
-      font-family: 'Inter', Arial, Helvetica, sans-serif;
-      color: hsl(var(--foreground));
-      overflow: hidden;
-      overscroll-behavior: none;
+      font-family:'Inter', Arial, Helvetica, sans-serif;
+      color:hsl(var(--foreground));
+      overflow:hidden;
+      overscroll-behavior:none;
     }
-    
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 30;
-      background: rgba(255, 255, 255, 0.95);
+
+    .top-bar{
+      position:fixed;
+      top:0; left:0; right:0;
+      z-index:30;
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      padding: calc(0.75rem + var(--safe-top)) calc(1rem + var(--safe-right)) 0.75rem calc(1rem + var(--safe-left));
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
-      direction: rtl;
-    }
-    
-    .social-icons {
-      display: flex;
-      gap: clamp(0.4rem, 1.5vw, 1rem);
-      order: 2;
-      flex: 0 0 auto;
-      flex-wrap: nowrap;
-      min-width: 0;
+      border-bottom:1px solid rgba(0,0,0,0.1);
+      padding: calc(clamp(0.4rem, 1.2vw, 0.75rem) + min(var(--safe-top), 12px))
+        calc(clamp(0.55rem, 2vw, 1rem) + var(--safe-right))
+        clamp(0.4rem, 1.2vw, 0.75rem)
+        calc(clamp(0.55rem, 2vw, 1rem) + var(--safe-left));
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:clamp(0.3rem, 1vw, 0.75rem);
+      direction:rtl;
+      flex-wrap:nowrap;
     }
 
-    .social-icon {
-      position: relative;
-      cursor: pointer;
-      flex: 0 0 auto;
+    .action-buttons{
+      display:flex;
+      gap:clamp(0.25rem, 0.8vw, 0.5rem);
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      flex:1 1 auto;
+      min-width:0;
+      padding-right:0;
     }
-    
-    .social-icon a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    
-    .social-icon span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: clamp(40px, 4.2vw, 50px);
-      width: clamp(40px, 4.2vw, 50px);
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
-      font-size: clamp(15px, 2.8vw, 20px);
-      color: #666;
-      flex-shrink: 0;
-    }
-    
-    .social-icon.tiktok:hover span {
-      background: #000000;
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .social-icon.facebook:hover span {
-      background: #3b5998;
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(59, 89, 152, 0.4);
-    }
-    
-    .social-icon.location:hover span {
-      background: #34b7f1;
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(52, 183, 241, 0.4);
-    }
+    .action-buttons::-webkit-scrollbar{ display:none; }
 
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:clamp(0.2rem, 0.7vw, 0.35rem);
+      padding:clamp(0.3rem, 0.9vw, 0.45rem) clamp(0.5rem, 1.8vw, 0.85rem);
+      border-radius: calc(var(--radius) - 2px);
+      font-size:clamp(0.68rem, 1.8vw, 0.8rem);
+      line-height:1.15;
+      min-height:36px;
+      font-weight:600;
+      text-decoration:none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -1px rgba(0,0,0,0.06);
+      white-space:nowrap;
+      border:none;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .btn-secondary{
+      background:#fff;
+      color:#3b82f6;
+      border:1px solid #3b82f6;
+    }
+    .btn-secondary:hover{ background:rgba(59,130,246,0.06); transform: translateY(-1px); }
 
-    .pdf-viewer-container {
-      position: fixed;
+    .social-icons{
+      display:flex;
+      gap:clamp(0.28rem, 1vw, 0.6rem);
+      flex:0 0 auto;
+    }
+    .social-icon span{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:clamp(36px, 6vw, 44px);
+      width:clamp(36px, 6vw, 44px);
+      background:#fff;
+      border-radius:50%;
+      box-shadow:0 4px 12px rgba(0,0,0,0.12);
+      transition:all 0.25s ease;
+      font-size:clamp(14px, 2.5vw, 18px);
+      color:#666;
+    }
+    .social-icon.tiktok:hover span{ background:#000; color:#fff; transform:translateY(-2px); }
+    .social-icon.facebook:hover span{ background:#3b5998; color:#fff; transform:translateY(-2px); }
+    .social-icon.location:hover span{ background:#34b7f1; color:#fff; transform:translateY(-2px); }
+
+    .pdf-viewer-container{
+      position:fixed;
       top: var(--header-offset);
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: white;
+      left:0; right:0; bottom:0;
+      background:#fff;
       border-radius: 20px 20px 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
-    
-    .pdf-canvas-container {
-      flex: 1;
-      overflow: auto;
-      padding: clamp(0.5rem, 1.5vw, 1rem);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(0.5rem, 1.5vw, 0.75rem);
+
+    .pdf-canvas-container{
+      position:relative;
+      flex:1;
+      overflow:auto;
+      padding: 0.55rem;
+    }
+
+    .page-loader{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:0.75rem;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      z-index:5;
+      padding:1rem;
+      text-align:center;
+    }
+    .spinner{
+      width:36px; height:36px;
+      border:4px solid #f3f3f3;
+      border-top:4px solid #3b82f6;
+      border-radius:50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin{ 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+    #pdfPages{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.7rem;
+    }
+
+    .pdf-page{
+      width: min(100%, var(--page-max));
+      height:auto;
+      border-radius:8px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.10);
+      display:block;
     }
 
     .seo-section{
       width:100%;
       max-width:860px;
-      margin: 0.75rem auto 1.5rem;
-      padding: 0.85rem 0.9rem;
+      margin: 0.5rem auto 0.9rem;
+      padding: 0.65rem 0.7rem;
       background:#fff;
       border:1px solid rgba(0,0,0,0.08);
       border-radius:12px;
-      font-size: 0.85rem;
-      line-height:1.7;
+      font-size: 0.74rem;
+      line-height:1.55;
       color:#475569;
     }
-    .seo-section h2{ margin:0 0 0.6rem; font-size:1rem; color: #334155; }
-    .seo-section p { margin: 0 0 0.55rem; }
-    .seo-section p:last-child { margin-bottom: 0; }
-    
-    .pdf-page {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      max-width: 100%;
-      height: auto;
-      width: auto;
-      display: block;
+    .seo-section h2{
+      margin:0 0 0.4rem;
+      font-size:0.85rem;
+      color:#334155;
     }
-    
-    .loading-spinner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 200px;
-      gap: 1rem;
+    .seo-section p{
+      margin: 0 0 0.35rem;
     }
-    
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3b82f6;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-      gap: clamp(0.4rem, 1.5vw, 0.75rem);
-      max-width: calc(100% - clamp(140px, 32vw, 180px));
-      min-width: 0;
-      order: 1;
-      justify-content: flex-start;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      flex: 1 1 auto;
-      padding-right: 0.5rem;
+    .seo-section p:last-child{
+      margin-bottom:0;
     }
 
-    .action-buttons::-webkit-scrollbar {
-      display: none;
+    @media (max-width: 420px){
+      .seo-section{ font-size:0.70rem; padding:0.6rem 0.65rem; }
+      .seo-section h2{ font-size:0.82rem; }
+      .seo-section p{ margin-bottom:0.3rem; }
     }
-    
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
-      border-radius: calc(var(--radius) - 2px);
-      font-size: clamp(0.7rem, 1.8vw, 0.875rem);
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      width: auto;
-      white-space: nowrap;
-      min-height: clamp(38px, 4vw, 44px);
-      flex: 0 0 auto;
-      border: none;
-      cursor: pointer;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background: #2563eb;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-    }
-    
-    .btn-secondary {
-      background: white;
-      color: #3b82f6;
-      border: 1px solid #3b82f6;
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(59, 130, 246, 0.05);
-      transform: translateY(-1px);
-    }
-    
-    .icon {
-      display: inline-block;
-    }
-    
-    .no-menu {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100dvh;
-      flex-direction: column;
-      text-align: center;
-      padding: 2rem;
-    }
-    
-    .no-menu-icon {
-      font-size: 4rem;
-      color: #94a3b8;
-      margin-bottom: 1.5rem;
-    }
-    
-    .no-menu-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 0.75rem;
-    }
-    
-    .no-menu-text {
-      color: #64748b;
-      max-width: 400px;
-      margin-bottom: 1.5rem;
-    }
-    
-    .mobile-hint {
-      position: fixed;
-      bottom: calc(1rem + var(--safe-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      text-align: center;
+
+    .mobile-hint{
+      position:fixed;
+      bottom: calc(0.75rem + var(--safe-bottom));
+      left:50%;
+      transform:translateX(-50%);
+      z-index:20;
+      background: rgba(0,0,0,0.7);
+      color:#fff;
+      padding:0.45rem 0.85rem;
+      border-radius:20px;
+      font-size:0.72rem;
       backdrop-filter: blur(10px);
+      white-space:nowrap;
     }
-    
-    @media (max-width: 768px) {
-      .top-bar {
-        padding: calc(0.625rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.625rem calc(0.75rem + var(--safe-left));
-        gap: clamp(0.4rem, 1.5vw, 0.625rem);
-        min-height: clamp(56px, 8vh, 70px);
+    @media (min-width:768px){ .mobile-hint{ display:none; } }
+
+    @media (max-width:640px){
+      .top-bar{
+        padding: calc(0.34rem + min(var(--safe-top), 8px))
+          calc(0.5rem + var(--safe-right))
+          0.34rem
+          calc(0.5rem + var(--safe-left));
+        gap:0.32rem;
       }
-      
-      .action-buttons {
-        max-width: calc(100% - clamp(120px, 28vw, 160px));
-        gap: clamp(0.3rem, 1vw, 0.5rem);
+      .social-icons{ gap:0.28rem; }
+      .social-icon span{
+        height:36px;
+        width:36px;
+        font-size:14px;
       }
-      
-      .btn {
-        padding: clamp(0.35rem, 1vw, 0.45rem) clamp(0.5rem, 1.5vw, 0.75rem);
-        font-size: clamp(0.65rem, 1.5vw, 0.8rem);
-        min-height: clamp(36px, 3vw, 40px);
+      .action-buttons{
+        gap:0.3rem;
+        padding-right:0;
       }
-      
-      .social-icons {
-        gap: clamp(0.3rem, 1vw, 0.75rem);
-      }
-      
-      .social-icon span {
-        height: clamp(40px, 5.6vw, 46px);
-        width: clamp(40px, 5.6vw, 46px);
-        font-size: clamp(15px, 3.4vw, 17px);
-      }
-      
-      .pdf-canvas-container {
-        padding: clamp(0.75rem, 2vw, 1rem);
-        gap: clamp(0.6rem, 2vw, 1rem);
-      }
-      
-      .mobile-hint {
-        font-size: clamp(0.65rem, 1.5vw, 0.75rem);
-        padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.75rem, 2vw, 1rem);
-        bottom: calc(clamp(0.75rem, 1.5vw, 1rem) + var(--safe-bottom));
+      .btn{
+        gap:0.2rem;
+        padding:0.3rem 0.5rem;
+        font-size:0.67rem;
+        line-height:1.15;
+        min-height:34px;
+        max-width:112px;
+        overflow:hidden;
+        text-overflow:ellipsis;
       }
     }
 
-    @media (max-width: 480px) {
-      .top-bar {
-        padding: calc(0.5rem + var(--safe-top)) calc(0.5rem + var(--safe-right)) 0.5rem calc(0.5rem + var(--safe-left));
-        gap: 0.4rem;
-        min-height: clamp(52px, 7vh, 64px);
+    @media (max-width:380px){
+      .top-bar{
+        padding: calc(0.3rem + min(var(--safe-top), 6px))
+          calc(0.44rem + var(--safe-right))
+          0.3rem
+          calc(0.44rem + var(--safe-left));
       }
-      
-      .action-buttons {
-        max-width: calc(100% - clamp(110px, 26vw, 140px));
-        padding-right: 0.3rem;
+      .social-icons{ gap:0.24rem; }
+      .social-icon span{
+        height:34px;
+        width:34px;
+        font-size:13px;
       }
-      
-      .btn {
-        padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.45rem, 1.2vw, 0.6rem);
-        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
-        min-height: clamp(34px, 2.8vw, 38px);
-        gap: 0.25rem;
-      }
-      
-      .btn-primary:hover,
-      .btn-secondary:hover {
-        transform: translateY(-0.5px);
-      }
-      
-      .social-icons {
-        gap: clamp(0.25rem, 0.8vw, 0.5rem);
-      }
-      
-      .social-icon span {
-        height: clamp(40px, 10vw, 44px);
-        width: clamp(40px, 10vw, 44px);
-        font-size: clamp(14px, 4.2vw, 16px);
-      }
-
-      .seo-section {
-        font-size: 0.8rem;
-        line-height: 1.65;
-        padding: 0.75rem 0.8rem;
-      }
-
-      .seo-section h2 {
-        font-size: 0.95rem;
-      }
-      
-      .pdf-canvas-container {
-        padding: clamp(0.5rem, 1.5vw, 0.75rem);
-        gap: clamp(0.5rem, 1.5vw, 0.75rem);
-      }
-      
-      .pdf-page {
-        border-radius: 6px;
-      }
-      
-      .mobile-hint {
-        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
-        padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.75rem);
-        bottom: calc(clamp(0.5rem, 1vw, 0.75rem) + var(--safe-bottom));
-      }
-      
-      .loading-spinner {
-        height: 150px;
-      }
-      
-      .spinner {
-        width: 32px;
-        height: 32px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #3b82f6;
+      .btn{
+        padding:0.27rem 0.42rem;
+        font-size:0.64rem;
+        min-height:32px;
+        max-width:102px;
       }
     }
 
-    @media (max-width: 360px) {
-      .top-bar {
-        min-height: clamp(48px, 6vh, 56px);
-        padding: calc(0.4rem + var(--safe-top)) calc(0.4rem + var(--safe-right)) 0.4rem calc(0.4rem + var(--safe-left));
-      }
-      
-      .action-buttons {
-        max-width: calc(100% - 100px);
-      }
-      
-      .btn {
-        padding: 0.3rem 0.4rem;
-        font-size: 0.6rem;
-        min-height: 32px;
-        gap: 0.2rem;
-      }
-      
-      .btn .icon {
-        font-size: 0.8em;
-      }
-      
-      .social-icon span {
-        height: 40px;
-        width: 40px;
-        font-size: 16px;
-      }
-      
-      .pdf-canvas-container {
-        padding: 0.4rem;
-        gap: 0.4rem;
-      }
-      
-      .mobile-hint {
-        font-size: 0.6rem;
-        padding: 0.25rem 0.5rem;
-      }
+    .no-menu{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100dvh;
+      flex-direction:column;
+      text-align:center;
+      padding:2rem;
     }
-
-    @media (max-height: 600px) and (orientation: landscape) {
-      .top-bar {
-        min-height: clamp(48px, 10vh, 70px);
-        padding: calc(0.5rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.5rem calc(0.75rem + var(--safe-left));
-        gap: 0.5rem;
-      }
-      
-      .action-buttons {
-        max-width: calc(100% - clamp(120px, 25vw, 150px));
-        gap: 0.4rem;
-      }
-      
-      .btn {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.7rem;
-        min-height: 36px;
-      }
-      
-      .social-icons {
-        gap: clamp(0.3rem, 1vw, 0.5rem);
-      }
-      
-      .social-icon span {
-        height: 38px;
-        width: 38px;
-        font-size: 15px;
-      }
-      
-      .pdf-canvas-container {
-        padding: clamp(0.5rem, 1.5vw, 0.75rem);
-        gap: clamp(0.5rem, 1.5vw, 0.75rem);
-      }
-      
-      .mobile-hint {
-        font-size: 0.65rem;
-        bottom: calc(0.5rem + var(--safe-bottom));
-      }
-      
-      .no-menu-icon {
-        font-size: clamp(2rem, 10vh, 3rem);
-      }
-      
-      .no-menu-title {
-        font-size: clamp(1rem, 4vw, 1.25rem);
-      }
-      
-      .no-menu-text {
-        font-size: clamp(0.75rem, 2vw, 0.875rem);
-      }
-    }
-
-    @media (max-height: 500px) and (orientation: landscape) {
-      .top-bar {
-        min-height: clamp(44px, 8vh, 56px);
-        padding: calc(0.4rem + var(--safe-top)) calc(0.6rem + var(--safe-right)) 0.4rem calc(0.6rem + var(--safe-left));
-      }
-      
-      .action-buttons {
-        gap: 0.3rem;
-      }
-      
-      .btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.65rem;
-        min-height: 32px;
-      }
-      
-      .social-icon span {
-        height: 36px;
-        width: 36px;
-        font-size: 14px;
-      }
-      
-      .pdf-canvas-container {
-        padding: 0.4rem;
-        gap: 0.4rem;
-      }
-      
-      .spinner {
-        width: 28px;
-        height: 28px;
-        border: 2px solid #f3f3f3;
-        border-top: 2px solid #3b82f6;
-      }
-    }
-
-    @media (max-width: 640px) and (orientation: portrait) {
-      .top-bar {
-        min-height: clamp(54px, 8vh, 68px);
-      }
-    }
-
-    /* Legacy appearance sync (mobile) */
-    .top-bar {
-      padding: 1rem;
-    }
-
-    .social-icons {
-      gap: 2rem;
-    }
-
-    .social-icon span {
-      height: 50px;
-      width: 50px;
-      font-size: 20px;
-    }
-
-    .action-buttons {
-      gap: 1rem;
-      max-width: none;
-      overflow: visible;
-      padding-right: 0;
-      flex: 0 1 auto;
-    }
-
-    .btn {
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-      min-height: auto;
-    }
-
-    .pdf-viewer-container {
-      top: 90px;
-    }
-
-    .pdf-canvas-container {
-      padding: 1rem;
-      gap: 1rem;
-    }
-
-    .mobile-hint {
-      bottom: 1rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.75rem;
-    }
-
-    @media (min-width: 768px) {
-      .mobile-hint {
-        display: none;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .top-bar {
-        padding: 0.75rem;
-      }
-
-      .social-icons {
-        gap: 1rem;
-      }
-
-      .action-buttons {
-        gap: 0.5rem;
-      }
-
-      .social-icon span {
-        height: 45px;
-        width: 45px;
-        font-size: 18px;
-      }
-
-      .pdf-viewer-container {
-        top: 80px;
-      }
-
-      .btn {
-        padding: 0.375rem 0.75rem;
-        font-size: 0.75rem;
-      }
-    }
+    .no-menu-icon{ font-size:3.5rem; color:#94a3b8; margin-bottom:1rem; }
+    .no-menu-title{ font-size:1.3rem; font-weight:700; color:#1e293b; margin:0 0 0.5rem; }
+    .no-menu-text{ color:#64748b; max-width:420px; margin:0; }
   </style>
 </head>
+
 <body>
-  ${data.menuExists ? `
-    <!-- Top Bar -->
-    <div class="top-bar">
-       <div class="action-buttons">
-        ${data.offersExists ? `<a href="/offers" class="btn btn-secondary"><span class="icon">🎁</span>العروض</a>` : ''}
-        ${data.suhoorExists ? `<a href="/suhoor" class="btn btn-secondary"><span class="icon">🌙</span>منيو السحور</a>` : ''}
-      </div>
-      <div class="social-icons">
-        <div class="social-icon tiktok">
-          <a href="https://www.tiktok.com/@fale7_1961" target="_blank">
-            <span><i class="fab fa-tiktok"></i></span>
-          </a>
-        </div>
-        <div class="social-icon facebook">
-          <a href="https://www.facebook.com/profile.php?id=100063865183387" target="_blank">
-            <span><i class="fab fa-facebook-f"></i></span>
-          </a>
-        </div>
-        <div class="social-icon location">
-          <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank">
-            <span><i class="fas fa-map-marker-alt"></i></span>
-          </a>
-        </div>
-      </div>
+  ${
+    data.menuExists
+      ? `
+  <div class="top-bar">
+    <div class="action-buttons">
+      ${data.offersExists ? `<a href="/offers" class="btn btn-secondary"><span>🎁</span>العروض</a>` : ''}
+      ${data.suhoorExists ? `<a href="/suhoor" class="btn btn-secondary"><span>🌙</span>منيو السحور</a>` : ''}
     </div>
-    
-    <!-- عارض PDF مخصص -->
-    <div class="pdf-viewer-container">
-      <div class="pdf-canvas-container" id="pdfContainer">
-        <div id="pdfPages">
-          <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>جاري تحميل المنيو...</p>
-          </div>
-        </div>
+    <div class="social-icons">
+      <div class="social-icon tiktok"><a href="https://www.tiktok.com/@fale7_1961" target="_blank" rel="noopener"><span><i class="fab fa-tiktok"></i></span></a></div>
+      <div class="social-icon facebook"><a href="https://www.facebook.com/profile.php?id=100063865183387" target="_blank" rel="noopener"><span><i class="fab fa-facebook-f"></i></span></a></div>
+      <div class="social-icon location"><a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener"><span><i class="fas fa-map-marker-alt"></i></span></a></div>
+    </div>
+  </div>
 
-        <section class="seo-section" id="seoText" aria-label="معلومات المطعم">
-          <h2>معلومات المطعم</h2>
-
-          <p>مطعم فالح أبو العنبه (Fale7) هو مطعم يقدم السندوتشات والمشاوي والفلافل والأكلات العراقية في مدينة 6 أكتوبر بمحافظة الجيزة، تحديدًا في الحي السابع شارع مكة المكرمة بالقرب من سنتر الأردنية.</p>
-          <p>يعمل المطعم يوميًا من الساعة 7 صباحًا حتى 3 صباحًا ويقدم مجموعة متنوعة من السندوتشات والبطاطس والمشاوي العراقية والفلافل العراقية والأكلات السريعة المناسبة لسكان مدينة 6 أكتوبر والمناطق المجاورة.</p>
-
-          <p>يبحث سكان 6 أكتوبر عن مطعم قريب يقدم سندوتشات ومشاوي بطعم مميز، ويعد مطعم فالح من الأماكن المعروفة في الحي السابع للوجبات السريعة والأكل العراقي والمشاوي الطازجة.</p>
-          <p>يمكنك مشاهدة المنيو كاملًا عبر الموقع أو زيارة صفحات المطعم الرسمية على تيك توك وفيسبوك لمعرفة أحدث العروض.</p>
-
-          <p><strong>العنوان:</strong> الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية</p>
-          <p><strong>رقم الهاتف:</strong> 01000602832 / 01144741115</p>
-          <p><strong>للشكاوى والمقترحات:</strong> 01112595678</p>
-          <p><strong>صفحة تيك توك:</strong> fale7_1961</p>
-          <p><strong>الموقع على الخريطة:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
-        </section>
+  <div class="pdf-viewer-container">
+    <div class="pdf-canvas-container" id="pdfContainer">
+      <div class="page-loader" id="pageLoader">
+        <div class="spinner"></div>
+        <div>جاري تحميل المنيو...</div>
       </div>
-    </div>
-    
-    <div class="mobile-hint">
-      استخدم إصبعين للتكبير والتصغير
-    </div>
-    
-    <script>
-      // تحديد مسار PDF.js worker
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-      let pdfDoc = null;
-      let renderToken = 0;
-      let resizeTimer = null;
+      <div id="pdfPages"></div>
 
-      function syncHeaderOffset() {
-        const topBar = document.querySelector('.top-bar');
-        if (!topBar) return;
-        const height = Math.ceil(topBar.getBoundingClientRect().height);
-        document.documentElement.style.setProperty('--header-offset', height + 'px');
+      <section class="seo-section" id="seoText" aria-label="معلومات المطعم">
+        <h2>معلومات المطعم</h2>
+        <p>مطعم فالح أبو العنبه (Fale7) هو مطعم يقدم السندوتشات والمشاوي والفلافل والأكلات العراقية في مدينة 6 أكتوبر بمحافظة الجيزة، تحديدًا في الحي السابع شارع مكة المكرمة بالقرب من سنتر الأردنية.</p>
+        <p>يعمل المطعم يوميًا من الساعة 7 صباحًا حتى 3 صباحًا ويقدم مجموعة متنوعة من السندوتشات والبطاطس والمشاوي العراقية والفلافل العراقية.</p>
+        <p><strong>العنوان:</strong> الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية</p>
+        <p><strong>رقم الهاتف:</strong> 01000602832 / 01144741115</p>
+        <p><strong>للشكاوى والمقترحات:</strong> 01112595678</p>
+        <p><strong>الموقع على الخريطة:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
+      </section>
+    </div>
+  </div>
+
+  <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const TARGET_CSS_WIDTH = 860;
+    let pdfDoc = null;
+    let renderToken = 0;
+
+    function syncHeaderOffset(){
+      const topBar = document.querySelector('.top-bar');
+      if(!topBar) return;
+      const h = Math.ceil(topBar.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--header-offset', h + 'px');
+    }
+
+    function getRenderScale(page){
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const v1 = page.getViewport({ scale: 1 });
+      return (TARGET_CSS_WIDTH / v1.width) * dpr;
+    }
+
+    async function renderAllPages(){
+      const pagesContainer = document.getElementById('pdfPages');
+      const loader = document.getElementById('pageLoader');
+      if(!pagesContainer || !pdfDoc) return;
+
+      const current = ++renderToken;
+
+      const fragment = document.createDocumentFragment();
+
+      for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
+        if(current !== renderToken) return;
+
+        const page = await pdfDoc.getPage(pageNum);
+        const scale = getRenderScale(page);
+        const viewport = page.getViewport({ scale });
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page';
+
+        const ctx = canvas.getContext('2d', { alpha: false });
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        page.cleanup();
+
+        fragment.appendChild(canvas);
       }
 
-      async function renderAllPages() {
+      if(current !== renderToken) return;
+
+      pagesContainer.innerHTML = '';
+      pagesContainer.appendChild(fragment);
+
+      if(loader) loader.style.display = 'none';
+    }
+
+    async function loadPDF(){
+      const loader = document.getElementById('pageLoader');
+      try{
+        pdfDoc = await pdfjsLib.getDocument('${data.menuUrl}').promise;
+        await renderAllPages();
+      }catch(err){
+        console.error('PDF load error:', err);
         const pagesContainer = document.getElementById('pdfPages');
-        if (!pagesContainer || !pdfDoc) return;
-
-        const currentToken = ++renderToken;
-        pagesContainer.innerHTML = '';
-
-        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-          if (currentToken !== renderToken) return;
-
-          const page = await pdfDoc.getPage(pageNum);
-          const scale = 1.5;
-          const viewport = page.getViewport({ scale });
-
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.className = 'pdf-page';
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-
-          await page.render({
-            canvasContext: context,
-            viewport
-          }).promise;
-
-          if (currentToken !== renderToken) return;
-          pagesContainer.appendChild(canvas);
-        }
-      }
-
-      // تحميل وعرض PDF
-      async function loadPDF() {
-        const pagesContainer = document.getElementById('pdfPages');
-        try {
-          pdfDoc = await pdfjsLib.getDocument('${data.menuUrl}').promise;
-          await renderAllPages();
-        } catch (error) {
-          console.error('خطأ في تحميل PDF:', error);
-          if (!pagesContainer) return;
+        if(pagesContainer){
           pagesContainer.innerHTML =
-            '<div style="text-align: center; padding: 2rem;"><p>حدث خطأ في تحميل المنيو. يرجى المحاولة مرة أخرى.</p></div>';
+            '<div style="text-align:center;padding:1.25rem;color:#475569">تعذر تحميل المنيو الآن. حاول لاحقًا.</div>';
         }
+        if(loader) loader.style.display = 'none';
       }
+    }
 
-      function handleViewportChange() {
-        syncHeaderOffset();
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (pdfDoc) {
-            renderAllPages();
-          }
-        }, 150);
-      }
-      
-      // تحميل PDF عند تحميل الصفحة
-      document.addEventListener('DOMContentLoaded', () => {
-        syncHeaderOffset();
-        loadPDF();
-      });
-      window.addEventListener('resize', handleViewportChange);
-      window.addEventListener('orientationchange', handleViewportChange);
-    </script>
-  ` : `
-    <div class="no-menu">
-      <div class="no-menu-icon">📋</div>
-      <h2 class="no-menu-title">المنيو غير متوفر حالياً</h2>
-      <p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.</p>
-    </div>
-  `}
+    document.addEventListener('DOMContentLoaded', () => {
+      syncHeaderOffset();
+      loadPDF();
+    });
+
+    window.addEventListener('resize', syncHeaderOffset);
+    window.addEventListener('orientationchange', syncHeaderOffset);
+  </script>
+  `
+      : `
+  <div class="no-menu">
+    <div class="no-menu-icon">📋</div>
+    <h2 class="no-menu-title">المنيو غير متوفر حالياً</h2>
+    <p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقاً.</p>
+  </div>
+  `
+  }
 </body>
 </html>`;
   },
-
   // قالب صفحات PDF الإضافية (العروض / السحور)
   pdfPage: (data) => {
-    const indexable = typeof data.indexable === 'boolean' ? data.indexable : data.pageExists;
-    const robotsContent = indexable ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' : 'noindex, nofollow';
+    const indexable =
+      typeof data.indexable === 'boolean' ? data.indexable : data.pageExists;
+
+    const robotsContent = indexable
+      ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+      : 'noindex, nofollow';
+
     const metaDescription = data.metaDescription || 'صفحة المنيو والعروض الخاصة بمطعم فالح أبو العنبه.';
+
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2128,679 +1774,355 @@ module.exports = {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
-    :root {
-      --background: 0 0% 100%;
+    :root{
       --foreground: 0 0% 3.9%;
-      --border: 0 0% 89.8%;
       --radius: 0.5rem;
       --safe-top: env(safe-area-inset-top);
       --safe-right: env(safe-area-inset-right);
       --safe-bottom: env(safe-area-inset-bottom);
       --safe-left: env(safe-area-inset-left);
       --header-offset: 0px;
+      --page-max: 860px;
     }
+    *{ box-sizing:border-box; }
+    html{ text-size-adjust:100%; -webkit-text-size-adjust:100%; }
 
-    * { box-sizing: border-box; }
-
-    html {
-      text-size-adjust: 100%;
-      -webkit-text-size-adjust: 100%;
-    }
-
-    body, html {
-      margin:0;
-      padding:0;
+    body, html{
+      margin:0; padding:0;
       height:100%;
-      min-height: 100dvh;
+      min-height:100dvh;
       background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
-      font-family: 'Inter', Arial, Helvetica, sans-serif;
-      color: hsl(var(--foreground));
-      overflow: hidden;
-      overscroll-behavior: none;
+      font-family:'Inter', Arial, Helvetica, sans-serif;
+      color:hsl(var(--foreground));
+      overflow:hidden;
+      overscroll-behavior:none;
     }
 
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 30;
-      background: rgba(255, 255, 255, 0.95);
+    .top-bar{
+      position:fixed;
+      top:0; left:0; right:0;
+      z-index:30;
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      padding: calc(0.75rem + var(--safe-top)) calc(1rem + var(--safe-right)) 0.75rem calc(1rem + var(--safe-left));
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: clamp(0.5rem, 2vw, 0.75rem);
-      direction: rtl;
-      flex-wrap: nowrap;
-      min-height: clamp(60px, 10vh, 80px);
-      overflow: hidden;
+      border-bottom:1px solid rgba(0,0,0,0.1);
+      padding: calc(clamp(0.4rem, 1.2vw, 0.75rem) + min(var(--safe-top), 12px))
+        calc(clamp(0.55rem, 2vw, 1rem) + var(--safe-right))
+        clamp(0.4rem, 1.2vw, 0.75rem)
+        calc(clamp(0.55rem, 2vw, 1rem) + var(--safe-left));
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:clamp(0.3rem, 1vw, 0.75rem);
+      direction:rtl;
+      flex-wrap:nowrap;
     }
 
-    .social-icons {
-      display: flex;
-      gap: clamp(0.4rem, 1.5vw, 1rem);
-      order: 2;
-      flex: 0 0 auto;
-      flex-wrap: nowrap;
-      min-width: 0;
+    .action-buttons{
+      display:flex;
+      gap:clamp(0.25rem, 0.8vw, 0.5rem);
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      flex:1 1 auto;
+      min-width:0;
+      padding-right:0;
     }
+    .action-buttons::-webkit-scrollbar{ display:none; }
 
-    .social-icon {
-      position: relative;
-      cursor: pointer;
-      flex: 0 0 auto;
-    }
-
-    .social-icon a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .social-icon span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: clamp(40px, 4.2vw, 50px);
-      width: clamp(40px, 4.2vw, 50px);
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
-      font-size: clamp(15px, 2.8vw, 20px);
-      color: #666;
-      flex-shrink: 0;
-    }
-
-    .social-icon.tiktok:hover span {
-      background: #000000;
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .social-icon.facebook:hover span {
-      background: #3b5998;
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(59, 89, 152, 0.4);
-    }
-
-    .social-icon.location:hover span {
-      background: #34b7f1;
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(52, 183, 241, 0.4);
-    }
-
-    .action-buttons {
-      display: flex;
-      flex-direction: row;
-      gap: clamp(0.4rem, 1.5vw, 0.75rem);
-      max-width: calc(100% - clamp(140px, 32vw, 180px));
-      min-width: 0;
-      order: 1;
-      justify-content: flex-start;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      flex: 1 1 auto;
-      padding-right: 0.5rem;
-    }
-
-    .action-buttons::-webkit-scrollbar {
-      display: none;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:clamp(0.2rem, 0.7vw, 0.35rem);
+      padding:clamp(0.3rem, 0.9vw, 0.45rem) clamp(0.5rem, 1.8vw, 0.85rem);
       border-radius: calc(var(--radius) - 2px);
-      font-size: clamp(0.7rem, 1.8vw, 0.875rem);
-      font-weight: 500;
-      text-decoration: none;
+      font-size:clamp(0.68rem, 1.8vw, 0.8rem);
+      line-height:1.15;
+      min-height:36px;
+      font-weight:600;
+      text-decoration:none;
       transition: all 0.2s;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-      width: auto;
-      white-space: nowrap;
-      min-height: clamp(38px, 4vw, 44px);
-      flex: 0 0 auto;
-      border: none;
-      cursor: pointer;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -1px rgba(0,0,0,0.06);
+      white-space:nowrap;
+      border:none;
+      cursor:pointer;
+      flex:0 0 auto;
     }
+    .btn-secondary{
+      background:#fff;
+      color:#3b82f6;
+      border:1px solid #3b82f6;
+    }
+    .btn-secondary:hover{ background:rgba(59,130,246,0.06); transform: translateY(-1px); }
 
-    .btn-primary { background:#3b82f6; color:white; }
-    .btn-primary:hover { background:#2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
-    .btn-secondary { background:white; color:#3b82f6; border:1px solid #3b82f6; }
-    .btn-secondary:hover { background:rgba(59,130,246,0.05); transform: translateY(-1px); }
+    .social-icons{ display:flex; gap:clamp(0.28rem, 1vw, 0.6rem); flex:0 0 auto; }
+    .social-icon span{
+      display:flex; align-items:center; justify-content:center;
+      height:clamp(36px, 6vw, 44px); width:clamp(36px, 6vw, 44px); background:#fff; border-radius:50%;
+      box-shadow:0 4px 12px rgba(0,0,0,0.12);
+      transition:all 0.25s ease;
+      font-size:clamp(14px, 2.5vw, 18px); color:#666;
+    }
+    .social-icon.tiktok:hover span{ background:#000; color:#fff; transform:translateY(-2px); }
+    .social-icon.facebook:hover span{ background:#3b5998; color:#fff; transform:translateY(-2px); }
+    .social-icon.location:hover span{ background:#34b7f1; color:#fff; transform:translateY(-2px); }
 
-    .pdf-viewer-container {
-      position: fixed;
+    .pdf-viewer-container{
+      position:fixed;
       top: var(--header-offset);
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: white;
+      left:0; right:0; bottom:0;
+      background:#fff;
       border-radius: 20px 20px 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
 
-    .pdf-canvas-container {
-      flex: 1;
-      overflow: auto;
-      padding: clamp(0.75rem, 2vw, 1rem);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(0.75rem, 2vw, 1rem);
+    .pdf-canvas-container{
+      position:relative;
+      flex:1;
+      overflow:auto;
+      padding:0.55rem;
     }
 
-    .pdf-page {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-      border-radius: 8px;
-      max-width: 100%;
-      height: auto;
-      width: auto;
+    .page-loader{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      flex-direction:column; gap:0.75rem;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      z-index:5;
+      padding:1rem;
+      text-align:center;
     }
-
-    .loading-spinner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: clamp(150px, 30vh, 200px);
-      gap: clamp(0.75rem, 2vw, 1rem);
-      color: #475569;
-      padding: 1rem;
-    }
-
-    .spinner {
-      width: clamp(32px, 5vw, 40px);
-      height: clamp(32px, 5vw, 40px);
-      border: clamp(2px, 0.5vw, 4px) solid #f3f3f3;
-      border-top: clamp(2px, 0.5vw, 4px) solid #3b82f6;
-      border-radius: 50%;
+    .spinner{
+      width:36px; height:36px;
+      border:4px solid #f3f3f3;
+      border-top:4px solid #3b82f6;
+      border-radius:50%;
       animation: spin 1s linear infinite;
     }
+    @keyframes spin{ 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 
-    .empty {
-      display: flex;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      color: #475569;
-      padding: clamp(1rem, 3vw, 2rem);
+    #pdfPages{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.7rem;
     }
 
-    .empty h2 {
-      font-size: clamp(1.125rem, 3vw, 1.5rem);
-      margin: 0 0 0.75rem 0;
+    .pdf-page{
+      width: min(100%, var(--page-max));
+      height:auto;
+      border-radius:8px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.10);
+      display:block;
     }
 
-    .empty p {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      max-width: 300px;
+    .empty{
+      display:flex;
+      height:100%;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      color:#475569;
+      padding:1.25rem;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .mobile-hint {
-      position: fixed;
-      bottom: calc(clamp(0.75rem, 1.5vw, 1rem) + var(--safe-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.75rem, 2vw, 1rem);
-      border-radius: 20px;
-      font-size: clamp(0.65rem, 1.5vw, 0.75rem);
-      text-align: center;
+    .mobile-hint{
+      position:fixed;
+      bottom: calc(0.75rem + var(--safe-bottom));
+      left:50%;
+      transform:translateX(-50%);
+      z-index:20;
+      background: rgba(0,0,0,0.7);
+      color:#fff;
+      padding:0.45rem 0.85rem;
+      border-radius:20px;
+      font-size:0.72rem;
       backdrop-filter: blur(10px);
-      white-space: nowrap;
-      max-width: 90vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space:nowrap;
     }
+    @media (min-width:768px){ .mobile-hint{ display:none; } }
 
-    @media (max-width: 768px) {
-      .top-bar {
-        padding: calc(0.625rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.625rem calc(0.75rem + var(--safe-left));
-        gap: clamp(0.4rem, 1.5vw, 0.625rem);
-        min-height: clamp(56px, 8vh, 70px);
+    @media (max-width:640px){
+      .top-bar{
+        padding: calc(0.34rem + min(var(--safe-top), 8px))
+          calc(0.5rem + var(--safe-right))
+          0.34rem
+          calc(0.5rem + var(--safe-left));
+        gap:0.32rem;
       }
-
-      .action-buttons {
-        max-width: calc(100% - clamp(120px, 28vw, 160px));
-        gap: clamp(0.3rem, 1vw, 0.5rem);
+      .social-icons{ gap:0.28rem; }
+      .social-icon span{
+        height:36px;
+        width:36px;
+        font-size:14px;
       }
-
-      .btn {
-        padding: clamp(0.35rem, 1vw, 0.45rem) clamp(0.5rem, 1.5vw, 0.75rem);
-        font-size: clamp(0.65rem, 1.5vw, 0.8rem);
-        min-height: clamp(36px, 3vw, 40px);
+      .action-buttons{
+        gap:0.3rem;
+        padding-right:0;
       }
-
-      .social-icons {
-        gap: clamp(0.3rem, 1vw, 0.75rem);
-      }
-
-      .social-icon span {
-        height: clamp(40px, 5.6vw, 46px);
-        width: clamp(40px, 5.6vw, 46px);
-        font-size: clamp(15px, 3.4vw, 17px);
-      }
-
-      .pdf-canvas-container {
-        padding: clamp(0.6rem, 1.5vw, 0.85rem);
-        gap: clamp(0.6rem, 1.5vw, 0.85rem);
-      }
-
-      .mobile-hint {
-        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+      .btn{
+        gap:0.2rem;
+        padding:0.3rem 0.5rem;
+        font-size:0.67rem;
+        line-height:1.15;
+        min-height:34px;
+        max-width:112px;
+        overflow:hidden;
+        text-overflow:ellipsis;
       }
     }
 
-    @media (max-width: 480px) {
-      .top-bar {
-        padding: calc(0.5rem + var(--safe-top)) calc(0.5rem + var(--safe-right)) 0.5rem calc(0.5rem + var(--safe-left));
-        gap: 0.4rem;
-        min-height: clamp(52px, 7vh, 64px);
+    @media (max-width:380px){
+      .top-bar{
+        padding: calc(0.3rem + min(var(--safe-top), 6px))
+          calc(0.44rem + var(--safe-right))
+          0.3rem
+          calc(0.44rem + var(--safe-left));
       }
-
-      .action-buttons {
-        max-width: calc(100% - clamp(110px, 26vw, 140px));
-        padding-right: 0.3rem;
+      .social-icons{ gap:0.24rem; }
+      .social-icon span{
+        height:34px;
+        width:34px;
+        font-size:13px;
       }
-
-      .btn {
-        padding: clamp(0.3rem, 0.8vw, 0.4rem) clamp(0.45rem, 1.2vw, 0.6rem);
-        font-size: clamp(0.6rem, 1.2vw, 0.7rem);
-        min-height: clamp(34px, 2.8vw, 38px);
-        gap: 0.25rem;
-      }
-
-      .btn-primary:hover,
-      .btn-secondary:hover {
-        transform: translateY(-0.5px);
-      }
-
-      .social-icons {
-        gap: clamp(0.25rem, 0.8vw, 0.5rem);
-      }
-
-      .social-icon span {
-        height: clamp(40px, 10vw, 44px);
-        width: clamp(40px, 10vw, 44px);
-        font-size: clamp(14px, 4.2vw, 16px);
-      }
-
-      .pdf-canvas-container {
-        padding: clamp(0.5rem, 1.5vw, 0.75rem);
-        gap: clamp(0.5rem, 1.5vw, 0.75rem);
-      }
-
-      .pdf-page {
-        border-radius: 6px;
-      }
-
-      .mobile-hint {
-        font-size: clamp(0.55rem, 1vw, 0.65rem);
-      }
-
-      .loading-spinner {
-        height: 140px;
-      }
-
-      .spinner {
-        width: 28px;
-        height: 28px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #3b82f6;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .top-bar {
-        min-height: clamp(48px, 6vh, 56px);
-        padding: calc(0.4rem + var(--safe-top)) calc(0.4rem + var(--safe-right)) 0.4rem calc(0.4rem + var(--safe-left));
-      }
-
-      .action-buttons {
-        max-width: calc(100% - 100px);
-      }
-
-      .btn {
-        padding: 0.3rem 0.4rem;
-        font-size: 0.6rem;
-        min-height: 32px;
-        gap: 0.2rem;
-      }
-
-      .btn .icon {
-        font-size: 0.8em;
-      }
-
-      .social-icon span {
-        height: 40px;
-        width: 40px;
-        font-size: 16px;
-      }
-
-      .pdf-canvas-container {
-        padding: 0.4rem;
-        gap: 0.4rem;
-      }
-
-      .mobile-hint {
-        font-size: 0.55rem;
-        padding: 0.25rem 0.5rem;
-      }
-
-      .empty h2 {
-        font-size: 1rem;
-      }
-
-      .empty p {
-        font-size: 0.8rem;
-      }
-    }
-
-    @media (max-height: 600px) and (orientation: landscape) {
-      .top-bar {
-        min-height: clamp(48px, 10vh, 70px);
-        padding: calc(0.5rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) 0.5rem calc(0.75rem + var(--safe-left));
-        gap: 0.5rem;
-      }
-
-      .action-buttons {
-        max-width: calc(100% - clamp(120px, 25vw, 150px));
-        gap: 0.4rem;
-      }
-
-      .btn {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.7rem;
-        min-height: 36px;
-      }
-
-      .social-icons {
-        gap: clamp(0.3rem, 1vw, 0.5rem);
-      }
-
-      .social-icon span {
-        height: 38px;
-        width: 38px;
-        font-size: 15px;
-      }
-
-      .pdf-canvas-container {
-        padding: clamp(0.4rem, 1vw, 0.6rem);
-        gap: clamp(0.4rem, 1vw, 0.6rem);
-      }
-
-      .mobile-hint {
-        font-size: 0.6rem;
-        bottom: calc(0.4rem + var(--safe-bottom));
-      }
-    }
-
-    @media (max-height: 500px) and (orientation: landscape) {
-      .top-bar {
-        min-height: clamp(44px, 8vh, 56px);
-        padding: calc(0.4rem + var(--safe-top)) calc(0.6rem + var(--safe-right)) 0.4rem calc(0.6rem + var(--safe-left));
-      }
-
-      .action-buttons {
-        gap: 0.3rem;
-      }
-
-      .btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.65rem;
-        min-height: 32px;
-      }
-
-      .social-icon span {
-        height: 36px;
-        width: 36px;
-        font-size: 14px;
-      }
-
-      .pdf-canvas-container {
-        padding: 0.35rem;
-        gap: 0.35rem;
-      }
-
-      .spinner {
-        width: 24px;
-        height: 24px;
-        border: 2px solid #f3f3f3;
-        border-top: 2px solid #3b82f6;
-      }
-    }
-
-    @media (max-width: 640px) and (orientation: portrait) {
-      .top-bar {
-        min-height: clamp(54px, 8vh, 68px);
-      }
-    }
-
-    /* Legacy appearance sync (mobile) */
-    .top-bar {
-      padding: 1rem;
-    }
-
-    .social-icons {
-      gap: 2rem;
-    }
-
-    .social-icon span {
-      height: 50px;
-      width: 50px;
-      font-size: 20px;
-    }
-
-    .action-buttons {
-      gap: 1rem;
-      max-width: none;
-      overflow: visible;
-      padding-right: 0;
-      flex: 0 1 auto;
-    }
-
-    .btn {
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-      min-height: auto;
-    }
-
-    .pdf-viewer-container {
-      top: 90px;
-    }
-
-    .pdf-canvas-container {
-      padding: 1rem;
-      gap: 1rem;
-    }
-
-    .mobile-hint {
-      bottom: 1rem;
-      padding: 0.5rem 1rem;
-      font-size: 0.75rem;
-    }
-
-    @media (min-width: 768px) {
-      .mobile-hint {
-        display: none;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .top-bar {
-        padding: 0.75rem;
-      }
-
-      .social-icons {
-        gap: 1rem;
-      }
-
-      .action-buttons {
-        gap: 0.5rem;
-      }
-
-      .social-icon span {
-        height: 45px;
-        width: 45px;
-        font-size: 18px;
-      }
-
-      .pdf-viewer-container {
-        top: 80px;
-      }
-
-      .btn {
-        padding: 0.375rem 0.75rem;
-        font-size: 0.75rem;
+      .btn{
+        padding:0.27rem 0.42rem;
+        font-size:0.64rem;
+        min-height:32px;
+        max-width:102px;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="top-bar">
     <div class="action-buttons">
       ${data.offersExists && data.pageType !== 'offers' ? `<a href="/offers" class="btn btn-secondary"><span>🎁</span>العروض</a>` : ''}
       ${data.suhoorExists && data.pageType !== 'suhoor' ? `<a href="/suhoor" class="btn btn-secondary"><span>🌙</span>منيو السحور</a>` : ''}
-      <a href="/menu" class="btn btn-secondary">
-        <span>🏠</span>
-        المنيو الرئيسي
-      </a>
+      <a href="/menu" class="btn btn-secondary"><span>🏠</span>المنيو الرئيسي</a>
     </div>
+
     <div class="social-icons">
-      <div class="social-icon tiktok">
-        <a href="https://www.tiktok.com/@fale7_1961" target="_blank">
-          <span><i class="fab fa-tiktok"></i></span>
-        </a>
-      </div>
-      <div class="social-icon facebook">
-        <a href="https://www.facebook.com/profile.php?id=100063865183387" target="_blank">
-          <span><i class="fab fa-facebook-f"></i></span>
-        </a>
-      </div>
-      <div class="social-icon location">
-        <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank">
-          <span><i class="fas fa-map-marker-alt"></i></span>
-        </a>
-      </div>
+      <div class="social-icon tiktok"><a href="https://www.tiktok.com/@fale7_1961" target="_blank" rel="noopener"><span><i class="fab fa-tiktok"></i></span></a></div>
+      <div class="social-icon facebook"><a href="https://www.facebook.com/profile.php?id=100063865183387" target="_blank" rel="noopener"><span><i class="fab fa-facebook-f"></i></span></a></div>
+      <div class="social-icon location"><a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener"><span><i class="fas fa-map-marker-alt"></i></span></a></div>
     </div>
   </div>
 
-  ${data.pageExists ? `
-    <div class="pdf-viewer-container">
-      <div class="pdf-canvas-container" id="pdfContainer">
-        <div class="loading-spinner">
-          <div class="spinner"></div>
-          <p>جاري التحميل...</p>
-        </div>
+  ${
+    data.pageExists
+      ? `
+  <div class="pdf-viewer-container">
+    <div class="pdf-canvas-container" id="pdfContainer">
+      <div class="page-loader" id="pageLoader">
+        <div class="spinner"></div>
+        <div>جاري التحميل...</div>
       </div>
+      <div id="pdfPages"></div>
     </div>
-    <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
-    <script>
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      let pdfDoc = null;
-      let renderToken = 0;
-      let resizeTimer = null;
+  </div>
 
-      function syncHeaderOffset() {
-        const topBar = document.querySelector('.top-bar');
-        if (!topBar) return;
-        const height = Math.ceil(topBar.getBoundingClientRect().height);
-        document.documentElement.style.setProperty('--header-offset', height + 'px');
+  <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const TARGET_CSS_WIDTH = 860;
+    let pdfDoc = null;
+    let renderToken = 0;
+
+    function syncHeaderOffset(){
+      const topBar = document.querySelector('.top-bar');
+      if(!topBar) return;
+      const h = Math.ceil(topBar.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--header-offset', h + 'px');
+    }
+
+    function getRenderScale(page){
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const v1 = page.getViewport({ scale: 1 });
+      return (TARGET_CSS_WIDTH / v1.width) * dpr;
+    }
+
+    async function renderAllPages(){
+      const pagesContainer = document.getElementById('pdfPages');
+      const loader = document.getElementById('pageLoader');
+      if(!pagesContainer || !pdfDoc) return;
+
+      const current = ++renderToken;
+      const fragment = document.createDocumentFragment();
+
+      for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
+        if(current !== renderToken) return;
+
+        const page = await pdfDoc.getPage(pageNum);
+        const scale = getRenderScale(page);
+        const viewport = page.getViewport({ scale });
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page';
+
+        const ctx = canvas.getContext('2d', { alpha: false });
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        page.cleanup();
+
+        fragment.appendChild(canvas);
       }
 
-      async function renderAllPages() {
-        const container = document.getElementById('pdfContainer');
-        if (!container || !pdfDoc) return;
+      if(current !== renderToken) return;
 
-        const currentToken = ++renderToken;
-        container.innerHTML = '';
+      pagesContainer.innerHTML = '';
+      pagesContainer.appendChild(fragment);
+      if(loader) loader.style.display = 'none';
+    }
 
-        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-          if (currentToken !== renderToken) return;
-
-          const page = await pdfDoc.getPage(pageNum);
-          const scale = 1.5;
-          const viewport = page.getViewport({ scale });
-
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.className = 'pdf-page';
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-
-          await page.render({ canvasContext: context, viewport }).promise;
-
-          if (currentToken !== renderToken) return;
-          container.appendChild(canvas);
+    async function loadPDF(){
+      const loader = document.getElementById('pageLoader');
+      try{
+        pdfDoc = await pdfjsLib.getDocument('${data.pageUrl}').promise;
+        await renderAllPages();
+      }catch(e){
+        console.error(e);
+        const pagesContainer = document.getElementById('pdfPages');
+        if(pagesContainer){
+          pagesContainer.innerHTML = '<div class="empty"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
         }
+        if(loader) loader.style.display = 'none';
       }
+    }
 
-      async function loadPDF() {
-        const container = document.getElementById('pdfContainer');
-        try {
-          pdfDoc = await pdfjsLib.getDocument('${data.pageUrl}').promise;
-          await renderAllPages();
-        } catch (e) {
-          container.innerHTML = '<div class=\"empty\"><h2>تعذر تحميل الملف</h2><p>حاول مرة أخرى لاحقًا.</p></div>';
-        }
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+      syncHeaderOffset();
+      loadPDF();
+    });
 
-      function handleViewportChange() {
-        syncHeaderOffset();
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (pdfDoc) {
-            renderAllPages();
-          }
-        }, 150);
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-        syncHeaderOffset();
-        loadPDF();
-      });
-      window.addEventListener('resize', handleViewportChange);
-      window.addEventListener('orientationchange', handleViewportChange);
-    </script>
-  ` : `
-    <div class="empty">
-      <h2>${data.emptyTitle || 'هذه الصفحة غير متاحة الآن'}</h2>
-      <p>${data.emptyText || 'يمكنك المتابعة لاحقاً.'}</p>
-    </div>
-  `}
+    // ✅ بدون إعادة رسم PDF عند rotate
+    window.addEventListener('resize', syncHeaderOffset);
+    window.addEventListener('orientationchange', syncHeaderOffset);
+  </script>
+  `
+      : `
+  <div class="empty">
+    <h2>${data.emptyTitle || 'هذه الصفحة غير متاحة الآن'}</h2>
+    <p>${data.emptyText || 'يمكنك المتابعة لاحقاً.'}</p>
+  </div>
+  `
+  }
 </body>
 </html>`;
   }
-
-
 };
+
