@@ -1744,8 +1744,7 @@ module.exports = {
 
       const current = ++renderToken;
       isRendering = true;
-      let didSwapPages = false;
-      let renderedCount = 0;
+      const fragment = document.createDocumentFragment();
 
       try{
         for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
@@ -1767,17 +1766,7 @@ module.exports = {
           page.cleanup();
           if(current !== renderToken) return;
 
-          if(!didSwapPages){
-            pagesContainer.innerHTML = '';
-            didSwapPages = true;
-          }
-
-          pagesContainer.appendChild(canvas);
-          renderedCount += 1;
-
-          if(loader && renderedCount === 1){
-            loader.style.display = 'none';
-          }
+          fragment.appendChild(canvas);
 
           if(pageNum % RENDER_BATCH_SIZE === 0){
             await pauseForUI();
@@ -1786,6 +1775,8 @@ module.exports = {
 
         if(current !== renderToken) return;
 
+        pagesContainer.innerHTML = '';
+        pagesContainer.appendChild(fragment);
         lastRenderViewportWidth = nextViewportWidth;
 
         if(loader) loader.style.display = 'none';
@@ -2214,8 +2205,7 @@ module.exports = {
 
       const current = ++renderToken;
       isRendering = true;
-      let didSwapPages = false;
-      let renderedCount = 0;
+      const fragment = document.createDocumentFragment();
 
       try{
         for(let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++){
@@ -2237,17 +2227,7 @@ module.exports = {
           page.cleanup();
           if(current !== renderToken) return;
 
-          if(!didSwapPages){
-            pagesContainer.innerHTML = '';
-            didSwapPages = true;
-          }
-
-          pagesContainer.appendChild(canvas);
-          renderedCount += 1;
-
-          if(loader && renderedCount === 1){
-            loader.style.display = 'none';
-          }
+          fragment.appendChild(canvas);
 
           if(pageNum % RENDER_BATCH_SIZE === 0){
             await pauseForUI();
@@ -2256,6 +2236,8 @@ module.exports = {
 
         if(current !== renderToken) return;
 
+        pagesContainer.innerHTML = '';
+        pagesContainer.appendChild(fragment);
         lastRenderViewportWidth = nextViewportWidth;
         if(loader) loader.style.display = 'none';
       } finally {
