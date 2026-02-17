@@ -26,6 +26,12 @@ const STATIC_PAGE_FILES = {
   suhoor: 'suhoor.pdf',
 };
 
+const getMissingGithubEnv = () => ([
+  'GITHUB_TOKEN',
+  'GITHUB_OWNER',
+  'GITHUB_REPO',
+].filter((key) => !String(process.env[key] || '').trim()));
+
 const DEFAULT_ALLOWED_PDFS = Object.values(STATIC_PAGE_FILES);
 const EXTRA_ALLOWED_PDFS = String(process.env.ALLOWED_PDF_FILES || '')
   .split(',')
@@ -70,6 +76,11 @@ const AUTH_CONFIG_READY = Boolean(SESSION_SECRET && COOKIE_SECRET && ADMIN_PASSW
 
 if (!AUTH_CONFIG_READY) {
   console.warn('Admin authentication env vars are missing. Public pages and static assets will still work.');
+}
+
+const missingGithubEnvAtBoot = getMissingGithubEnv();
+if (missingGithubEnvAtBoot.length > 0) {
+  console.warn(`GitHub PDF storage env vars missing: ${missingGithubEnvAtBoot.join(', ')}`);
 }
 
 // Static assets should be served before auth checks/routes.
@@ -172,9 +183,13 @@ const getPdfFilename = (value) => {
 };
 
 const canUseGithubStorage = () => {
+  if (getMissingGithubEnv().length > 0) {
+    return false;
+  }
+
   try {
     getGithubConfig();
-    return Boolean(process.env.GITHUB_OWNER && process.env.GITHUB_REPO && process.env.GITHUB_TOKEN);
+    return true;
   } catch {
     return false;
   }
@@ -276,9 +291,13 @@ const requireAdminAuth = (req, res, next) => {
 
 const requireGithubStorage = (req, res, next) => {
   if (!canUseGithubStorage()) {
+    const missing = getMissingGithubEnv();
     return res.status(503).json({
       success: false,
-      message: 'GitHub storage is not configured.',
+      message: missing.length > 0
+        ? `GitHub storage is not configured. Missing: ${missing.join(', ')}`
+        : 'GitHub storage is not configured.',
+      missing,
     });
   }
   return next();
