@@ -41,7 +41,7 @@ const ALLOWED_PDFS = new Set([
   ...DEFAULT_ALLOWED_PDFS.map((name) => name.toLowerCase()),
   ...EXTRA_ALLOWED_PDFS,
 ]);
-const DEFAULT_MAX_PDF_UPLOAD_MB = process.env.VERCEL ? 4 : 15;
+const DEFAULT_MAX_PDF_UPLOAD_MB = 20;
 const parsedMaxPdfSizeMb = Number(process.env.MAX_PDF_UPLOAD_MB || DEFAULT_MAX_PDF_UPLOAD_MB);
 const MAX_PDF_SIZE_MB = Number.isFinite(parsedMaxPdfSizeMb) && parsedMaxPdfSizeMb > 0
   ? parsedMaxPdfSizeMb

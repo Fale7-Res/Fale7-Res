@@ -446,7 +446,7 @@ module.exports = {
 
   // قالب لوحة الإدارة
   admin: (data = {}) => {
-    const maxUploadMb = Number(data.maxUploadMb) > 0 ? Number(data.maxUploadMb) : 15;
+    const maxUploadMb = Number(data.maxUploadMb) > 0 ? Number(data.maxUploadMb) : 20;
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
