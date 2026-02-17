@@ -47,6 +47,14 @@ const MAX_PDF_SIZE_MB = Number.isFinite(parsedMaxPdfSizeMb) && parsedMaxPdfSizeM
   ? parsedMaxPdfSizeMb
   : DEFAULT_MAX_PDF_UPLOAD_MB;
 const MAX_PDF_SIZE_BYTES = Math.max(1, MAX_PDF_SIZE_MB) * 1024 * 1024;
+const PLATFORM_DIRECT_UPLOAD_CAP_MB = process.env.VERCEL ? 3 : MAX_PDF_SIZE_MB;
+const DEFAULT_DIRECT_UPLOAD_MAX_MB = PLATFORM_DIRECT_UPLOAD_CAP_MB;
+const parsedDirectUploadMb = Number(process.env.DIRECT_UPLOAD_MAX_MB || DEFAULT_DIRECT_UPLOAD_MAX_MB);
+const DIRECT_UPLOAD_MAX_MB = Number.isFinite(parsedDirectUploadMb) && parsedDirectUploadMb > 0
+  ? Math.min(parsedDirectUploadMb, MAX_PDF_SIZE_MB, PLATFORM_DIRECT_UPLOAD_CAP_MB)
+  : DEFAULT_DIRECT_UPLOAD_MAX_MB;
+const DIRECT_UPLOAD_MAX_BYTES = Math.max(1, DIRECT_UPLOAD_MAX_MB) * 1024 * 1024;
+const CHUNK_STORAGE_DIR = 'tmp/pdf-chunks';
 const EXISTS_CACHE_TTL_MS = 30 * 1000;
 const ADMIN_RATE_WINDOW_MS = 60 * 1000;
 const ADMIN_RATE_MAX_REQUESTS = 20;
@@ -372,6 +380,23 @@ const resolveFilenameFromRequest = (req, uploadedFile) => getPdfFilename(
   || uploadedFile?.originalname
 );
 
+const parseChunkNumber = (value) => {
+  const numberValue = Number.parseInt(String(value), 10);
+  return Number.isFinite(numberValue) ? numberValue : NaN;
+};
+
+const sanitizeUploadId = (value) => {
+  const uploadId = String(value || '').trim();
+  if (!/^[a-zA-Z0-9_-]{8,80}$/.test(uploadId)) {
+    return null;
+  }
+  return uploadId;
+};
+
+const getChunkStoragePath = (uploadId, index) => (
+  `${CHUNK_STORAGE_DIR}/${uploadId}/chunk-${String(index).padStart(5, '0')}.part`
+);
+
 const uploadPdfHandler = async (req, res) => {
   const uploadedFile = getUploadedFile(req);
   if (!uploadedFile) {
@@ -393,6 +418,133 @@ const uploadPdfHandler = async (req, res) => {
   const storagePath = resolvePdfPath(filename);
   await uploadOrUpdateFile(storagePath, uploadedFile.buffer, `Update ${filename}`);
   updateVersionFor(filename, true);
+
+  const proxyUrl = withCacheVersion(`/pdf/${encodeURIComponent(filename)}`);
+  const rawUrl = `${buildRawFileUrl(filename)}?v=${Date.now()}`;
+  return res.json({
+    success: true,
+    message: 'PDF uploaded successfully.',
+    filename,
+    url: proxyUrl,
+    rawUrl,
+  });
+};
+
+const uploadPdfChunkHandler = async (req, res) => {
+  const uploadedFile = getUploadedFile(req);
+  if (!uploadedFile) {
+    return res.status(400).json({ success: false, message: 'No chunk uploaded.' });
+  }
+
+  const uploadId = sanitizeUploadId(req.body?.uploadId);
+  if (!uploadId) {
+    return res.status(400).json({ success: false, message: 'Invalid upload id.' });
+  }
+
+  const chunkIndex = parseChunkNumber(req.body?.chunkIndex);
+  const totalChunks = parseChunkNumber(req.body?.totalChunks);
+
+  if (!Number.isInteger(chunkIndex) || chunkIndex < 0 || !Number.isInteger(totalChunks) || totalChunks <= 0) {
+    return res.status(400).json({ success: false, message: 'Invalid chunk metadata.' });
+  }
+
+  if (chunkIndex >= totalChunks) {
+    return res.status(400).json({ success: false, message: 'Chunk index is out of range.' });
+  }
+
+  const estimatedSize = totalChunks * DIRECT_UPLOAD_MAX_BYTES;
+  if (estimatedSize > (MAX_PDF_SIZE_BYTES + DIRECT_UPLOAD_MAX_BYTES)) {
+    return res.status(413).json({ success: false, message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.` });
+  }
+
+  if (uploadedFile.size > DIRECT_UPLOAD_MAX_BYTES) {
+    return res.status(413).json({
+      success: false,
+      message: `Chunk is too large. Max chunk is ${DIRECT_UPLOAD_MAX_MB}MB.`,
+    });
+  }
+
+  const filename = resolveFilenameFromRequest(req, uploadedFile);
+  if (!filename) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid PDF name. Add it to ALLOWED_PDF_FILES to allow it.',
+    });
+  }
+
+  const chunkPath = getChunkStoragePath(uploadId, chunkIndex);
+  await uploadOrUpdateFile(chunkPath, uploadedFile.buffer, `Upload chunk ${chunkIndex + 1}/${totalChunks} for ${filename}`);
+
+  return res.json({
+    success: true,
+    uploadId,
+    chunkIndex,
+    totalChunks,
+    filename,
+  });
+};
+
+const completeChunkedUploadHandler = async (req, res) => {
+  const uploadId = sanitizeUploadId(req.body?.uploadId);
+  if (!uploadId) {
+    return res.status(400).json({ success: false, message: 'Invalid upload id.' });
+  }
+
+  const totalChunks = parseChunkNumber(req.body?.totalChunks);
+  if (!Number.isInteger(totalChunks) || totalChunks <= 0) {
+    return res.status(400).json({ success: false, message: 'Invalid total chunk count.' });
+  }
+
+  const filename = resolveFilenameFromRequest(req, null);
+  if (!filename) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid PDF name. Add it to ALLOWED_PDF_FILES to allow it.',
+    });
+  }
+
+  const chunkBuffers = [];
+  let totalBytes = 0;
+
+  for (let index = 0; index < totalChunks; index += 1) {
+    const chunkPath = getChunkStoragePath(uploadId, index);
+    const chunkBuffer = await downloadFile(chunkPath);
+    if (!chunkBuffer) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing uploaded chunk ${index + 1}/${totalChunks}.`,
+      });
+    }
+
+    totalBytes += chunkBuffer.length;
+    if (totalBytes > MAX_PDF_SIZE_BYTES) {
+      return res.status(413).json({
+        success: false,
+        message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.`,
+      });
+    }
+
+    chunkBuffers.push(chunkBuffer);
+  }
+
+  const fullBuffer = Buffer.concat(chunkBuffers);
+  if (!fullBuffer.subarray(0, 4).equals(Buffer.from('%PDF'))) {
+    return res.status(400).json({ success: false, message: 'Uploaded file is not a valid PDF.' });
+  }
+
+  const storagePath = resolvePdfPath(filename);
+  await uploadOrUpdateFile(storagePath, fullBuffer, `Update ${filename}`);
+  updateVersionFor(filename, true);
+
+  // Cleanup temporary chunks. Ignore cleanup failures to keep upload success.
+  await Promise.all(Array.from({ length: totalChunks }, async (_, index) => {
+    try {
+      const chunkPath = getChunkStoragePath(uploadId, index);
+      await deleteFile(chunkPath, `Cleanup chunk ${index + 1}/${totalChunks} for ${filename}`);
+    } catch {
+      // Ignore cleanup errors.
+    }
+  }));
 
   const proxyUrl = withCacheVersion(`/pdf/${encodeURIComponent(filename)}`);
   const rawUrl = `${buildRawFileUrl(filename)}?v=${Date.now()}`;
@@ -489,11 +641,45 @@ app.post("/login", (req, res) => {
 
 app.get("/admin", (req, res) => {
   if (isAuthenticated(req)) {
-    res.send(views.admin({ maxUploadMb: MAX_PDF_SIZE_MB }));
+    res.send(views.admin({
+      maxUploadMb: MAX_PDF_SIZE_MB,
+      directUploadMb: DIRECT_UPLOAD_MAX_MB,
+    }));
   } else {
     res.redirect("/login");
   }
 });
+
+app.post(
+  '/admin/pdf/upload-chunk',
+  requireAdminAuth,
+  requireGithubStorage,
+  applyAdminRateLimit,
+  parseUploadRequest,
+  async (req, res) => {
+    try {
+      await uploadPdfChunkHandler(req, res);
+    } catch (error) {
+      console.error('Chunk upload failed:', error.message);
+      res.status(500).json({ success: false, message: 'Failed to upload chunk.' });
+    }
+  }
+);
+
+app.post(
+  '/admin/pdf/upload-complete',
+  requireAdminAuth,
+  requireGithubStorage,
+  applyAdminRateLimit,
+  async (req, res) => {
+    try {
+      await completeChunkedUploadHandler(req, res);
+    } catch (error) {
+      console.error('Chunk completion failed:', error.message);
+      res.status(500).json({ success: false, message: 'Failed to finalize PDF upload.' });
+    }
+  }
+);
 
 app.post(
   '/admin/pdf/upload',

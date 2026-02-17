@@ -447,6 +447,7 @@ module.exports = {
   // قالب لوحة الإدارة
   admin: (data = {}) => {
     const maxUploadMb = Number(data.maxUploadMb) > 0 ? Number(data.maxUploadMb) : 20;
+    const directUploadMb = Number(data.directUploadMb) > 0 ? Number(data.directUploadMb) : 3;
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1131,6 +1132,9 @@ module.exports = {
       const progressPercentage = document.getElementById('progressPercentage');
       const MAX_UPLOAD_MB = ${maxUploadMb};
       const MAX_UPLOAD_BYTES = Math.floor(MAX_UPLOAD_MB * 1024 * 1024);
+      const DIRECT_UPLOAD_MB = ${directUploadMb};
+      const DIRECT_UPLOAD_BYTES = Math.floor(DIRECT_UPLOAD_MB * 1024 * 1024);
+      const CHUNK_UPLOAD_BYTES = Math.max(256 * 1024, DIRECT_UPLOAD_BYTES - (128 * 1024));
 
       const forms = document.querySelectorAll('.upload-form');
       forms.forEach((form) => {
@@ -1152,25 +1156,7 @@ module.exports = {
           }
         });
 
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
-
-          if (!fileInput.files || fileInput.files.length === 0) {
-            alert('Please choose a file first.');
-            return;
-          }
-
-          const file = fileInput.files[0];
-          if (file.size > MAX_UPLOAD_BYTES) {
-            alert('File is too large for this deployment. Max allowed is ' + MAX_UPLOAD_MB + 'MB.');
-            return;
-          }
-
-          if (file.type !== 'application/pdf') {
-            alert('Please upload a PDF file only.');
-            return;
-          }
-
+        const uploadDirect = (file) => new Promise((resolve, reject) => {
           const formData = new FormData();
           formData.append('file', file);
           formData.append('filename', pathname);
@@ -1197,47 +1183,151 @@ module.exports = {
             if (xhr.status === 401) {
               alert('Your login session has expired. Please login again.');
               window.location.href = '/login';
-              return;
-            }
-
-            if (xhr.status === 413) {
-              const serverMessage = data && (data.message || data.error);
-              alert(serverMessage || ('File is too large for this deployment. Max allowed is ' + MAX_UPLOAD_MB + 'MB.'));
-              loadingOverlay.style.display = 'none';
-              progressBar.style.width = '0%';
-              progressPercentage.innerText = '0%';
+              const authError = new Error('Unauthorized');
+              authError.status = 401;
+              reject(authError);
               return;
             }
 
             if (xhr.status >= 200 && xhr.status < 300) {
-              progressBar.style.width = '100%';
-              progressPercentage.innerText = '100%';
-              loadingText.innerText = 'Completed successfully!';
-              setTimeout(() => window.location.reload(), 900);
+              resolve(data || {});
               return;
             }
 
             const errorMessage = (data && (data.message || data.error)) || 'An error occurred while uploading.';
-            alert(errorMessage);
-            loadingOverlay.style.display = 'none';
-            progressBar.style.width = '0%';
-            progressPercentage.innerText = '0%';
+            const uploadError = new Error(errorMessage);
+            uploadError.status = xhr.status;
+            reject(uploadError);
           });
 
           xhr.addEventListener('error', () => {
-            alert('Upload failed. Please check your network connection.');
-            loadingOverlay.style.display = 'none';
-            progressBar.style.width = '0%';
-            progressPercentage.innerText = '0%';
+            const networkError = new Error('Upload failed. Please check your network connection.');
+            networkError.status = 0;
+            reject(networkError);
           });
+
+          xhr.open('POST', '/admin/pdf/upload');
+          xhr.send(formData);
+        });
+
+        const uploadChunked = async (file) => {
+          const uploadId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+          const totalChunks = Math.ceil(file.size / CHUNK_UPLOAD_BYTES);
+
+          for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex += 1) {
+            const start = chunkIndex * CHUNK_UPLOAD_BYTES;
+            const end = Math.min(file.size, start + CHUNK_UPLOAD_BYTES);
+            const chunk = file.slice(start, end);
+
+            const chunkFormData = new FormData();
+            chunkFormData.append('file', chunk, file.name);
+            chunkFormData.append('filename', pathname);
+            chunkFormData.append('pageType', pageType);
+            chunkFormData.append('uploadId', uploadId);
+            chunkFormData.append('chunkIndex', String(chunkIndex));
+            chunkFormData.append('totalChunks', String(totalChunks));
+
+            const response = await fetch('/admin/pdf/upload-chunk', {
+              method: 'POST',
+              body: chunkFormData,
+            });
+            const data = await response.json().catch(() => ({}));
+
+            if (response.status === 401) {
+              alert('Your login session has expired. Please login again.');
+              window.location.href = '/login';
+              throw new Error('Unauthorized');
+            }
+
+            if (!response.ok || !data.success) {
+              throw new Error(data.message || 'An error occurred while uploading chunk.');
+            }
+
+            const chunkProgress = Math.round(((chunkIndex + 1) / totalChunks) * 92);
+            progressBar.style.width = chunkProgress + '%';
+            progressPercentage.innerText = chunkProgress + '%';
+            loadingText.innerText = 'Uploading ' + label + ' (' + (chunkIndex + 1) + '/' + totalChunks + ')...';
+          }
+
+          progressBar.style.width = '96%';
+          progressPercentage.innerText = '96%';
+          loadingText.innerText = 'Finalizing upload...';
+
+          const completeResponse = await fetch('/admin/pdf/upload-complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: pathname,
+              pageType,
+              uploadId,
+              totalChunks,
+            }),
+          });
+
+          const completeData = await completeResponse.json().catch(() => ({}));
+          if (completeResponse.status === 401) {
+            alert('Your login session has expired. Please login again.');
+            window.location.href = '/login';
+            throw new Error('Unauthorized');
+          }
+
+          if (!completeResponse.ok || !completeData.success) {
+            throw new Error(completeData.message || 'An error occurred while finalizing upload.');
+          }
+
+          return completeData;
+        };
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          if (!fileInput.files || fileInput.files.length === 0) {
+            alert('Please choose a file first.');
+            return;
+          }
+
+          const file = fileInput.files[0];
+          if (file.size > MAX_UPLOAD_BYTES) {
+            alert('File is too large for this deployment. Max allowed is ' + MAX_UPLOAD_MB + 'MB.');
+            return;
+          }
+
+          if (file.type !== 'application/pdf') {
+            alert('Please upload a PDF file only.');
+            return;
+          }
 
           loadingText.innerText = 'Uploading ' + label + '...';
           progressBar.style.width = '0%';
           progressPercentage.innerText = '0%';
           loadingOverlay.style.display = 'flex';
 
-          xhr.open('POST', '/admin/pdf/upload');
-          xhr.send(formData);
+          try {
+            if (file.size > DIRECT_UPLOAD_BYTES) {
+              await uploadChunked(file);
+            } else {
+              try {
+                await uploadDirect(file);
+              } catch (uploadError) {
+                // Some deployments still return 413 due overhead, fallback to chunked mode.
+                if (uploadError && uploadError.status === 413 && file.size <= MAX_UPLOAD_BYTES) {
+                  await uploadChunked(file);
+                } else {
+                  throw uploadError;
+                }
+              }
+            }
+
+            progressBar.style.width = '100%';
+            progressPercentage.innerText = '100%';
+            loadingText.innerText = 'Completed successfully!';
+            setTimeout(() => window.location.reload(), 900);
+          } catch (error) {
+            alert(error.message || 'An error occurred while uploading.');
+            loadingOverlay.style.display = 'none';
+            progressBar.style.width = '0%';
+            progressPercentage.innerText = '0%';
+          }
         });
       });
 
