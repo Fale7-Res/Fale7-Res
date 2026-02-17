@@ -1164,7 +1164,8 @@ module.exports = {
           }
 
           const formData = new FormData();
-          formData.append('menu', file);
+          formData.append('file', file);
+          formData.append('filename', pathname);
           formData.append('pageType', pageType);
 
           const xhr = new XMLHttpRequest();
@@ -1218,7 +1219,7 @@ module.exports = {
           progressPercentage.innerText = '0%';
           loadingOverlay.style.display = 'flex';
 
-          xhr.open('POST', '/upload');
+          xhr.open('POST', '/admin/pdf/upload');
           xhr.send(formData);
         });
       });
@@ -1236,10 +1237,8 @@ module.exports = {
             progressBar.style.width = '30%';
             progressPercentage.innerText = '30%';
 
-            const response = await fetch('/delete-page', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ pageType }),
+            const response = await fetch('/admin/pdf/' + encodeURIComponent(pageType), {
+              method: 'DELETE',
             });
 
             const data = await response.json();

@@ -2,8 +2,17 @@ const express = require("express");
 const session = require("express-session");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const cookieParser = require("cookie-parser");
-const { put, del, list } = require('@vercel/blob');
+const {
+  getConfig: getGithubConfig,
+  resolvePdfPath,
+  buildRawFileUrl,
+  getFileSha,
+  uploadOrUpdateFile,
+  deleteFile,
+  downloadFile,
+} = require('./lib/githubStorage');
 require("dotenv").config();
 
 const app = express();
@@ -16,6 +25,23 @@ const STATIC_PAGE_FILES = {
   offers: 'offers.pdf',
   suhoor: 'suhoor.pdf',
 };
+
+const DEFAULT_ALLOWED_PDFS = Object.values(STATIC_PAGE_FILES);
+const EXTRA_ALLOWED_PDFS = String(process.env.ALLOWED_PDF_FILES || '')
+  .split(',')
+  .map((name) => name.trim().toLowerCase())
+  .filter(Boolean);
+const ALLOWED_PDFS = new Set([
+  ...DEFAULT_ALLOWED_PDFS.map((name) => name.toLowerCase()),
+  ...EXTRA_ALLOWED_PDFS,
+]);
+const MAX_PDF_SIZE_MB = Number(process.env.MAX_PDF_UPLOAD_MB || 15);
+const MAX_PDF_SIZE_BYTES = Math.max(1, MAX_PDF_SIZE_MB) * 1024 * 1024;
+const EXISTS_CACHE_TTL_MS = 30 * 1000;
+const ADMIN_RATE_WINDOW_MS = 60 * 1000;
+const ADMIN_RATE_MAX_REQUESTS = 20;
+const existsCache = new Map();
+const adminRateBuckets = new Map();
 
 // Helper to parse command-line arguments
 const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
@@ -92,10 +118,10 @@ app.use(express.json({ limit: '200mb' }));
 app.use((req, res, next) => {
   const privatePath = req.path === '/login'
     || req.path === '/admin'
+    || req.path.startsWith('/admin/pdf')
     || req.path === '/upload'
     || req.path === '/delete-page'
-    || req.path === '/logout'
-    || req.path.startsWith('/api/');
+    || req.path === '/logout';
 
   if (privatePath) {
     res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -111,27 +137,88 @@ app.use((req, res, next) => {
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    // السماح برفع ملفات PDF كبيرة نسبيًا (200MB)
-    fileSize: 200 * 1024 * 1024,
+    // السماح برفع ملفات PDF كبيرة نسبيًا (MB)
+    fileSize: MAX_PDF_SIZE_BYTES,
   },
 });
 
-const getBlobOptions = () => {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    return { token: process.env.BLOB_READ_WRITE_TOKEN };
+const getPdfFilename = (value) => {
+  if (!value) return null;
+  const normalized = String(value).trim().toLowerCase().replace(/\\/g, '/');
+  const baseName = path.posix.basename(normalized);
+  if (!baseName || baseName.includes('/') || baseName.includes('..')) {
+    return null;
   }
-  return {};
+
+  if (STATIC_PAGE_FILES[baseName]) {
+    return STATIC_PAGE_FILES[baseName];
+  }
+
+  const byPageType = STATIC_PAGE_FILES[baseName.replace(/\.pdf$/i, '')];
+  if (byPageType) {
+    return byPageType;
+  }
+
+  const filename = baseName.endsWith('.pdf') ? baseName : `${baseName}.pdf`;
+  if (!/^[a-z0-9][a-z0-9._-]{0,120}\.pdf$/i.test(filename)) {
+    return null;
+  }
+
+  if (!ALLOWED_PDFS.has(filename.toLowerCase())) {
+    return null;
+  }
+
+  return filename;
 };
 
-const getBlobByPathname = async (pathname) => {
+const canUseGithubStorage = () => {
   try {
-    const blobOptions = getBlobOptions();
-    const { blobs } = await list({ prefix: pathname, limit: 10, ...blobOptions });
-    return blobs.find((blob) => blob.pathname === pathname) || null;
-  } catch (error) {
-    console.error('Error listing blobs:', error.message);
-    throw error;
+    getGithubConfig();
+    return Boolean(process.env.GITHUB_OWNER && process.env.GITHUB_REPO && process.env.GITHUB_TOKEN);
+  } catch {
+    return false;
   }
+};
+
+const getCachedExists = (filename) => {
+  const cached = existsCache.get(filename);
+  if (!cached) return null;
+  if ((Date.now() - cached.updatedAt) > EXISTS_CACHE_TTL_MS) {
+    existsCache.delete(filename);
+    return null;
+  }
+  return cached.exists;
+};
+
+const setCachedExists = (filename, exists) => {
+  existsCache.set(filename, { exists, updatedAt: Date.now() });
+};
+
+const checkLocalPdfExists = async (filename) => {
+  const localPath = path.join(PUBLIC_DIR, 'pdf', filename);
+  try {
+    await fs.promises.access(localPath, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const fileExistsInStorage = async (filename, force = false) => {
+  const cached = !force ? getCachedExists(filename) : null;
+  if (typeof cached === 'boolean') {
+    return cached;
+  }
+
+  let exists = false;
+  if (canUseGithubStorage()) {
+    exists = Boolean(await getFileSha(resolvePdfPath(filename)));
+  } else {
+    exists = await checkLocalPdfExists(filename);
+  }
+
+  setCachedExists(filename, exists);
+  return exists;
 };
 
 const withCacheVersion = (rawUrl) => {
@@ -146,22 +233,15 @@ const withCacheVersion = (rawUrl) => {
   }
 };
 
-const getPageData = async (pathname) => {
-  const blob = await getBlobByPathname(pathname);
-  if (!blob) {
+const getPageData = async (filename) => {
+  const exists = await fileExistsInStorage(filename);
+  if (!exists) {
     return { exists: false, url: null };
   }
 
-  // Determine the pageType from the pathname
-  let pageType = 'menu';
-  if (pathname === STATIC_PAGE_FILES.offers) pageType = 'offers';
-  if (pathname === STATIC_PAGE_FILES.suhoor) pageType = 'suhoor';
-
-  // Return a proxy URL that the server will handle
-  const proxyUrl = `/api/pdf/${pageType}?v=${menuVersion}`;
   return {
     exists: true,
-    url: proxyUrl,
+    url: withCacheVersion(`/pdf/${encodeURIComponent(filename)}`),
   };
 };
 
@@ -182,15 +262,177 @@ const getMenuViewData = async () => {
   };
 };
 
-const deleteBlobByPathname = async (pathname) => {
-  const blob = await getBlobByPathname(pathname);
-  if (!blob) {
-    return false;
+const updateVersionFor = (filename, exists) => {
+  setCachedExists(filename, exists);
+  menuVersion = Date.now();
+};
+
+const requireAdminAuth = (req, res, next) => {
+  if (!isAuthenticated(req)) {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
+  return next();
+};
+
+const requireGithubStorage = (req, res, next) => {
+  if (!canUseGithubStorage()) {
+    return res.status(503).json({
+      success: false,
+      message: 'GitHub storage is not configured.',
+    });
+  }
+  return next();
+};
+
+const applyAdminRateLimit = (req, res, next) => {
+  const clientIp = String(req.headers['x-forwarded-for'] || req.ip || 'unknown')
+    .split(',')[0]
+    .trim();
+  const now = Date.now();
+  const bucket = adminRateBuckets.get(clientIp) || [];
+  const fresh = bucket.filter((stamp) => (now - stamp) < ADMIN_RATE_WINDOW_MS);
+
+  if (fresh.length >= ADMIN_RATE_MAX_REQUESTS) {
+    return res.status(429).json({
+      success: false,
+      message: 'Too many admin requests. Please retry shortly.',
+    });
   }
 
-  await del(blob.pathname, getBlobOptions());
-  menuVersion = Date.now();
-  return true;
+  fresh.push(now);
+  adminRateBuckets.set(clientIp, fresh);
+  return next();
+};
+
+const uploadPdfFields = upload.fields([
+  { name: 'file', maxCount: 1 },
+  { name: 'menu', maxCount: 1 },
+  { name: 'offers', maxCount: 1 },
+  { name: 'suhoor', maxCount: 1 },
+]);
+
+const parseUploadRequest = (req, res, next) => {
+  uploadPdfFields(req, res, (error) => {
+    if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        success: false,
+        message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.`,
+      });
+    }
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unable to read the uploaded file.',
+      });
+    }
+
+    return next();
+  });
+};
+
+const getUploadedFile = (req) => {
+  if (req.file) return req.file;
+  const files = req.files || {};
+  return files.file?.[0]
+    || files.menu?.[0]
+    || files.offers?.[0]
+    || files.suhoor?.[0]
+    || null;
+};
+
+const resolveFilenameFromRequest = (req, uploadedFile) => getPdfFilename(
+  req.body?.filename
+  || req.body?.pathname
+  || req.body?.pageType
+  || req.params.name
+  || uploadedFile?.originalname
+);
+
+const uploadPdfHandler = async (req, res) => {
+  const uploadedFile = getUploadedFile(req);
+  if (!uploadedFile) {
+    return res.status(400).json({ success: false, message: 'No file uploaded.' });
+  }
+
+  if (uploadedFile.mimetype !== 'application/pdf') {
+    return res.status(400).json({ success: false, message: 'Only PDF files are allowed.' });
+  }
+
+  const filename = resolveFilenameFromRequest(req, uploadedFile);
+  if (!filename) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid PDF name. Add it to ALLOWED_PDF_FILES to allow it.',
+    });
+  }
+
+  const storagePath = resolvePdfPath(filename);
+  await uploadOrUpdateFile(storagePath, uploadedFile.buffer, `Update ${filename}`);
+  updateVersionFor(filename, true);
+
+  const proxyUrl = withCacheVersion(`/pdf/${encodeURIComponent(filename)}`);
+  const rawUrl = `${buildRawFileUrl(filename)}?v=${Date.now()}`;
+  return res.json({
+    success: true,
+    message: 'PDF uploaded successfully.',
+    filename,
+    url: proxyUrl,
+    rawUrl,
+  });
+};
+
+const deletePdfByName = async (req, res) => {
+  const filename = resolveFilenameFromRequest(req, null);
+  if (!filename) {
+    return res.status(400).json({ success: false, message: 'Invalid PDF name.' });
+  }
+
+  const storagePath = resolvePdfPath(filename);
+  const result = await deleteFile(storagePath, `Delete ${filename}`);
+  updateVersionFor(filename, false);
+
+  return res.json({
+    success: true,
+    deleted: Boolean(result.deleted),
+    message: result.deleted ? 'PDF deleted successfully.' : 'PDF was already missing.',
+  });
+};
+
+const sendPdfResponse = async (filename, res) => {
+  const safeFilename = getPdfFilename(filename);
+  if (!safeFilename) {
+    res.status(404).json({ error: 'PDF not found' });
+    return;
+  }
+
+  try {
+    let pdfBuffer = null;
+
+    if (canUseGithubStorage()) {
+      pdfBuffer = await downloadFile(resolvePdfPath(safeFilename));
+    } else {
+      const localPath = path.join(PUBLIC_DIR, 'pdf', safeFilename);
+      try {
+        pdfBuffer = await fs.promises.readFile(localPath);
+      } catch {
+        pdfBuffer = null;
+      }
+    }
+
+    if (!pdfBuffer) {
+      res.status(404).json({ error: 'PDF not found' });
+      return;
+    }
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${safeFilename}"`);
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error('PDF proxy error:', error.message);
+    res.status(500).json({ error: 'Failed to load PDF', details: error.message });
+  }
 };
 
 // توزيع الملفات الثابتة من مجلد public (صور، تحقق جوجل، ...إلخ)
@@ -202,7 +444,7 @@ app.get("/", async (req, res) => {
     res.set('X-Robots-Tag', 'index, follow');
     res.send(views.menu({ ...menuData, canonicalUrl: `${SITE_URL}/`, indexable: true }));
   } catch (error) {
-    console.error('خطأ في التحقق من Blob:', error);
+    console.error('Error while checking PDF availability:', error);
     res.set('X-Robots-Tag', 'index, follow');
     res.send(views.menu({ menuExists: false, offersExists: false, suhoorExists: false, canonicalUrl: `${SITE_URL}/`, indexable: true }));
   }
@@ -230,97 +472,68 @@ app.get("/admin", (req, res) => {
   }
 });
 
-app.post("/upload", (req, res, next) => {
-  upload.single("menu")(req, res, (error) => {
-    if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
-      return res.status(413).json({
-        success: false,
-        message: 'حجم ملف المنيو كبير جدًا. الحد الأقصى 200MB.',
-      });
+app.post(
+  '/admin/pdf/upload',
+  requireAdminAuth,
+  requireGithubStorage,
+  applyAdminRateLimit,
+  parseUploadRequest,
+  async (req, res) => {
+    try {
+      await uploadPdfHandler(req, res);
+    } catch (error) {
+      console.error('Upload failed:', error.message);
+      res.status(500).json({ success: false, message: 'Failed to upload PDF.' });
     }
+  }
+);
 
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: 'تعذر قراءة الملف المرفوع. تأكد أنه PDF صالح.',
-      });
+app.delete(
+  '/admin/pdf/:name',
+  requireAdminAuth,
+  requireGithubStorage,
+  applyAdminRateLimit,
+  async (req, res) => {
+    try {
+      await deletePdfByName(req, res);
+    } catch (error) {
+      console.error('Delete failed:', error.message);
+      res.status(500).json({ success: false, message: 'Failed to delete PDF.' });
     }
-
-    next();
-  });
-}, async (req, res) => {
-  if (!isAuthenticated(req)) {
-    return res.status(401).json({ message: "Unauthorized" });
   }
+);
 
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: "لم يتم رفع أي ملف." });
-  }
-
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return res.status(500).json({ success: false, message: "BLOB_READ_WRITE_TOKEN is missing in environment variables." });
-  }
-
-  const pageType = req.body.pageType || 'menu';
-  const pathname = STATIC_PAGE_FILES[pageType];
-  if (!pathname) {
-    return res.status(400).json({ success: false, message: "Invalid page type." });
-  }
-
-  console.log(`Starting upload for pageType: ${pageType}, pathname: ${pathname}, fileSize: ${req.file.size}`);
-  
-  try {
-    const blobOptions = getBlobOptions();
-    console.log(`Blob options token present: ${!!blobOptions.token}`);
-
-    const existingBlob = await getBlobByPathname(pathname);
-    if (existingBlob) {
-      console.log(`Deleting existing blob: ${existingBlob.pathname}`);
-      await del(existingBlob.pathname, blobOptions);
-      console.log(`Existing ${pathname} deleted from Blob storage`);
+// Backward-compatible aliases used by old admin UI clients.
+app.post(
+  '/upload',
+  requireAdminAuth,
+  requireGithubStorage,
+  applyAdminRateLimit,
+  parseUploadRequest,
+  async (req, res) => {
+    try {
+      await uploadPdfHandler(req, res);
+    } catch (error) {
+      console.error('Legacy upload failed:', error.message);
+      res.status(500).json({ success: false, message: 'Failed to upload PDF.' });
     }
-
-    console.log(`Uploading new blob: ${pathname}`);
-    const result = await put(pathname, req.file.buffer, {
-      access: 'public',
-      addRandomSuffix: false,
-      ...blobOptions,
-    });
-
-    menuVersion = Date.now();
-    console.log(`Successfully uploaded: ${pathname}, URL: ${result.url}`);
-    return res.json({ success: true, message: "Page uploaded.", url: result.url });
-  } catch (error) {
-    console.error('خطأ في رفع الملف إلى Blob:', error);
-    console.error('Error details:', error.message, error.stack);
-    return res.status(500).json({ success: false, message: "خطأ في رفع المنيو." });
   }
-});
+);
 
-app.post('/delete-page', async (req, res) => {
-  if (!isAuthenticated(req)) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' });
+app.post(
+  '/delete-page',
+  requireAdminAuth,
+  requireGithubStorage,
+  applyAdminRateLimit,
+  async (req, res) => {
+    try {
+      await deletePdfByName(req, res);
+    } catch (error) {
+      console.error('Legacy delete failed:', error.message);
+      res.status(500).json({ success: false, message: 'Failed to delete PDF.' });
+    }
   }
-
-  const pageType = req.body.pageType;
-  const pathname = STATIC_PAGE_FILES[pageType];
-
-  if (!pathname) {
-    return res.status(400).json({ success: false, message: 'نوع الصفحة غير صالح.' });
-  }
-
-  try {
-    const removed = await deleteBlobByPathname(pathname);
-    return res.json({
-      success: true,
-      message: removed ? 'تم حذف الصفحة بنجاح.' : 'الصفحة غير موجودة بالفعل.',
-    });
-  } catch (error) {
-    console.error('خطأ في حذف الصفحة:', error);
-    return res.status(500).json({ success: false, message: 'حدث خطأ أثناء حذف الصفحة.' });
-  }
-});
-
+);
 app.get("/menu", (req, res) => {
   res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
   res.redirect(301, "/");
@@ -412,46 +625,27 @@ app.get("/logout", (req, res) => {
 });
 
 // API endpoint to serve PDFs (proxies through server to handle auth)
-app.get("/api/pdf/:pageType", async (req, res) => {
+app.get('/pdf/:file', async (req, res) => {
+  let rawName = req.params.file || '';
   try {
-    const { pageType } = req.params;
-    const pathname = STATIC_PAGE_FILES[pageType];
-    
-    if (!pathname) {
-      return res.status(404).json({ error: "Page type not found" });
-    }
-    
-    const blob = await getBlobByPathname(pathname);
-    if (!blob) {
-      return res.status(404).json({ error: "PDF not found" });
-    }
-    
-    // Set response headers
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${pathname}"`);
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-    
-    // Fetch and stream the blob
-    const fetchResponse = await fetch(blob.url);
-    
-    if (!fetchResponse.ok) {
-      console.error(`Blob fetch failed: ${fetchResponse.status} ${fetchResponse.statusText} for URL: ${blob.url}`);
-      res.status(fetchResponse.status);
-      res.send(`Error fetching PDF: ${fetchResponse.statusText}`);
-      return;
-    }
-    
-    // Stream the response body directly to the client
-    const buffer = await fetchResponse.arrayBuffer();
-    res.send(Buffer.from(buffer));
-  } catch (error) {
-    console.error('PDF proxy error:', error.message);
-    res.status(500);
-    res.json({ error: "Failed to load PDF", details: error.message });
+    rawName = decodeURIComponent(rawName);
+  } catch {
+    rawName = req.params.file || '';
   }
+  const filename = getPdfFilename(rawName);
+  await sendPdfResponse(filename, res);
 });
 
-// استيراد القوالب من ملف views.js
+// Backward-compatible API route for existing frontend links.
+app.get('/api/pdf/:pageType', async (req, res) => {
+  const filename = getPdfFilename(req.params.pageType);
+  if (!filename) {
+    return res.status(404).json({ error: 'Page type not found' });
+  }
+
+  await sendPdfResponse(filename, res);
+});
+
 const views = require('./views');
 
 app.listen(PORT, HOSTNAME, () => {
