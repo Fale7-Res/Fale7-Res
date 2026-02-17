@@ -54,11 +54,13 @@ const DIRECT_UPLOAD_MAX_MB = Number.isFinite(parsedDirectUploadMb) && parsedDire
   ? Math.min(parsedDirectUploadMb, MAX_PDF_SIZE_MB, PLATFORM_DIRECT_UPLOAD_CAP_MB)
   : DEFAULT_DIRECT_UPLOAD_MAX_MB;
 const DIRECT_UPLOAD_MAX_BYTES = Math.max(1, DIRECT_UPLOAD_MAX_MB) * 1024 * 1024;
+const CHUNK_SESSION_TTL_MS = 20 * 60 * 1000;
 const EXISTS_CACHE_TTL_MS = 30 * 1000;
 const ADMIN_RATE_WINDOW_MS = 60 * 1000;
 const ADMIN_RATE_MAX_REQUESTS = 20;
 const existsCache = new Map();
 const adminRateBuckets = new Map();
+const chunkUploadSessions = new Map();
 
 // Helper to parse command-line arguments
 const args = process.argv.slice(2).reduce((acc, arg, index, arr) => {
@@ -408,9 +410,16 @@ const sanitizeUploadId = (value) => {
   return uploadId;
 };
 
-const getChunkStoragePath = (filename, uploadId, index) => (
-  `${resolvePdfPath(filename)}.__chunk__${uploadId}__${String(index).padStart(5, '0')}.pdf`
-);
+const getChunkSessionKey = (uploadId, filename) => `${uploadId}:${filename}`;
+
+const cleanupExpiredChunkSessions = () => {
+  const now = Date.now();
+  for (const [key, session] of chunkUploadSessions.entries()) {
+    if ((now - session.updatedAt) > CHUNK_SESSION_TTL_MS) {
+      chunkUploadSessions.delete(key);
+    }
+  }
+};
 
 const uploadPdfHandler = async (req, res) => {
   const uploadedFile = getUploadedFile(req);
@@ -487,8 +496,40 @@ const uploadPdfChunkHandler = async (req, res) => {
     });
   }
 
-  const chunkPath = getChunkStoragePath(filename, uploadId, chunkIndex);
-  await uploadOrUpdateFile(chunkPath, uploadedFile.buffer, `Upload chunk ${chunkIndex + 1}/${totalChunks} for ${filename}`);
+  cleanupExpiredChunkSessions();
+  const sessionKey = getChunkSessionKey(uploadId, filename);
+  const existing = chunkUploadSessions.get(sessionKey);
+  const session = existing || {
+    filename,
+    totalChunks,
+    chunks: new Array(totalChunks).fill(null),
+    receivedBytes: 0,
+    updatedAt: Date.now(),
+  };
+
+  if (session.totalChunks !== totalChunks) {
+    return res.status(400).json({ success: false, message: 'Chunk session metadata mismatch.' });
+  }
+
+  const previousChunk = session.chunks[chunkIndex];
+  if (previousChunk) {
+    session.receivedBytes -= previousChunk.length;
+  }
+
+  const currentChunkBuffer = Buffer.from(uploadedFile.buffer);
+  session.chunks[chunkIndex] = currentChunkBuffer;
+  session.receivedBytes += currentChunkBuffer.length;
+  session.updatedAt = Date.now();
+
+  if (session.receivedBytes > MAX_PDF_SIZE_BYTES) {
+    chunkUploadSessions.delete(sessionKey);
+    return res.status(413).json({
+      success: false,
+      message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.`,
+    });
+  }
+
+  chunkUploadSessions.set(sessionKey, session);
 
   return res.json({
     success: true,
@@ -496,6 +537,7 @@ const uploadPdfChunkHandler = async (req, res) => {
     chunkIndex,
     totalChunks,
     filename,
+    receivedChunks: session.chunks.filter(Boolean).length,
   });
 };
 
@@ -518,31 +560,41 @@ const completeChunkedUploadHandler = async (req, res) => {
     });
   }
 
-  const chunkBuffers = [];
-  let totalBytes = 0;
-
-  for (let index = 0; index < totalChunks; index += 1) {
-    const chunkPath = getChunkStoragePath(filename, uploadId, index);
-    const chunkBuffer = await downloadFile(chunkPath);
-    if (!chunkBuffer) {
-      return res.status(400).json({
-        success: false,
-        message: `Missing uploaded chunk ${index + 1}/${totalChunks}.`,
-      });
-    }
-
-    totalBytes += chunkBuffer.length;
-    if (totalBytes > MAX_PDF_SIZE_BYTES) {
-      return res.status(413).json({
-        success: false,
-        message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.`,
-      });
-    }
-
-    chunkBuffers.push(chunkBuffer);
+  cleanupExpiredChunkSessions();
+  const sessionKey = getChunkSessionKey(uploadId, filename);
+  const session = chunkUploadSessions.get(sessionKey);
+  if (!session) {
+    return res.status(400).json({
+      success: false,
+      message: 'Upload session expired. Please upload again.',
+    });
   }
 
-  const fullBuffer = Buffer.concat(chunkBuffers);
+  if (session.totalChunks !== totalChunks) {
+    chunkUploadSessions.delete(sessionKey);
+    return res.status(400).json({
+      success: false,
+      message: 'Upload session metadata mismatch.',
+    });
+  }
+
+  const missingChunkIndex = session.chunks.findIndex((chunk) => !chunk);
+  if (missingChunkIndex !== -1) {
+    return res.status(400).json({
+      success: false,
+      message: `Missing uploaded chunk ${missingChunkIndex + 1}/${totalChunks}.`,
+    });
+  }
+
+  if (session.receivedBytes > MAX_PDF_SIZE_BYTES) {
+    chunkUploadSessions.delete(sessionKey);
+    return res.status(413).json({
+      success: false,
+      message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.`,
+    });
+  }
+
+  const fullBuffer = Buffer.concat(session.chunks);
   if (!fullBuffer.subarray(0, 4).equals(Buffer.from('%PDF'))) {
     return res.status(400).json({ success: false, message: 'Uploaded file is not a valid PDF.' });
   }
@@ -550,16 +602,7 @@ const completeChunkedUploadHandler = async (req, res) => {
   const storagePath = resolvePdfPath(filename);
   await uploadOrUpdateFile(storagePath, fullBuffer, `Update ${filename}`);
   updateVersionFor(filename, true);
-
-  // Cleanup temporary chunks. Ignore cleanup failures to keep upload success.
-  await Promise.all(Array.from({ length: totalChunks }, async (_, index) => {
-    try {
-      const chunkPath = getChunkStoragePath(filename, uploadId, index);
-      await deleteFile(chunkPath, `Cleanup chunk ${index + 1}/${totalChunks} for ${filename}`);
-    } catch {
-      // Ignore cleanup errors.
-    }
-  }));
+  chunkUploadSessions.delete(sessionKey);
 
   const proxyUrl = withCacheVersion(`/pdf/${encodeURIComponent(filename)}`);
   const rawUrl = `${buildRawFileUrl(filename)}?v=${Date.now()}`;
@@ -571,6 +614,8 @@ const completeChunkedUploadHandler = async (req, res) => {
     rawUrl,
   });
 };
+
+setInterval(cleanupExpiredChunkSessions, 60 * 1000).unref();
 
 const deletePdfByName = async (req, res) => {
   const filename = resolveFilenameFromRequest(req, null);
