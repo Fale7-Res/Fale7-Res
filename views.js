@@ -1251,6 +1251,13 @@ module.exports = {
               const detail = (!data.message && rawText && rawText.length < 240) ? (' ' + rawText) : '';
               const uploadChunkError = new Error(baseMessage + detail);
               uploadChunkError.status = response.status;
+              console.error('[CHUNK_UPLOAD_FAILED]', { 
+                status: response.status, 
+                uploadId, 
+                chunkIndex,
+                data,
+                rawText: rawText.substring(0, 500)
+              });
               throw uploadChunkError;
             }
 

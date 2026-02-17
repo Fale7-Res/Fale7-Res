@@ -116,9 +116,25 @@ const getAuthCookieOptions = () => ({
   path: '/',
 });
 
-const isAuthenticated = (req) => (
-  Boolean(req.session?.loggedIn) || req.signedCookies?.[AUTH_COOKIE_NAME] === '1'
-);
+const isAuthenticated = (req) => {
+  const sessionLoggedIn = Boolean(req.session?.loggedIn);
+  const cookieValue = req.signedCookies?.[AUTH_COOKIE_NAME];
+  const isAuth = sessionLoggedIn || cookieValue === '1';
+  
+  if (!isAuth && (req.path.startsWith('/admin') || req.path === '/upload' || req.path === '/delete-page')) {
+    console.log('[AUTH_CHECK]', {
+      path: req.path,
+      method: req.method,
+      hasSession: !!req.session,
+      sessionLoggedIn,
+      hasSignedCookies: !!req.signedCookies,
+      cookieValue,
+      allSignedCookies: Object.keys(req.signedCookies || {}),
+    });
+  }
+  
+  return isAuth;
+};
 
 // إعداد الجلسة
 app.use(cookieParser(COOKIE_SECRET));
@@ -296,8 +312,23 @@ const updateVersionFor = (filename, exists) => {
 };
 
 const requireAdminAuth = (req, res, next) => {
-  if (!isAuthenticated(req)) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+  const authenticated = isAuthenticated(req);
+  const debugInfo = {
+    path: req.path,
+    method: req.method,
+    sessionLoggedIn: req.session?.loggedIn,
+    cookieExists: Boolean(req.signedCookies?.[AUTH_COOKIE_NAME]),
+    cookieValue: req.signedCookies?.[AUTH_COOKIE_NAME],
+    allCookies: req.signedCookies,
+  };
+  console.log('[AUTH_DEBUG]', JSON.stringify(debugInfo));
+  
+  if (!authenticated) {
+    return res.status(401).json({ 
+      success: false, 
+      message: "Unauthorized",
+      debug: debugInfo
+    });
   }
   return next();
 };
@@ -717,10 +748,11 @@ app.post(
   applyAdminRateLimit,
   parseUploadRequest,
   async (req, res) => {
+    console.log('[CHUNK_UPLOAD_START]', { uploadId: req.body?.uploadId, chunkIndex: req.body?.chunkIndex });
     try {
       await uploadPdfChunkHandler(req, res);
     } catch (error) {
-      console.error('Chunk upload failed:', error.message);
+      console.error('[CHUNK_UPLOAD_ERROR]', error.message, error.stack);
       const status = getErrorStatusCode(error, 500);
       res.status(status).json({
         success: false,
