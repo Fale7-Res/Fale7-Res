@@ -499,8 +499,8 @@ const uploadPdfHandler = async (req, res) => {
 };
 
 const uploadPdfChunkHandler = async (req, res) => {
-  const uploadedFile = getUploadedFile(req);
-  if (!uploadedFile) {
+  const chunkBuffer = req.body;
+  if (!chunkBuffer || !Buffer.isBuffer(chunkBuffer) || chunkBuffer.length === 0) {
     return res.status(400).json({ success: false, message: 'No chunk uploaded.' });
   }
 
@@ -520,19 +520,18 @@ const uploadPdfChunkHandler = async (req, res) => {
     return res.status(400).json({ success: false, message: 'Chunk index is out of range.' });
   }
 
-  const estimatedSize = totalChunks * DIRECT_UPLOAD_MAX_BYTES;
-  if (estimatedSize > (MAX_PDF_SIZE_BYTES + DIRECT_UPLOAD_MAX_BYTES)) {
+  const estimatedSize = totalChunks * chunkBuffer.length;
+  if (estimatedSize > MAX_PDF_SIZE_BYTES) {
     return res.status(413).json({ success: false, message: `PDF size is too large. Max allowed is ${MAX_PDF_SIZE_MB}MB.` });
   }
 
-  if (uploadedFile.size > DIRECT_UPLOAD_MAX_BYTES) {
+  if (chunkBuffer.length > DIRECT_UPLOAD_MAX_BYTES) {
     return res.status(413).json({
       success: false,
       message: `Chunk is too large. Max chunk is ${DIRECT_UPLOAD_MAX_MB}MB.`,
     });
   }
 
-  // Read filename and pageType from headers instead of body
   const filenameHeader = req.headers['x-filename'];
   const pageTypeHeader = req.headers['x-page-type'];
   const filename = getPdfFilename(filenameHeader || pageTypeHeader);
@@ -564,9 +563,8 @@ const uploadPdfChunkHandler = async (req, res) => {
     session.receivedBytes -= previousChunk.length;
   }
 
-  const currentChunkBuffer = Buffer.from(uploadedFile.buffer);
-  session.chunks[chunkIndex] = currentChunkBuffer;
-  session.receivedBytes += currentChunkBuffer.length;
+  session.chunks[chunkIndex] = chunkBuffer;
+  session.receivedBytes += chunkBuffer.length;
   session.updatedAt = Date.now();
 
   if (session.receivedBytes > MAX_PDF_SIZE_BYTES) {
@@ -778,9 +776,13 @@ app.post(
   requireAdminAuth,
   requireGithubStorage,
   applyAdminRateLimit,
-  parseUploadRequest,
+  express.raw({ type: 'application/octet-stream', limit: '20mb' }),
   async (req, res) => {
-    console.log('[CHUNK_UPLOAD_START]', { uploadId: req.body?.uploadId, chunkIndex: req.body?.chunkIndex });
+    console.log('[CHUNK_UPLOAD_START]', { 
+      uploadId: req.headers['x-upload-id'], 
+      chunkIndex: req.headers['x-chunk-index'],
+      bodySize: req.body?.length
+    });
     try {
       await uploadPdfChunkHandler(req, res);
     } catch (error) {

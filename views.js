@@ -1219,14 +1219,12 @@ module.exports = {
             const end = Math.min(file.size, start + CHUNK_UPLOAD_BYTES);
             const chunk = file.slice(start, end);
 
-            const chunkFormData = new FormData();
-            chunkFormData.append('file', chunk, file.name);
-
             const response = await fetch('/admin/pdf/upload-chunk', {
               method: 'POST',
-              body: chunkFormData,
+              body: chunk,
               credentials: 'include',
               headers: {
+                'Content-Type': 'application/octet-stream',
                 'X-Upload-Id': uploadId,
                 'X-Chunk-Index': String(chunkIndex),
                 'X-Total-Chunks': String(totalChunks),
