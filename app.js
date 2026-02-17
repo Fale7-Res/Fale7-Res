@@ -99,6 +99,25 @@ if (missingGithubEnvAtBoot.length > 0) {
 // Static assets should be served before auth checks/routes.
 app.use(express.static(PUBLIC_DIR));
 
+// Handle CORS preflight requests for admin endpoints
+app.options('*', (req, res) => {
+  const origin = req.get('origin');
+  const isLocalhost = origin && (origin.includes('localhost') || origin.includes('127.0.0.1'));
+  const isProd = origin && origin.includes('fale7-res.vercel.app');
+  
+  if (isLocalhost || isProd || !origin) {
+    res.header('Access-Control-Allow-Origin', origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Max-Age', '3600');
+  }
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+});
+
 // Browser fallback requests for root favicon paths.
 app.get('/favicon.ico', (req, res) => {
   res.redirect(301, '/assets/favicon.ico');
