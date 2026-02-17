@@ -6,8 +6,8 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="application-name" content="مطعم فالح أبو العنبه">
   <meta name="robots" content="noindex, nofollow">
   
@@ -453,8 +453,8 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="application-name" content="مطعم فالح أبو العنبه">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم | نظام إدارة المنيو</title>
@@ -1422,8 +1422,8 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="application-name" content="مطعم فالح أبو العنبه">
   <meta name="apple-mobile-web-app-title" content="مطعم فالح أبو العنبه">
   <meta itemprop="name" content="مطعم فالح أبو العنبه">
@@ -1462,8 +1462,8 @@ module.exports = {
     "@context": "https://schema.org",
     "@id": "https://fale7-res.vercel.app/#restaurant",
     "@type": "Restaurant",
-    "name": "فالح أبو العنبه",
-    "alternateName": "Fale7",
+    "name": "مطعم فالح أبو العنبه",
+    "alternateName": "فالح",
     "logo": "https://fale7-res.vercel.app/assets/Logo.png",
     "image": "https://fale7-res.vercel.app/assets/Logo.png",
     "url": "https://fale7-res.vercel.app/",
@@ -1505,7 +1505,7 @@ module.exports = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "مطعم فالح أبو العنبه",
-    "url": "https://fale7-res.vercel.app",
+    "url": "https://fale7-res.vercel.app/",
     "logo": "https://fale7-res.vercel.app/assets/Logo.png",
     "image": "https://fale7-res.vercel.app/assets/Logo.png",
     "sameAs": []
@@ -1517,6 +1517,7 @@ module.exports = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "مطعم فالح أبو العنبه",
+    "alternateName": "فالح",
     "url": "https://fale7-res.vercel.app/"
   }
   </script>
@@ -2039,9 +2040,10 @@ module.exports = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="application-name" content="مطعم فالح أبو العنبه">
+  <meta name="apple-mobile-web-app-title" content="مطعم فالح أبو العنبه">
   <meta name="description" content="${metaDescription}">
   <meta property="og:title" content="${data.title}">
   <meta property="og:description" content="${metaDescription}">
@@ -2066,12 +2068,65 @@ module.exports = {
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
+    "@id": "https://fale7-res.vercel.app/#restaurant",
+    "@type": "Restaurant",
+    "name": "مطعم فالح أبو العنبه",
+    "alternateName": "فالح",
+    "logo": "https://fale7-res.vercel.app/assets/Logo.png",
+    "image": "https://fale7-res.vercel.app/assets/Logo.png",
+    "url": "https://fale7-res.vercel.app/",
+    "telephone": ["+201000602832", "+201144741115"],
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+201112595678",
+      "contactType": "customer service",
+      "areaServed": ["EG"],
+      "availableLanguage": ["ar"]
+    }],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "EG",
+      "addressRegion": "محافظة الجيزة",
+      "addressLocality": "6 أكتوبر",
+      "streetAddress": "الحي السابع - شارع مكة المكرمة - بالقرب من سنتر الأردنية"
+    },
+    "areaServed": ["EG"],
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "07:00",
+      "closes": "03:00"
+    }],
+    "servesCuisine": ["عراقي", "مشاوي", "سندوتشات", "فلافل"],
+    "hasMap": "https://maps.app.goo.gl/K38LYo9oSC2Myd119",
+    "menu": "https://fale7-res.vercel.app/",
+    "sameAs": [
+      "https://www.tiktok.com/@fale7_1961",
+      "https://www.facebook.com/profile.php?id=100063865183387",
+      "https://maps.app.goo.gl/K38LYo9oSC2Myd119"
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
     "@type": "Organization",
     "name": "مطعم فالح أبو العنبه",
-    "url": "https://fale7-res.vercel.app",
+    "url": "https://fale7-res.vercel.app/",
     "logo": "https://fale7-res.vercel.app/assets/Logo.png",
     "image": "https://fale7-res.vercel.app/assets/Logo.png",
     "sameAs": []
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "مطعم فالح أبو العنبه",
+    "alternateName": "فالح",
+    "url": "https://fale7-res.vercel.app/"
   }
   </script>
 
@@ -2233,6 +2288,36 @@ module.exports = {
       display:block;
     }
 
+    .seo-section{
+      width:100%;
+      max-width:860px;
+      margin: 0.35rem auto 0.65rem;
+      padding: 0.5rem 0.55rem;
+      background:#fff;
+      border:1px solid rgba(0,0,0,0.08);
+      border-radius:12px;
+      font-size: 0.68rem;
+      line-height:1.42;
+      color:#475569;
+    }
+    .seo-section h2{
+      margin:0 0 0.28rem;
+      font-size:0.78rem;
+      color:#334155;
+    }
+    .seo-section p{
+      margin: 0 0 0.24rem;
+    }
+    .seo-section p:last-child{
+      margin-bottom:0;
+    }
+    .seo-desc{
+      font-size:11px;
+      line-height:1.4;
+      margin-top:4px;
+      padding:0.45rem 0.5rem;
+    }
+
     .empty{
       display:flex;
       height:100%;
@@ -2310,6 +2395,16 @@ module.exports = {
         max-width:102px;
       }
     }
+
+    @media (max-width:420px){
+      .seo-section{ font-size:0.64rem; padding:0.45rem 0.5rem; }
+      .seo-section h2{ font-size:0.74rem; }
+      .seo-section p{ margin-bottom:0.2rem; }
+      .seo-desc{ font-size:10px; line-height:1.32; }
+    }
+    @media (max-width:360px){
+      .seo-desc{ font-size:9px; }
+    }
   </style>
 </head>
 
@@ -2338,6 +2433,15 @@ module.exports = {
         <div>جاري التحميل...</div>
       </div>
       <div id="pdfPages"></div>
+      <section class="seo-section seo-desc" id="seoText" aria-label="معلومات المطعم">
+        <h2>معلومات المطعم</h2>
+        <p>مطعم فالح أبو العنبه (Fale7) هو مطعم يقدم السندوتشات والمشاوي والفلافل والأكلات العراقية في مدينة 6 أكتوبر بمحافظة الجيزة، تحديدًا في الحي السابع شارع مكة المكرمة بالقرب من سنتر الأردنية.</p>
+        <p>يعمل المطعم يوميًا من الساعة 7 صباحًا حتى 3 صباحًا ويقدم مجموعة متنوعة من السندوتشات والبطاطس والمشاوي العراقية والفلافل العراقية.</p>
+        <p><strong>العنوان:</strong> الجيزة – 6 أكتوبر – الحي السابع – شارع مكة المكرمة – بالقرب من سنتر الأردنية</p>
+        <p><strong>رقم الهاتف:</strong> 01000602832 / 01144741115</p>
+        <p><strong>للشكاوى والمقترحات:</strong> 01112595678</p>
+        <p><strong>الموقع على الخريطة:</strong> <a href="https://maps.app.goo.gl/K38LYo9oSC2Myd119" target="_blank" rel="noopener">Google Maps</a></p>
+      </section>
     </div>
   </div>
 
@@ -2508,5 +2612,6 @@ module.exports = {
 </html>`;
   }
 };
+
 
 

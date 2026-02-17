@@ -96,6 +96,12 @@ if (missingGithubEnvAtBoot.length > 0) {
   console.warn(`GitHub PDF storage env vars missing: ${missingGithubEnvAtBoot.join(', ')}`);
 }
 
+// Prevent indexing direct PDF file URLs.
+app.use('/pdf', (req, res, next) => {
+  res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  next();
+});
+
 // Static assets should be served before auth checks/routes.
 app.use(express.static(PUBLIC_DIR));
 
@@ -709,6 +715,7 @@ const sendPdfResponse = async (filename, res) => {
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `inline; filename="${safeFilename}"`);
     res.setHeader('Cache-Control', 'public, max-age=300');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(pdfBuffer);
   } catch (error) {
     console.error('PDF proxy error:', error.message);
@@ -894,7 +901,6 @@ app.post(
   }
 );
 app.get("/menu", (req, res) => {
-  res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
   res.redirect(301, "/");
 });
 
@@ -904,17 +910,18 @@ app.get('/offers', async (req, res) => {
       getPageData(STATIC_PAGE_FILES.offers),
       getMenuViewData(),
     ]);
-    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    const offersIndexable = offersData.exists;
+    res.set('X-Robots-Tag', offersIndexable ? 'index, follow' : 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'عروض فالح أبو العنبه',
-      canonicalUrl: `${SITE_URL}/`,
+      canonicalUrl: `${SITE_URL}/offers`,
       pageExists: offersData.exists,
       pageUrl: offersData.url,
       menuUrl: menuData.menuUrl,
       offersExists: menuData.offersExists,
       suhoorExists: menuData.suhoorExists,
       pageType: 'offers',
-      indexable: false,
+      indexable: offersIndexable,
       metaDescription: 'تابع أحدث عروض مطعم فالح أبو العنبه في 6 أكتوبر، مصر، مع تحديثات مستمرة للعروض المتاحة.',
       emptyTitle: 'لا توجد عروض متاحة حالياً',
       emptyText: 'يمكنك متابعة الصفحة لاحقاً لمعرفة أحدث العروض.',
@@ -924,7 +931,7 @@ app.get('/offers', async (req, res) => {
     res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'عروض فالح أبو العنبه',
-      canonicalUrl: `${SITE_URL}/`,
+      canonicalUrl: `${SITE_URL}/offers`,
       pageExists: false,
       offersExists: false,
       suhoorExists: false,
@@ -943,17 +950,18 @@ app.get('/suhoor', async (req, res) => {
       getPageData(STATIC_PAGE_FILES.suhoor),
       getMenuViewData(),
     ]);
-    res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    const suhoorIndexable = suhoorData.exists;
+    res.set('X-Robots-Tag', suhoorIndexable ? 'index, follow' : 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'منيو السحور | فالح أبو العنبه',
-      canonicalUrl: `${SITE_URL}/`,
+      canonicalUrl: `${SITE_URL}/suhoor`,
       pageExists: suhoorData.exists,
       pageUrl: suhoorData.url,
       menuUrl: menuData.menuUrl,
       offersExists: menuData.offersExists,
       suhoorExists: menuData.suhoorExists,
       pageType: 'suhoor',
-      indexable: false,
+      indexable: suhoorIndexable,
       metaDescription: 'منيو السحور في مطعم فالح أبو العنبه: اختيارات متنوعة مناسبة لفترة السحور مع تحديثات مستمرة.',
       emptyTitle: 'منيو السحور غير متوفر حالياً',
       emptyText: 'سيتم نشر منيو السحور هنا عند التفعيل من لوحة التحكم.',
@@ -963,7 +971,7 @@ app.get('/suhoor', async (req, res) => {
     res.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.send(views.pdfPage({
       title: 'منيو السحور | فالح أبو العنبه',
-      canonicalUrl: `${SITE_URL}/`,
+      canonicalUrl: `${SITE_URL}/suhoor`,
       pageExists: false,
       offersExists: false,
       suhoorExists: false,
