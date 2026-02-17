@@ -1041,7 +1041,13 @@ app.use((req, res) => {
 
 const views = require('./views');
 
-app.listen(PORT, HOSTNAME, () => {
-  console.log(`🚀 شغال على http://localhost:${PORT}`);
-});
+// On Vercel, export the Express app (Serverless Function)
+module.exports = app;
+
+// Local dev only
+if (!process.env.VERCEL) {
+  app.listen(PORT, HOSTNAME, () => {
+    console.log(`🚀 شغال على http://localhost:${PORT}`);
+  });
+}
 
