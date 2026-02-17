@@ -445,7 +445,8 @@ module.exports = {
   },
 
   // قالب لوحة الإدارة
-  admin: () => {
+  admin: (data = {}) => {
+    const maxUploadMb = Number(data.maxUploadMb) > 0 ? Number(data.maxUploadMb) : 15;
     return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1128,6 +1129,8 @@ module.exports = {
       const loadingText = document.getElementById('loadingText');
       const progressBar = document.getElementById('progressBar');
       const progressPercentage = document.getElementById('progressPercentage');
+      const MAX_UPLOAD_MB = ${maxUploadMb};
+      const MAX_UPLOAD_BYTES = Math.floor(MAX_UPLOAD_MB * 1024 * 1024);
 
       const forms = document.querySelectorAll('.upload-form');
       forms.forEach((form) => {
@@ -1158,6 +1161,11 @@ module.exports = {
           }
 
           const file = fileInput.files[0];
+          if (file.size > MAX_UPLOAD_BYTES) {
+            alert('File is too large for this deployment. Max allowed is ' + MAX_UPLOAD_MB + 'MB.');
+            return;
+          }
+
           if (file.type !== 'application/pdf') {
             alert('Please upload a PDF file only.');
             return;
@@ -1189,6 +1197,15 @@ module.exports = {
             if (xhr.status === 401) {
               alert('Your login session has expired. Please login again.');
               window.location.href = '/login';
+              return;
+            }
+
+            if (xhr.status === 413) {
+              const serverMessage = data && (data.message || data.error);
+              alert(serverMessage || ('File is too large for this deployment. Max allowed is ' + MAX_UPLOAD_MB + 'MB.'));
+              loadingOverlay.style.display = 'none';
+              progressBar.style.width = '0%';
+              progressPercentage.innerText = '0%';
               return;
             }
 

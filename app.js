@@ -41,7 +41,11 @@ const ALLOWED_PDFS = new Set([
   ...DEFAULT_ALLOWED_PDFS.map((name) => name.toLowerCase()),
   ...EXTRA_ALLOWED_PDFS,
 ]);
-const MAX_PDF_SIZE_MB = Number(process.env.MAX_PDF_UPLOAD_MB || 15);
+const DEFAULT_MAX_PDF_UPLOAD_MB = process.env.VERCEL ? 4 : 15;
+const parsedMaxPdfSizeMb = Number(process.env.MAX_PDF_UPLOAD_MB || DEFAULT_MAX_PDF_UPLOAD_MB);
+const MAX_PDF_SIZE_MB = Number.isFinite(parsedMaxPdfSizeMb) && parsedMaxPdfSizeMb > 0
+  ? parsedMaxPdfSizeMb
+  : DEFAULT_MAX_PDF_UPLOAD_MB;
 const MAX_PDF_SIZE_BYTES = Math.max(1, MAX_PDF_SIZE_MB) * 1024 * 1024;
 const EXISTS_CACHE_TTL_MS = 30 * 1000;
 const ADMIN_RATE_WINDOW_MS = 60 * 1000;
@@ -485,7 +489,7 @@ app.post("/login", (req, res) => {
 
 app.get("/admin", (req, res) => {
   if (isAuthenticated(req)) {
-    res.send(views.admin());
+    res.send(views.admin({ maxUploadMb: MAX_PDF_SIZE_MB }));
   } else {
     res.redirect("/login");
   }
