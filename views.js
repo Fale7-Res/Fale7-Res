@@ -1230,6 +1230,7 @@ module.exports = {
             const response = await fetch('/admin/pdf/upload-chunk', {
               method: 'POST',
               body: chunkFormData,
+              credentials: 'include',
             });
             const rawText = await response.text();
             let data = {};
@@ -1272,6 +1273,7 @@ module.exports = {
               uploadId,
               totalChunks,
             }),
+            credentials: 'include',
           });
 
           const completeRawText = await completeResponse.text();
