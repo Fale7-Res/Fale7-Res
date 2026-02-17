@@ -1231,7 +1231,13 @@ module.exports = {
               method: 'POST',
               body: chunkFormData,
             });
-            const data = await response.json().catch(() => ({}));
+            const rawText = await response.text();
+            let data = {};
+            try {
+              data = rawText ? JSON.parse(rawText) : {};
+            } catch (_) {
+              data = {};
+            }
 
             if (response.status === 401) {
               alert('Your login session has expired. Please login again.');
@@ -1240,7 +1246,11 @@ module.exports = {
             }
 
             if (!response.ok || !data.success) {
-              throw new Error(data.message || 'An error occurred while uploading chunk.');
+              const baseMessage = data.message || data.error || 'An error occurred while uploading chunk.';
+              const detail = (!data.message && rawText && rawText.length < 240) ? (' ' + rawText) : '';
+              const uploadChunkError = new Error(baseMessage + detail);
+              uploadChunkError.status = response.status;
+              throw uploadChunkError;
             }
 
             const chunkProgress = Math.round(((chunkIndex + 1) / totalChunks) * 92);
@@ -1264,7 +1274,13 @@ module.exports = {
             }),
           });
 
-          const completeData = await completeResponse.json().catch(() => ({}));
+          const completeRawText = await completeResponse.text();
+          let completeData = {};
+          try {
+            completeData = completeRawText ? JSON.parse(completeRawText) : {};
+          } catch (_) {
+            completeData = {};
+          }
           if (completeResponse.status === 401) {
             alert('Your login session has expired. Please login again.');
             window.location.href = '/login';
@@ -1272,7 +1288,11 @@ module.exports = {
           }
 
           if (!completeResponse.ok || !completeData.success) {
-            throw new Error(completeData.message || 'An error occurred while finalizing upload.');
+            const completeBaseMessage = completeData.message || completeData.error || 'An error occurred while finalizing upload.';
+            const completeDetail = (!completeData.message && completeRawText && completeRawText.length < 240) ? (' ' + completeRawText) : '';
+            const uploadCompleteError = new Error(completeBaseMessage + completeDetail);
+            uploadCompleteError.status = completeResponse.status;
+            throw uploadCompleteError;
           }
 
           return completeData;
@@ -1323,7 +1343,12 @@ module.exports = {
             loadingText.innerText = 'Completed successfully!';
             setTimeout(() => window.location.reload(), 900);
           } catch (error) {
-            alert(error.message || 'An error occurred while uploading.');
+            const statusHint = Number(error && error.status);
+            if (statusHint === 403) {
+              alert((error.message || 'Upload blocked with 403.') + ' Check GitHub token permissions and repository rules, then redeploy.');
+            } else {
+              alert(error.message || 'An error occurred while uploading.');
+            }
             loadingOverlay.style.display = 'none';
             progressBar.style.width = '0%';
             progressPercentage.innerText = '0%';

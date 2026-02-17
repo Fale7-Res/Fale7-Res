@@ -54,7 +54,6 @@ const DIRECT_UPLOAD_MAX_MB = Number.isFinite(parsedDirectUploadMb) && parsedDire
   ? Math.min(parsedDirectUploadMb, MAX_PDF_SIZE_MB, PLATFORM_DIRECT_UPLOAD_CAP_MB)
   : DEFAULT_DIRECT_UPLOAD_MAX_MB;
 const DIRECT_UPLOAD_MAX_BYTES = Math.max(1, DIRECT_UPLOAD_MAX_MB) * 1024 * 1024;
-const CHUNK_STORAGE_DIR = 'tmp/pdf-chunks';
 const EXISTS_CACHE_TTL_MS = 30 * 1000;
 const ADMIN_RATE_WINDOW_MS = 60 * 1000;
 const ADMIN_RATE_MAX_REQUESTS = 20;
@@ -335,6 +334,22 @@ const applyAdminRateLimit = (req, res, next) => {
   return next();
 };
 
+const getErrorStatusCode = (error, fallback = 500) => {
+  const statusFromObject = Number(error?.status || error?.statusCode);
+  if (Number.isInteger(statusFromObject) && statusFromObject >= 400 && statusFromObject <= 599) {
+    return statusFromObject;
+  }
+
+  const message = String(error?.message || '');
+  const matched = message.match(/\((\d{3})\)/);
+  const statusFromMessage = matched ? Number(matched[1]) : NaN;
+  if (Number.isInteger(statusFromMessage) && statusFromMessage >= 400 && statusFromMessage <= 599) {
+    return statusFromMessage;
+  }
+
+  return fallback;
+};
+
 const uploadPdfFields = upload.fields([
   { name: 'file', maxCount: 1 },
   { name: 'menu', maxCount: 1 },
@@ -393,8 +408,8 @@ const sanitizeUploadId = (value) => {
   return uploadId;
 };
 
-const getChunkStoragePath = (uploadId, index) => (
-  `${CHUNK_STORAGE_DIR}/${uploadId}/chunk-${String(index).padStart(5, '0')}.part`
+const getChunkStoragePath = (filename, uploadId, index) => (
+  `${resolvePdfPath(filename)}.__chunk__${uploadId}__${String(index).padStart(5, '0')}.pdf`
 );
 
 const uploadPdfHandler = async (req, res) => {
@@ -472,7 +487,7 @@ const uploadPdfChunkHandler = async (req, res) => {
     });
   }
 
-  const chunkPath = getChunkStoragePath(uploadId, chunkIndex);
+  const chunkPath = getChunkStoragePath(filename, uploadId, chunkIndex);
   await uploadOrUpdateFile(chunkPath, uploadedFile.buffer, `Upload chunk ${chunkIndex + 1}/${totalChunks} for ${filename}`);
 
   return res.json({
@@ -507,7 +522,7 @@ const completeChunkedUploadHandler = async (req, res) => {
   let totalBytes = 0;
 
   for (let index = 0; index < totalChunks; index += 1) {
-    const chunkPath = getChunkStoragePath(uploadId, index);
+    const chunkPath = getChunkStoragePath(filename, uploadId, index);
     const chunkBuffer = await downloadFile(chunkPath);
     if (!chunkBuffer) {
       return res.status(400).json({
@@ -539,7 +554,7 @@ const completeChunkedUploadHandler = async (req, res) => {
   // Cleanup temporary chunks. Ignore cleanup failures to keep upload success.
   await Promise.all(Array.from({ length: totalChunks }, async (_, index) => {
     try {
-      const chunkPath = getChunkStoragePath(uploadId, index);
+      const chunkPath = getChunkStoragePath(filename, uploadId, index);
       await deleteFile(chunkPath, `Cleanup chunk ${index + 1}/${totalChunks} for ${filename}`);
     } catch {
       // Ignore cleanup errors.
@@ -661,7 +676,11 @@ app.post(
       await uploadPdfChunkHandler(req, res);
     } catch (error) {
       console.error('Chunk upload failed:', error.message);
-      res.status(500).json({ success: false, message: 'Failed to upload chunk.' });
+      const status = getErrorStatusCode(error, 500);
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Failed to upload chunk.',
+      });
     }
   }
 );
@@ -676,7 +695,11 @@ app.post(
       await completeChunkedUploadHandler(req, res);
     } catch (error) {
       console.error('Chunk completion failed:', error.message);
-      res.status(500).json({ success: false, message: 'Failed to finalize PDF upload.' });
+      const status = getErrorStatusCode(error, 500);
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Failed to finalize PDF upload.',
+      });
     }
   }
 );
@@ -692,7 +715,11 @@ app.post(
       await uploadPdfHandler(req, res);
     } catch (error) {
       console.error('Upload failed:', error.message);
-      res.status(500).json({ success: false, message: 'Failed to upload PDF.' });
+      const status = getErrorStatusCode(error, 500);
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Failed to upload PDF.',
+      });
     }
   }
 );
@@ -707,7 +734,11 @@ app.delete(
       await deletePdfByName(req, res);
     } catch (error) {
       console.error('Delete failed:', error.message);
-      res.status(500).json({ success: false, message: 'Failed to delete PDF.' });
+      const status = getErrorStatusCode(error, 500);
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Failed to delete PDF.',
+      });
     }
   }
 );
@@ -724,7 +755,11 @@ app.post(
       await uploadPdfHandler(req, res);
     } catch (error) {
       console.error('Legacy upload failed:', error.message);
-      res.status(500).json({ success: false, message: 'Failed to upload PDF.' });
+      const status = getErrorStatusCode(error, 500);
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Failed to upload PDF.',
+      });
     }
   }
 );
@@ -739,7 +774,11 @@ app.post(
       await deletePdfByName(req, res);
     } catch (error) {
       console.error('Legacy delete failed:', error.message);
-      res.status(500).json({ success: false, message: 'Failed to delete PDF.' });
+      const status = getErrorStatusCode(error, 500);
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Failed to delete PDF.',
+      });
     }
   }
 );
