@@ -99,23 +99,17 @@ if (missingGithubEnvAtBoot.length > 0) {
 // Static assets should be served before auth checks/routes.
 app.use(express.static(PUBLIC_DIR));
 
-// Handle CORS preflight requests for admin endpoints
-app.options('*', (req, res) => {
-  const origin = req.get('origin');
-  const isLocalhost = origin && (origin.includes('localhost') || origin.includes('127.0.0.1'));
-  const isProd = origin && origin.includes('fale7-res.vercel.app');
-  
-  if (isLocalhost || isProd || !origin) {
-    res.header('Access-Control-Allow-Origin', origin || '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Max-Age', '3600');
-  }
-  
+// Handle OPTIONS preflight requests early, before any other middleware
+app.all('/admin/*', (req, res, next) => {
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+    res.header('Access-Control-Allow-Origin', req.get('origin') || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
+    res.header('Access-Control-Allow-Headers', req.get('access-control-request-headers') || 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Max-Age', '86400');
+    return res.sendStatus(204);
   }
+  next();
 });
 
 // Browser fallback requests for root favicon paths.
@@ -510,13 +504,13 @@ const uploadPdfChunkHandler = async (req, res) => {
     return res.status(400).json({ success: false, message: 'No chunk uploaded.' });
   }
 
-  const uploadId = sanitizeUploadId(req.body?.uploadId);
+  const uploadId = sanitizeUploadId(req.headers['x-upload-id']);
   if (!uploadId) {
     return res.status(400).json({ success: false, message: 'Invalid upload id.' });
   }
 
-  const chunkIndex = parseChunkNumber(req.body?.chunkIndex);
-  const totalChunks = parseChunkNumber(req.body?.totalChunks);
+  const chunkIndex = parseChunkNumber(req.headers['x-chunk-index']);
+  const totalChunks = parseChunkNumber(req.headers['x-total-chunks']);
 
   if (!Number.isInteger(chunkIndex) || chunkIndex < 0 || !Number.isInteger(totalChunks) || totalChunks <= 0) {
     return res.status(400).json({ success: false, message: 'Invalid chunk metadata.' });
@@ -538,7 +532,11 @@ const uploadPdfChunkHandler = async (req, res) => {
     });
   }
 
-  const filename = resolveFilenameFromRequest(req, uploadedFile);
+  // Read filename and pageType from headers instead of body
+  const filenameHeader = req.headers['x-filename'];
+  const pageTypeHeader = req.headers['x-page-type'];
+  const filename = getPdfFilename(filenameHeader || pageTypeHeader);
+  
   if (!filename) {
     return res.status(400).json({
       success: false,
@@ -758,6 +756,21 @@ app.get("/admin", (req, res) => {
   } else {
     res.redirect("/login");
   }
+});
+
+app.get('/admin/auth-check', (req, res) => {
+  const authenticated = isAuthenticated(req);
+  console.log('[AUTH_STATUS_CHECK]', {
+    authenticated,
+    sessionLoggedIn: Boolean(req.session?.loggedIn),
+    cookieValue: req.signedCookies?.[AUTH_COOKIE_NAME],
+    allCookies: Object.keys(req.signedCookies || {}),
+  });
+  res.json({
+    authenticated,
+    sessionLoggedIn: Boolean(req.session?.loggedIn),
+    cookieExists: Boolean(req.signedCookies?.[AUTH_COOKIE_NAME]),
+  });
 });
 
 app.post(
@@ -988,6 +1001,32 @@ app.get('/api/pdf/:pageType', async (req, res) => {
   }
 
   await sendPdfResponse(filename, res);
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('[GLOBAL_ERROR_HANDLER]', {
+    message: err.message,
+    status: err.status || err.statusCode,
+    path: req.path,
+    method: req.method,
+    stack: err.stack?.split('\n')[0],
+  });
+  
+  const status = Number(err.status || err.statusCode) || 500;
+  res.status(status).json({
+    success: false,
+    message: err.message || 'Internal server error',
+  });
+});
+
+// Catch any 404s not matched by routes
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+    path: req.path,
+  });
 });
 
 const views = require('./views');

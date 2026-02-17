@@ -1221,16 +1221,18 @@ module.exports = {
 
             const chunkFormData = new FormData();
             chunkFormData.append('file', chunk, file.name);
-            chunkFormData.append('filename', pathname);
-            chunkFormData.append('pageType', pageType);
-            chunkFormData.append('uploadId', uploadId);
-            chunkFormData.append('chunkIndex', String(chunkIndex));
-            chunkFormData.append('totalChunks', String(totalChunks));
 
             const response = await fetch('/admin/pdf/upload-chunk', {
               method: 'POST',
               body: chunkFormData,
               credentials: 'include',
+              headers: {
+                'X-Upload-Id': uploadId,
+                'X-Chunk-Index': String(chunkIndex),
+                'X-Total-Chunks': String(totalChunks),
+                'X-Filename': pathname,
+                'X-Page-Type': pageType,
+              },
             });
             const rawText = await response.text();
             let data = {};
