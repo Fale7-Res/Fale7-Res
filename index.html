@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="تطبيق فالح أبو العنبه للطلبات والتوصيل.">
+  <meta
+    name="google-signin-client_id"
+    content="1097420115480-316v83f82lelnevclorq8i6ivm4r2v87.apps.googleusercontent.com"
+  >
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Fale7">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Fale7 | فالح أبو العنبه</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <script>
+    (function () {
+      function parseShareRoute() {
+        try {
+          var currentUrl = new URL(window.location.href);
+          var hash = currentUrl.hash || '';
+          var routeSource = hash.startsWith('#/') ? hash.substring(1) : currentUrl.pathname;
+          var routeUrl = new URL(routeSource, 'https://fale7.local');
+          var segments = routeUrl.pathname.split('/').filter(Boolean);
+
+          if (segments.length >= 3 && segments[0] === 'menu' && segments[1] === 'product') {
+            return {
+              productId: decodeURIComponent(segments[2]),
+              productName: routeUrl.searchParams.get('name') || currentUrl.searchParams.get('name') || ''
+            };
+          }
+
+          if (segments.length >= 2 && segments[0] === 'product') {
+            return {
+              productId: decodeURIComponent(segments[1]),
+              productName: routeUrl.searchParams.get('name') || currentUrl.searchParams.get('name') || ''
+            };
+          }
+        } catch (_) {}
+
+        return null;
+      }
+
+      var isMobileBrowser = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+      if (!isMobileBrowser) return;
+
+      var shareRoute = parseShareRoute();
+      if (!shareRoute || !shareRoute.productId) return;
+
+      var redirectKey = '__fale7_app_redirect__' + shareRoute.productId;
+      if (window.sessionStorage && window.sessionStorage.getItem(redirectKey) === '1') {
+        return;
+      }
+
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem(redirectKey, '1');
+      }
+
+      var query = '';
+      if (shareRoute.productName) {
+        query = '?name=' + encodeURIComponent(shareRoute.productName);
+      }
+
+      var appUrl = 'fale7://menu/product/' + encodeURIComponent(shareRoute.productId) + query;
+      var isAndroid = /Android/i.test(navigator.userAgent || '');
+      var browserFallbackUrl = encodeURIComponent(window.location.href);
+      var androidIntentUrl =
+        'intent://menu/product/' +
+        encodeURIComponent(shareRoute.productId) +
+        query +
+        '#Intent;scheme=fale7;package=com.fale7.app;S.browser_fallback_url=' +
+        browserFallbackUrl +
+        ';end';
+
+      function openLink(targetUrl) {
+        var link = document.createElement('a');
+        link.style.display = 'none';
+        link.rel = 'noopener';
+        link.href = targetUrl;
+        document.body.appendChild(link);
+        link.click();
+        window.setTimeout(function () {
+          if (link.parentNode) {
+            link.parentNode.removeChild(link);
+          }
+        }, 1000);
+      }
+
+      window.setTimeout(function () {
+        if (isAndroid) {
+          window.location.replace(androidIntentUrl);
+          return;
+        }
+
+        openLink(appUrl);
+        window.setTimeout(function () {
+          if (!document.hidden) {
+            window.location.href = appUrl;
+          }
+        }, 250);
+      }, 50);
+    })();
+  </script>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
