@@ -27,6 +27,10 @@ async function ensureStore() {
 
 async function readState() {
   await ensureStore();
+  if (isVercel && githubToken && githubRepository) {
+    const remote = await readFromGitHub('data/menu.json');
+    if (remote) return JSON.parse(remote);
+  }
   return JSON.parse(await fs.readFile(stateFile, 'utf8'));
 }
 
@@ -109,6 +113,16 @@ async function commitToGitHub(filePath, content, message) {
   if (!response.ok) throw new Error(`تعذر حفظ التعديل في GitHub (${response.status})`);
 }
 
+async function readFromGitHub(filePath) {
+  const encodedPath = filePath.split('/').map(encodeURIComponent).join('/');
+  const response = await fetch(`https://api.github.com/repos/${githubRepository}/contents/${encodedPath}?ref=${encodeURIComponent(githubBranch)}`, {
+    headers: { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  return Buffer.from(data.content.replace(/\s/g, ''), 'base64').toString('utf8');
+}
+
 async function deleteFromGitHub(filePath, message) {
   if (!githubToken || !githubRepository) return;
   const encodedPath = filePath.split('/').map(encodeURIComponent).join('/');
@@ -143,7 +157,11 @@ app.get('/api/pages/:id/file', async (req, res) => {
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   res.set('Cache-Control', 'public, max-age=31536000, immutable');
-  const file = await fs.readFile(path.join(uploadDir, page.fileName));
+  const source = isVercel && githubToken && githubRepository
+    ? await readFromGitHub(`uploads/${page.fileName}`)
+    : await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+  if (typeof source !== 'string') return res.sendStatus(404);
+  const file = Buffer.from(applyTextChanges(source, page.changes || []));
   if (req.acceptsEncodings('gzip') === 'gzip') {
     const compressed = await new Promise((resolve, reject) => zlib.gzip(file, { level: 1 }, (error, result) => error ? reject(error) : resolve(result)));
     res.set({ 'Content-Type': 'image/svg+xml', 'Content-Encoding': 'gzip', 'Vary': 'Accept-Encoding' });
@@ -158,15 +176,16 @@ app.put('/api/pages/:id', auth, async (req, res) => {
   if (!page) return res.status(400).json({ message: 'بيانات الصفحة غير صحيحة' });
   let nextSvg = req.body.svg;
   if (Array.isArray(req.body.changes)) {
-    nextSvg = applyTextChanges(await fs.readFile(path.join(uploadDir, page.fileName), 'utf8'), req.body.changes);
+    page.changes = req.body.changes;
+    nextSvg = null;
   }
-  if (typeof nextSvg !== 'string' || !/^\s*<svg\b[\s\S]*<\/svg>\s*$/i.test(nextSvg)) return res.status(400).json({ message: 'المحتوى الناتج ليس SVG صالحًا' });
+  if (nextSvg !== null && (typeof nextSvg !== 'string' || !/^\s*<svg\b[\s\S]*<\/svg>\s*$/i.test(nextSvg))) return res.status(400).json({ message: 'المحتوى الناتج ليس SVG صالحًا' });
   if (isVercel && (!githubToken || !githubRepository)) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة في Vercel' });
-  if (!isVercel) await fs.writeFile(path.join(uploadDir, page.fileName), nextSvg);
+  if (!isVercel && nextSvg !== null) await fs.writeFile(path.join(uploadDir, page.fileName), nextSvg);
   if (typeof req.body.name === 'string' && req.body.name.trim()) page.name = req.body.name.trim();
   page.updatedAt = new Date().toISOString();
   await writeState(state);
-  await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
+  if (nextSvg !== null) await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Update menu metadata for ${page.name}`);
   res.json({ success: true, page });
 });
