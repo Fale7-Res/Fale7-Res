@@ -12,9 +12,11 @@ const dataDir = path.join(root, 'data');
 const uploadDir = path.join(root, 'uploads');
 const stateFile = path.join(dataDir, 'menu.json');
 const adminPassword = process.env.ADMIN_PASSWORD || 'fale71961';
+const sessionSecret = process.env.SESSION_SECRET || 'change-this-secret';
+const adminCookieName = 'fale7_admin';
 
 app.use(express.json({ limit: '25mb' }));
-app.use(session({ secret: process.env.SESSION_SECRET || 'change-this-secret', resave: false, saveUninitialized: false }));
+app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
 app.use(express.static(path.join(root, 'public')));
 
 async function ensureStore() {
@@ -60,8 +62,31 @@ function applyTextChanges(svg, changes) {
 }
 
 function auth(req, res, next) {
-  if (!req.session.isAdmin) return res.status(401).json({ message: 'غير مصرح' });
+  if (!req.session.isAdmin && !hasAdminCookie(req)) return res.status(401).json({ message: 'غير مصرح' });
   next();
+}
+
+function adminCookieSignature() {
+  return crypto.createHmac('sha256', sessionSecret).update('admin').digest('hex');
+}
+
+function hasAdminCookie(req) {
+  const cookies = String(req.headers.cookie || '').split(';').map((item) => item.trim());
+  const value = cookies.find((item) => item.startsWith(`${adminCookieName}=`))?.slice(adminCookieName.length + 1);
+  if (!value) return false;
+  const expected = adminCookieSignature();
+  const actual = Buffer.from(value);
+  const target = Buffer.from(expected);
+  return actual.length === target.length && crypto.timingSafeEqual(actual, target);
+}
+
+function setAdminCookie(res) {
+  const secure = isVercel ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${adminCookieName}=${adminCookieSignature()}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400${secure}`);
+}
+
+function clearAdminCookie(res) {
+  res.setHeader('Set-Cookie', `${adminCookieName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
 }
 
 const githubToken = process.env.GITHUB_TOKEN;
@@ -103,11 +128,15 @@ app.get('/api/menu', async (req, res) => {
 app.post('/api/login', (req, res) => {
   if (req.body.password !== adminPassword) return res.status(401).json({ message: 'كلمة المرور غير صحيحة' });
   req.session.isAdmin = true;
+  setAdminCookie(res);
   res.json({ success: true });
 });
 
-app.post('/api/logout', (req, res) => req.session.destroy(() => res.json({ success: true })));
-app.get('/api/session', (req, res) => res.json({ isAdmin: Boolean(req.session.isAdmin) }));
+app.post('/api/logout', (req, res) => {
+  clearAdminCookie(res);
+  req.session.destroy(() => res.json({ success: true }));
+});
+app.get('/api/session', (req, res) => res.json({ isAdmin: Boolean(req.session.isAdmin || hasAdminCookie(req)) }));
 
 app.get('/api/pages/:id/file', async (req, res) => {
   const state = await readState();
