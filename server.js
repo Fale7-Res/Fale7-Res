@@ -116,7 +116,7 @@ app.get('/api/pages/:id/file', async (req, res) => {
   res.set('Cache-Control', 'public, max-age=31536000, immutable');
   const file = await fs.readFile(path.join(uploadDir, page.fileName));
   if (req.acceptsEncodings('gzip') === 'gzip') {
-    const compressed = await new Promise((resolve, reject) => zlib.gzip(file, { level: 9 }, (error, result) => error ? reject(error) : resolve(result)));
+    const compressed = await new Promise((resolve, reject) => zlib.gzip(file, { level: 1 }, (error, result) => error ? reject(error) : resolve(result)));
     res.set({ 'Content-Type': 'image/svg+xml', 'Content-Encoding': 'gzip', 'Vary': 'Accept-Encoding' });
     return res.end(compressed);
   }
