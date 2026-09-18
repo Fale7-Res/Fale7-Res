@@ -40,6 +40,25 @@ function splitSvgFile(buffer) {
   return pages;
 }
 
+function escapeXmlText(value) {
+  return String(value).replace(/[&<>]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[character]));
+}
+
+function applyTextChanges(svg, changes) {
+  if (!Array.isArray(changes) || changes.length > 500) throw new Error('قائمة التعديلات غير صحيحة');
+  let result = svg;
+  for (const change of changes) {
+    const attribute = change.type === 'price' ? 'data-price-index' : 'data-product-index';
+    const index = Number.parseInt(change.index, 10);
+    const value = String(change.value ?? '').trim();
+    if (!Number.isInteger(index) || !value || value.length > 300) throw new Error('بيانات التعديل غير صحيحة');
+    const pattern = new RegExp(`(<text\\b[^>]*\\b${attribute}=["']${index}["'][^>]*>)([\\s\\S]*?)(</text>)`, 'i');
+    if (!pattern.test(result)) throw new Error(`لم يتم العثور على عنصر التعديل رقم ${index}`);
+    result = result.replace(pattern, `$1${escapeXmlText(value)}$3`);
+  }
+  return result;
+}
+
 function auth(req, res, next) {
   if (!req.session.isAdmin) return res.status(401).json({ message: 'غير مصرح' });
   next();
@@ -107,14 +126,18 @@ app.get('/api/pages/:id/file', async (req, res) => {
 app.put('/api/pages/:id', auth, async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
-  if (!page || typeof req.body.svg !== 'string') return res.status(400).json({ message: 'بيانات الصفحة غير صحيحة' });
-  if (!/^\s*<svg\b[\s\S]*<\/svg>\s*$/i.test(req.body.svg)) return res.status(400).json({ message: 'المحتوى الناتج ليس SVG صالحًا' });
+  if (!page) return res.status(400).json({ message: 'بيانات الصفحة غير صحيحة' });
+  let nextSvg = req.body.svg;
+  if (Array.isArray(req.body.changes)) {
+    nextSvg = applyTextChanges(await fs.readFile(path.join(uploadDir, page.fileName), 'utf8'), req.body.changes);
+  }
+  if (typeof nextSvg !== 'string' || !/^\s*<svg\b[\s\S]*<\/svg>\s*$/i.test(nextSvg)) return res.status(400).json({ message: 'المحتوى الناتج ليس SVG صالحًا' });
   if (isVercel && (!githubToken || !githubRepository)) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة في Vercel' });
-  if (!isVercel) await fs.writeFile(path.join(uploadDir, page.fileName), req.body.svg);
+  if (!isVercel) await fs.writeFile(path.join(uploadDir, page.fileName), nextSvg);
   if (typeof req.body.name === 'string' && req.body.name.trim()) page.name = req.body.name.trim();
   page.updatedAt = new Date().toISOString();
   await writeState(state);
-  await commitToGitHub(`uploads/${page.fileName}`, req.body.svg, `Update menu page ${page.name}`);
+  await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Update menu metadata for ${page.name}`);
   res.json({ success: true, page });
 });

@@ -72,11 +72,7 @@ async function openEditor(page) {
   editorStatus.textContent = 'جاري فتح الصفحة...';
   editor.classList.add('open'); editor.setAttribute('aria-hidden', 'false');
   currentSvg = await fetch(`/api/pages/${page.id}/file?v=${Date.now()}`).then((response) => response.text());
-  const repaired = renderEditor();
-  if (repaired) {
-    currentSvg = new XMLSerializer().serializeToString(editorSvg);
-    await request(`/api/pages/${page.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ svg: currentSvg }) });
-  }
+  renderEditor();
   editorStatus.textContent = '';
   document.getElementById('downloadEditor').href = `/api/pages/${page.id}/download?v=${Date.now()}`;
 }
@@ -376,10 +372,13 @@ function normalizePricePositions() {
 
 document.getElementById('saveEditor').addEventListener('click', async () => {
   closePriceInput();
-  if (editorSvg) { normalizePricePositions(); currentSvg = new XMLSerializer().serializeToString(editorSvg); }
+  const changes = [
+    ...priceNodes.map((node) => ({ type: 'price', index: node.dataset.priceIndex, value: node.textContent.trim() })),
+    ...textNodes.map((node) => ({ type: 'product', index: node.dataset.productIndex, value: node.textContent.trim() }))
+  ];
   editorStatus.textContent = 'جاري الحفظ...';
   try {
-    await request(`/api/pages/${currentPage.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ svg: currentSvg }) });
+    await request(`/api/pages/${currentPage.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ changes }) });
     editorStatus.textContent = 'تم حفظ التعديلات.';
     document.getElementById('downloadEditor').href = `/api/pages/${currentPage.id}/download?v=${Date.now()}`;
     loadPages();
