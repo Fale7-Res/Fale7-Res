@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "sections": [
+    {
+      "title": "????????",
+      "id": "meat",
+      "items": [
+        {
+          "variants": [
+            {
+              "price": 90,
+              "svgElementId": "text11599",
+              "name": "????",
+              "id": "samoon",
+              "available": true
+            }
+          ],
+          "name": "????",
+          "id": "kofta"
+        }
+      ]
+    }
+  ],
+  "pageId": "23c9731e-2bcc-4155-a9cd-ea0c9d3a7cbb",
+  "updatedAt": "2026-09-17T02:56:55.398Z"
+}

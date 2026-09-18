@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="تصفح منيو مطعم فالح"><title>منيو المطعم</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="client-body">
+  <header class="top-bar">
+    <div class="action-buttons">
+      <a class="btn btn-primary" id="downloadBtn" href="#" download hidden><i class="fas fa-download" aria-hidden="true"></i> تحميل</a>
+      <button class="btn btn-secondary" id="refreshBtn" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i> تحديث</button>
+    </div>
+    <nav class="social-icons" aria-label="روابط المطعم">
+      <a class="social-icon tiktok" href="https://www.tiktok.com/@fale7_1961" target="_blank" rel="noreferrer" aria-label="تيك توك"><i class="fab fa-tiktok" aria-hidden="true"></i></a>
+      <a class="social-icon facebook" href="https://www.facebook.com/share/1FTjzqpHv8/" target="_blank" rel="noreferrer" aria-label="فيسبوك"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+      <a class="social-icon location" href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" rel="noreferrer" aria-label="الموقع"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></a>
+    </nav>
+  </header>
+  <main class="svg-viewer">
+    <div id="pages" class="svg-pages">
+      <div class="loading-spinner"><div class="spinner" aria-hidden="true"></div><p>جاري تحميل المنيو...</p></div>
+    </div>
+  </main>
+  <div class="mobile-hint">استخدم إصبعين للتكبير والتصغير</div>
+  <script src="/client.js"></script>
+</body>
+</html>
