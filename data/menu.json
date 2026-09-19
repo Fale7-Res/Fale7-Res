@@ -4,12 +4,12 @@
       "id": "inkscape-page1-edited",
       "name": "فالح الصفحة الأولى",
       "fileName": "inkscape_page1_edited.svg",
-      "previewFile": "previews/inkscape_page1_edited-1600.webp",
+      "previewFile": "previews/inkscape_page1_edited-f2886f05b6b8-1600.webp",
       "previewFiles": {
-        "640": "previews/inkscape_page1_edited-640.webp",
-        "1024": "previews/inkscape_page1_edited-1024.webp",
-        "1600": "previews/inkscape_page1_edited-1600.webp",
-        "2400": "previews/inkscape_page1_edited-2400.webp"
+        "640": "previews/inkscape_page1_edited-f2886f05b6b8-640.webp",
+        "1024": "previews/inkscape_page1_edited-f2886f05b6b8-1024.webp",
+        "1600": "previews/inkscape_page1_edited-f2886f05b6b8-1600.webp",
+        "2400": "previews/inkscape_page1_edited-f2886f05b6b8-2400.webp"
       },
       "createdAt": "2026-09-19T00:00:00.000Z"
     },
@@ -17,12 +17,12 @@
       "id": "inkscape-page2",
       "name": "فالح الصفحة الثانية",
       "fileName": "inkscape page2.svg",
-      "previewFile": "previews/inkscape-page2-1600.webp",
+      "previewFile": "previews/inkscape-page2-7708da99dab2-1600.webp",
       "previewFiles": {
-        "640": "previews/inkscape-page2-640.webp",
-        "1024": "previews/inkscape-page2-1024.webp",
-        "1600": "previews/inkscape-page2-1600.webp",
-        "2400": "previews/inkscape-page2-2400.webp"
+        "640": "previews/inkscape-page2-7708da99dab2-640.webp",
+        "1024": "previews/inkscape-page2-7708da99dab2-1024.webp",
+        "1600": "previews/inkscape-page2-7708da99dab2-1600.webp",
+        "2400": "previews/inkscape-page2-7708da99dab2-2400.webp"
       },
       "createdAt": "2026-09-19T00:00:00.000Z",
       "changes": [
@@ -1125,5 +1125,9 @@
       "updatedAt": "2026-09-19T05:02:46.593Z"
     }
   ],
+<<<<<<< HEAD
   "updatedAt": "2026-09-19T05:02:46.593Z"
+=======
+  "updatedAt": "2026-09-19T04:49:56.867Z"
+>>>>>>> ba62276 (invalidate stale webp previews)
 }

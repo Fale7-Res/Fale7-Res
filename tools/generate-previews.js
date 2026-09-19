@@ -1,5 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
+const crypto = require('crypto');
 const sharp = require('sharp');
 
 const root = process.cwd();
@@ -12,9 +13,12 @@ async function run() {
     const source = await fs.readFile(path.join(root, 'uploads', page.fileName), 'utf8');
     const svg = applyChanges(source, page.changes || []);
     const baseName = path.basename(page.fileName, path.extname(page.fileName)).replace(/[^a-zA-Z0-9_-]/g, '-');
+    const version = crypto.createHash('sha1').update(svg).digest('hex').slice(0, 12);
+    const oldFiles = (await fs.readdir(path.join(root, 'previews'))).filter((file) => file.startsWith(`${baseName}-`) && file.endsWith('.webp'));
+    await Promise.all(oldFiles.map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
     page.previewFiles = {};
     for (const width of widths) {
-      const fileName = `previews/${baseName}-${width}.webp`;
+      const fileName = `previews/${baseName}-${version}-${width}.webp`;
       await sharp(Buffer.from(svg)).resize({ width }).webp({ quality: 84, effort: 3 }).toFile(path.join(root, fileName));
       page.previewFiles[String(width)] = fileName;
     }
