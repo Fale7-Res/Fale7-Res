@@ -114,6 +114,12 @@ async function commitToGitHub(filePath, content, message) {
 }
 
 async function readFromGitHub(filePath) {
+  if (filePath.startsWith('uploads/')) {
+    const rawUrl = `https://raw.githubusercontent.com/${githubRepository}/${encodeURIComponent(githubBranch)}/${filePath.split('/').map(encodeURIComponent).join('/')}`;
+    const rawResponse = await fetch(rawUrl, { cache: 'no-store' });
+    if (!rawResponse.ok) return null;
+    return rawResponse.text();
+  }
   const encodedPath = filePath.split('/').map(encodeURIComponent).join('/');
   const response = await fetch(`https://api.github.com/repos/${githubRepository}/contents/${encodedPath}?ref=${encodeURIComponent(githubBranch)}`, {
     headers: { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
