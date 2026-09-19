@@ -161,6 +161,36 @@ async function readFromGitHub(filePath) {
   return Buffer.from(data.content.replace(/\s/g, ''), 'base64').toString('utf8');
 }
 
+async function readPageSource(page) {
+  try {
+    return await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+  } catch {
+    return isVercel && githubToken && githubRepository
+      ? readFromGitHub(`uploads/${page.fileName}`)
+      : null;
+  }
+}
+
+async function generatePreviewFiles(page, svg) {
+  const baseName = path.basename(page.fileName, path.extname(page.fileName)).replace(/[^a-zA-Z0-9_-]/g, '-');
+  const previewFiles = {};
+  for (const width of previewWidths) {
+    const previewPath = `previews/${baseName}-${width}.webp`;
+    const previewBuffer = await sharp(Buffer.from(svg))
+      .resize({ width })
+      .webp({ quality: 84, effort: 3 })
+      .toBuffer();
+    previewFiles[String(width)] = previewPath;
+    if (!isVercel) {
+      await fs.mkdir(path.dirname(path.join(root, previewPath)), { recursive: true });
+      await fs.writeFile(path.join(root, previewPath), previewBuffer);
+    }
+    await commitToGitHub(previewPath, previewBuffer, `Generate WebP preview for ${page.name}`);
+  }
+  page.previewFiles = previewFiles;
+  page.previewFile = previewFiles['1600'];
+}
+
 async function deleteFromGitHub(filePath, message) {
   if (!githubToken || !githubRepository) return;
   const encodedPath = filePath.split('/').map(encodeURIComponent).join('/');
@@ -277,6 +307,10 @@ app.put('/api/pages/:id', auth, async (req, res) => {
   if (!isVercel && nextSvg !== null) await fs.writeFile(path.join(uploadDir, page.fileName), nextSvg);
   if (typeof req.body.name === 'string' && req.body.name.trim()) page.name = req.body.name.trim();
   page.updatedAt = new Date().toISOString();
+  const source = nextSvg === null ? await readPageSource(page) : nextSvg;
+  if (typeof source !== 'string') return res.status(404).json({ message: 'ملف SVG الأصلي غير موجود' });
+  const renderedSvg = nextSvg === null ? applyTextChanges(source, page.changes || []) : source;
+  await generatePreviewFiles(page, renderedSvg);
   await writeState(state);
   if (nextSvg !== null) await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Update menu metadata for ${page.name}`);
