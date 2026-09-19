@@ -19,6 +19,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install Cairo Font
+        run: |
+          mkdir -p ~/.local/share/fonts
+          wget -qO cairo.zip "https://fonts.google.com/download?family=Cairo"
+          unzip cairo.zip -d ~/.local/share/fonts/
+          fc-cache -f -v
       - run: npm install --no-audit --no-fund
       - run: node tools/generate-previews.js
       - name: Commit generated previews
