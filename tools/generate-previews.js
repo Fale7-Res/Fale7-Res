@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
+const puppeteer = require('puppeteer');
 
 const root = process.cwd();
 const widths = [640, 1024, 1600, 2400];
@@ -10,22 +11,41 @@ async function run() {
   const state = JSON.parse(await fs.readFile(path.join(root, 'data/menu.json'), 'utf8'));
   await fs.mkdir(path.join(root, 'previews'), { recursive: true });
   const expected = new Set();
-  for (const page of state.pages) {
-    const source = await fs.readFile(path.join(root, 'uploads', page.fileName), 'utf8');
-    const svg = applyChanges(source, page.changes || []);
-    const baseName = path.basename(page.fileName, path.extname(page.fileName)).replace(/[^a-zA-Z0-9_-]/g, '-');
+  
+  const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox', '--font-render-hinting=none'] });
+  const page = await browser.newPage();
+
+  for (const pageItem of state.pages) {
+    const source = await fs.readFile(path.join(root, 'uploads', pageItem.fileName), 'utf8');
+    const svg = applyChanges(source, pageItem.changes || []);
+    const baseName = path.basename(pageItem.fileName, path.extname(pageItem.fileName)).replace(/[^a-zA-Z0-9_-]/g, '-');
     const version = crypto.createHash('sha1').update(svg).digest('hex').slice(0, 12);
+    
     const oldFiles = (await fs.readdir(path.join(root, 'previews'))).filter((file) => file.startsWith(`${baseName}-`) && file.endsWith('.webp'));
     await Promise.all(oldFiles.map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
-    page.previewFiles = {};
+    
+    const b64 = Buffer.from(svg).toString('base64');
+    await page.goto(`data:image/svg+xml;base64,${b64}`, { waitUntil: 'networkidle0' });
+    const dimensions = await page.evaluate(() => {
+      const el = document.documentElement;
+      return { width: parseInt(el.getAttribute('width') || el.clientWidth || 1054), height: parseInt(el.getAttribute('height') || el.clientHeight || 1492) };
+    });
+    
+    await page.setViewport({ width: dimensions.width, height: dimensions.height, deviceScaleFactor: 2 });
+    const screenshot = await page.screenshot({ type: 'png', fullPage: true });
+
+    pageItem.previewFiles = {};
     for (const width of widths) {
       const fileName = `previews/${baseName}-${version}-${width}.webp`;
       expected.add(fileName);
-      await sharp(Buffer.from(svg)).resize({ width }).webp({ quality: 84, effort: 3 }).toFile(path.join(root, fileName));
-      page.previewFiles[String(width)] = fileName;
+      await sharp(screenshot).resize({ width }).webp({ quality: 84, effort: 3 }).toFile(path.join(root, fileName));
+      pageItem.previewFiles[String(width)] = fileName;
     }
-    page.previewFile = page.previewFiles['1600'];
+    pageItem.previewFile = pageItem.previewFiles['1600'];
   }
+  
+  await browser.close();
+
   const existing = await fs.readdir(path.join(root, 'previews'));
   await Promise.all(existing.filter((file) => file.endsWith('.webp') && !expected.has(`previews/${file}`)).map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
   await fs.writeFile(path.join(root, 'data/menu.json'), JSON.stringify(state, null, 2) + '\n');
@@ -33,8 +53,8 @@ async function run() {
 
 function applyChanges(svg, changes) {
   const values = new Map(changes.map((change) => [`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${change.index}`, escapeXml(change.value)]));
-  const processedSvg = svg.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
-  return processedSvg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
+  // We no longer strip <style> because Chrome handles embedded web fonts flawlessly!
+  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
     const value = values.get(`${attribute.toLowerCase()}:${index}`);
     return value === undefined ? match : `${start}${value}${end}`;
   });
