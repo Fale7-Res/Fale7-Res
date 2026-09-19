@@ -385,7 +385,11 @@ document.getElementById('saveEditor').addEventListener('click', async () => {
   } catch (error) { editorStatus.textContent = error.message; }
 });
 
-document.getElementById('closeEditor').addEventListener('click', () => { editor.classList.remove('open'); editor.setAttribute('aria-hidden', 'true'); });
+document.getElementById('closeEditor').addEventListener('click', () => {
+  if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  editor.classList.remove('open');
+  editor.setAttribute('aria-hidden', 'true');
+});
 document.getElementById('togglePriceSelection').addEventListener('click', () => {
   closePriceInput();
   selectionMode = selectionMode === 'prices' ? 'none' : 'prices';

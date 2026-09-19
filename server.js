@@ -162,9 +162,14 @@ app.get('/api/pages/:id/file', async (req, res) => {
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   res.set('Cache-Control', 'public, max-age=31536000, immutable');
-  const source = isVercel && githubToken && githubRepository
-    ? await readFromGitHub(`uploads/${page.fileName}`)
-    : await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+  let source;
+  try {
+    source = await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+  } catch {
+    source = isVercel && githubToken && githubRepository
+      ? await readFromGitHub(`uploads/${page.fileName}`)
+      : null;
+  }
   if (typeof source !== 'string') return res.sendStatus(404);
   const file = Buffer.from(applyTextChanges(source, page.changes || []));
   res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(file);
