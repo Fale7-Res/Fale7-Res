@@ -42,12 +42,15 @@ async function run() {
       pageItem.previewFiles[String(width)] = fileName;
     }
     pageItem.previewFile = pageItem.previewFiles['1600'];
+    pageItem.updatedAt = new Date().toISOString();
   }
   
   await browser.close();
 
   const existing = await fs.readdir(path.join(root, 'previews'));
   await Promise.all(existing.filter((file) => file.endsWith('.webp') && !expected.has(`previews/${file}`)).map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
+  
+  state.updatedAt = new Date().toISOString();
   await fs.writeFile(path.join(root, 'data/menu.json'), JSON.stringify(state, null, 2) + '\n');
 }
 
