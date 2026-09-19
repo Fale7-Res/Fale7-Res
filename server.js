@@ -73,7 +73,8 @@ function applyTextChanges(svg, changes) {
     if (!Number.isInteger(index) || !value || value.length > 300) throw new Error('بيانات التعديل غير صحيحة');
     values.set(`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${index}`, escapeXmlText(value));
   }
-  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
+  const processedSvg = svg.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
+  return processedSvg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
     const value = values.get(`${attribute.toLowerCase()}:${index}`);
     return value === undefined ? match : `${start}${value}${end}`;
   });

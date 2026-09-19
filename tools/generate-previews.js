@@ -33,7 +33,8 @@ async function run() {
 
 function applyChanges(svg, changes) {
   const values = new Map(changes.map((change) => [`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${change.index}`, escapeXml(change.value)]));
-  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
+  const processedSvg = svg.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
+  return processedSvg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
     const value = values.get(`${attribute.toLowerCase()}:${index}`);
     return value === undefined ? match : `${start}${value}${end}`;
   });
