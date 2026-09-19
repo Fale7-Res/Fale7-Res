@@ -96,6 +96,7 @@ const githubToken = process.env.GITHUB_TOKEN;
 const githubRepository = process.env.GITHUB_REPOSITORY;
 const githubBranch = process.env.GITHUB_BRANCH || 'main';
 const isVercel = process.env.VERCEL === '1';
+const renderedSvgCache = new Map();
 
 async function commitToGitHub(filePath, content, message) {
   if (!githubToken || !githubRepository) return;
@@ -162,6 +163,10 @@ app.get('/api/pages/:id/file', async (req, res) => {
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   res.set('Cache-Control', 'public, max-age=31536000, immutable');
+  if (!page.changes?.length) return res.sendFile(path.join(uploadDir, page.fileName));
+  const cacheKey = `${page.id}:${page.updatedAt || ''}`;
+  const cached = renderedSvgCache.get(cacheKey);
+  if (cached) return res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(cached);
   let source;
   try {
     source = await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
@@ -172,6 +177,8 @@ app.get('/api/pages/:id/file', async (req, res) => {
   }
   if (typeof source !== 'string') return res.sendStatus(404);
   const file = Buffer.from(applyTextChanges(source, page.changes || []));
+  renderedSvgCache.clear();
+  renderedSvgCache.set(cacheKey, file);
   res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(file);
 });
 
