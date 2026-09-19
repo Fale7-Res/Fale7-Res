@@ -51,17 +51,17 @@ function escapeXmlText(value) {
 
 function applyTextChanges(svg, changes) {
   if (!Array.isArray(changes) || changes.length > 500) throw new Error('قائمة التعديلات غير صحيحة');
-  let result = svg;
+  const values = new Map();
   for (const change of changes) {
-    const attribute = change.type === 'price' ? 'data-price-index' : 'data-product-index';
     const index = Number.parseInt(change.index, 10);
     const value = String(change.value ?? '').trim();
     if (!Number.isInteger(index) || !value || value.length > 300) throw new Error('بيانات التعديل غير صحيحة');
-    const pattern = new RegExp(`(<text\\b[^>]*\\b${attribute}=["']${index}["'][^>]*>)([\\s\\S]*?)(</text>)`, 'i');
-    if (!pattern.test(result)) throw new Error(`لم يتم العثور على عنصر التعديل رقم ${index}`);
-    result = result.replace(pattern, `$1${escapeXmlText(value)}$3`);
+    values.set(`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${index}`, escapeXmlText(value));
   }
-  return result;
+  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
+    const value = values.get(`${attribute.toLowerCase()}:${index}`);
+    return value === undefined ? match : `${start}${value}${end}`;
+  });
 }
 
 function auth(req, res, next) {
