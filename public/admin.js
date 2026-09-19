@@ -55,7 +55,7 @@ loginForm.addEventListener('submit', async (event) => {
 logoutBtn.addEventListener('click', async () => { await request('/api/logout', { method: 'POST' }); setAuthenticated(false); });
 async function loadPages() {
   const data = await request('/api/menu');
-  pageGrid.innerHTML = data.pages.length ? data.pages.map((page) => `<article class="page-card"><div class="page-thumb"><img src="/api/pages/${page.id}/file?v=${encodeURIComponent(page.updatedAt || data.updatedAt || '')}" alt=""></div><div class="page-info"><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';
+  pageGrid.innerHTML = data.pages.length ? data.pages.map((page) => `<article class="page-card"><div class="page-thumb"><img src="/api/pages/${page.id}/preview?v=${encodeURIComponent(page.updatedAt || data.updatedAt || '')}" alt="" loading="lazy" decoding="async"></div><div class="page-info"><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';
   pageGrid.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => openEditor(data.pages.find((page) => page.id === button.dataset.edit))));
   pageGrid.querySelectorAll('[data-delete]').forEach((button) => button.addEventListener('click', () => deletePage(button.dataset.delete)));
 }
@@ -89,9 +89,9 @@ function renderEditor() {
   textList.innerHTML = '<p class="notice">اضغط على رقم السعر داخل الصفحة لبدء التعديل.</p>';
   const restored = restoreLegacyNonPriceNodes();
   priceNodes = [...editorSvg.querySelectorAll('text')].filter((node) => isPriceText(node.textContent));
-  textNodes = [...editorSvg.querySelectorAll('text')].filter((node) => !isPriceText(node.textContent) && !isPhoneText(node.textContent) && node.textContent.trim());
+  textNodes = [...editorSvg.querySelectorAll('text')].filter((node) => !isPriceText(node.textContent) && !isPhoneText(node.textContent) && !node.hasAttribute('data-fixed-phone') && node.textContent.trim());
   restoreFixedTextNodes();
-  fixedNumberNodes = [...editorSvg.querySelectorAll('text')].filter((node) => isPhoneText(node.textContent));
+  fixedNumberNodes = [...editorSvg.querySelectorAll('text')].filter((node) => isPhoneText(node.textContent) || node.hasAttribute('data-fixed-phone'));
   const columnCenters = getColumnCenters(priceNodes);
   priceNodes.forEach((node, index) => {
     const width = getTextWidth(node);
@@ -183,12 +183,12 @@ function isPriceText(value) {
 
 function isPhoneText(value) {
   const digits = String(value || '').replace(/[^0-9٠-٩]/g, '');
-  return digits.length >= 8 && digits.length <= 15 && /[0-9٠-٩][\s-]*[0-9٠-٩]/.test(String(value || ''));
+  return digits.length >= 8 && digits.length <= 24 && /[0-9٠-٩][\s-]*[0-9٠-٩]/.test(String(value || ''));
 }
 
 function restoreFixedTextNodes() {
   editorSvg.querySelectorAll('text').forEach((node) => {
-    if (!isPhoneText(node.textContent)) return;
+    if (!isPhoneText(node.textContent) && !node.hasAttribute('data-fixed-phone')) return;
     node.classList.remove('product-target', 'product-selected', 'price-target', 'price-selected', 'number-selected');
     node.removeAttribute('tabindex');
     node.removeAttribute('data-product-index');
