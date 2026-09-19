@@ -9,6 +9,9 @@
       }
     }
   ],
+  "functions": {
+    "api/index.js": { "maxDuration": 60, "maxBodySize": "50mb" }
+  },
   "routes": [
     { "src": "/(.*)", "dest": "api/index.js" }
   ]

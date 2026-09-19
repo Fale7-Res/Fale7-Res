@@ -175,7 +175,19 @@ async function deleteFromGitHub(filePath, message) {
   await fetch(apiUrl, { method: 'DELETE', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha, branch: githubBranch }) });
 }
 
+async function triggerPreviewGeneration() {
+  if (!githubToken || !githubRepository) return;
+  try {
+    await fetch(`https://api.github.com/repos/${githubRepository}/actions/workflows/generate-previews.yml/dispatches`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: githubBranch })
+    });
+  } catch (err) { console.error('triggerPreviewGeneration error:', err); }
+}
+
 app.get('/api/menu', async (req, res) => {
+
   const state = await readState();
   res.json({ pages: state.pages, updatedAt: state.updatedAt || null });
 });
@@ -213,6 +225,7 @@ app.post('/api/pages', auth, upload.single('file'), async (req, res) => {
     await commitToGitHub('data/menu.json', JSON.stringify(state, null, 2), 'Register uploaded menu pages');
     stateCache = state;
     stateCacheTime = Date.now();
+    triggerPreviewGeneration(); // fire-and-forget: generate WebP previews via GitHub Actions
     res.json({ success: true, count: created.length, pages: created });
   } catch (error) { res.status(400).json({ message: error.message || 'تعذر رفع ملف SVG' }); }
 });
@@ -221,7 +234,7 @@ app.get('/api/pages/:id/file', async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
-  res.set('Cache-Control', 'public, max-age=31536000, immutable');
+  res.set('Cache-Control', 'no-store');
   if (!page.changes?.length) return res.sendFile(path.join(uploadDir, page.fileName));
   const cacheKey = `${page.id}:${page.updatedAt || ''}`;
   const cached = renderedSvgCache.get(cacheKey);
@@ -307,6 +320,8 @@ app.put('/api/pages/:id', auth, async (req, res) => {
   await writeState(state);
   if (nextSvg !== null) await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Update menu metadata for ${page.name}`);
+  stateCache = null; // invalidate cache so next read fetches fresh data
+  triggerPreviewGeneration(); // fire-and-forget: regenerate WebP previews
   res.json({ success: true, page });
 });
 
@@ -331,7 +346,18 @@ app.get('/api/pages/:id/download', auth, async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
-  res.download(path.join(uploadDir, page.fileName), `${page.name.replace(/[^\\w\\u0600-\\u06ff -]/g, '') || 'menu-page'}.svg`);
+  const safeName = (page.name.replace(/[^w؀-ۿ -]/g, '') || 'menu-page') + '.svg';
+  res.set({
+    'Content-Type': 'image/svg+xml; charset=utf-8',
+    'Content-Disposition': "attachment; filename*=UTF-8''" + encodeURIComponent(safeName),
+    'Cache-Control': 'no-store'
+  });
+  if (isVercel && githubToken && githubRepository) {
+    const source = await readFromGitHub(`uploads/${page.fileName}`);
+    if (!source) return res.sendStatus(404);
+    return res.end(source);
+  }
+  res.sendFile(path.join(uploadDir, page.fileName));
 });
 
 app.get('/admin', (req, res) => res.sendFile(path.join(root, 'public', 'admin.html')));
