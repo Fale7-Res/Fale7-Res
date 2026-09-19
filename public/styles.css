@@ -56,6 +56,7 @@ h1 { margin-bottom:8px; font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; }
 .page-card { overflow:hidden; background:#fff; border:1px solid var(--line); border-radius:14px; }
 .page-thumb { min-height:170px; display:grid; place-items:center; padding:10px; background:#f7f9fc; }
 .page-thumb img { max-width:100%; max-height:210px; }
+.page-thumb-light { background:linear-gradient(135deg,#eef4ff,#f8fbff); color:#3b82f6; font-size:2rem; font-weight:800; letter-spacing:.08em; }
 .page-info { padding:14px; }
 .page-info h3 { margin:0 0 12px; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .page-actions { display:flex; gap:8px; }
