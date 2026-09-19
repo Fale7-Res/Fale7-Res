@@ -13,6 +13,7 @@ const stateFile = path.join(dataDir, 'menu.json');
 const adminPassword = process.env.ADMIN_PASSWORD || 'fale71961';
 const sessionSecret = process.env.SESSION_SECRET || 'change-this-secret';
 const adminCookieName = 'fale7_admin';
+const previewCache = new Map();
 
 app.use(express.json({ limit: '25mb' }));
 app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
@@ -62,6 +63,25 @@ function applyTextChanges(svg, changes) {
     const value = values.get(`${attribute.toLowerCase()}:${index}`);
     return value === undefined ? match : `${start}${value}${end}`;
   });
+}
+
+function optimizeSvg(svg) {
+  return svg
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<\?xml[\s\S]*?\?>/gi, '')
+    .replace(/<!DOCTYPE[\s\S]*?>/gi, '')
+    .replace(/<title>[\s\S]*?<\/title>/gi, '')
+    .replace(/<desc[\s\S]*?<\/desc>/gi, '')
+    .replace(/\s+(?:inkscape|sodipodi):[\w-]+=(?:"[^"]*"|'[^']*')/gi, '')
+    .replace(/\s+(?:data-price-index|data-product-index|data-price-center|data-product-right|tabindex)=(?:"[^"]*"|'[^']*')/gi, '')
+    .replace(/\s+class=(?:"[^"]*"|'[^']*')/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/>\s+</g, '><')
+    .trim();
+}
+
+function previewCacheKey(page, source) {
+  return crypto.createHash('sha1').update(source).update(JSON.stringify(page.changes || [])).digest('hex');
 }
 
 function auth(req, res, next) {
@@ -180,6 +200,27 @@ app.get('/api/pages/:id/file', async (req, res) => {
   renderedSvgCache.clear();
   renderedSvgCache.set(cacheKey, file);
   res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(file);
+});
+
+app.get('/api/pages/:id/preview', async (req, res) => {
+  const state = await readState();
+  const page = state.pages.find((item) => item.id === req.params.id);
+  if (!page) return res.sendStatus(404);
+  let source;
+  try {
+    source = await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+  } catch {
+    source = isVercel && githubToken && githubRepository ? await readFromGitHub(`uploads/${page.fileName}`) : null;
+  }
+  if (typeof source !== 'string') return res.sendStatus(404);
+  const key = previewCacheKey(page, source);
+  let preview = previewCache.get(key);
+  if (!preview) {
+    preview = Buffer.from(optimizeSvg(applyTextChanges(source, page.changes || [])));
+    previewCache.clear();
+    previewCache.set(key, preview);
+  }
+  res.set({ 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/svg+xml; charset=utf-8' }).end(preview);
 });
 
 app.put('/api/pages/:id', auth, async (req, res) => {
