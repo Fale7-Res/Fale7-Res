@@ -3,7 +3,6 @@ const session = require('express-session');
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
-const zlib = require('zlib');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -168,12 +167,7 @@ app.get('/api/pages/:id/file', async (req, res) => {
     : await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
   if (typeof source !== 'string') return res.sendStatus(404);
   const file = Buffer.from(applyTextChanges(source, page.changes || []));
-  if (req.acceptsEncodings('gzip') === 'gzip') {
-    const compressed = await new Promise((resolve, reject) => zlib.gzip(file, { level: 1 }, (error, result) => error ? reject(error) : resolve(result)));
-    res.set({ 'Content-Type': 'image/svg+xml', 'Content-Encoding': 'gzip', 'Vary': 'Accept-Encoding' });
-    return res.end(compressed);
-  }
-  res.type('svg').end(file);
+  res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(file);
 });
 
 app.put('/api/pages/:id', auth, async (req, res) => {
