@@ -242,7 +242,7 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
   const requestedWidth = Number.parseInt(req.query.w, 10);
   const width = previewWidths.includes(requestedWidth) ? requestedWidth : 1600;
   const previewFile = page.previewFiles?.[String(width)] || (width === 1600 ? page.previewFile : null);
-  if (!page.changes?.length && previewFile) {
+  if (previewFile) {
     return res.sendFile(path.join(root, previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
   }
   let source;
