@@ -10,7 +10,7 @@
     }
   ],
   "functions": {
-    "api/index.js": { "maxDuration": 60, "maxBodySize": "50mb" }
+    "api/index.js": { "maxDuration": 60 }
   },
   "routes": [
     { "src": "/(.*)", "dest": "api/index.js" }
