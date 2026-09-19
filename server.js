@@ -3,6 +3,7 @@ const session = require('express-session');
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
+const sharp = require('sharp');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ const adminPassword = process.env.ADMIN_PASSWORD || 'fale71961';
 const sessionSecret = process.env.SESSION_SECRET || 'change-this-secret';
 const adminCookieName = 'fale7_admin';
 const previewCache = new Map();
+const previewImageCache = new Map();
 
 app.use(express.json({ limit: '25mb' }));
 app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
@@ -221,6 +223,28 @@ app.get('/api/pages/:id/preview', async (req, res) => {
     previewCache.set(key, preview);
   }
   res.set({ 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/svg+xml; charset=utf-8' }).end(preview);
+});
+
+app.get('/api/pages/:id/preview.webp', async (req, res) => {
+  const state = await readState();
+  const page = state.pages.find((item) => item.id === req.params.id);
+  if (!page) return res.sendStatus(404);
+  let source;
+  try {
+    source = await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+  } catch {
+    source = isVercel && githubToken && githubRepository ? await readFromGitHub(`uploads/${page.fileName}`) : null;
+  }
+  if (typeof source !== 'string') return res.sendStatus(404);
+  const key = previewCacheKey(page, source);
+  let image = previewImageCache.get(key);
+  if (!image) {
+    const svg = applyTextChanges(source, page.changes || []);
+    image = await sharp(Buffer.from(svg)).resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 84, effort: 3 }).toBuffer();
+    previewImageCache.clear();
+    previewImageCache.set(key, image);
+  }
+  res.set({ 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' }).end(image);
 });
 
 app.put('/api/pages/:id', auth, async (req, res) => {

@@ -14,7 +14,7 @@ async function loadMenu() {
     }
     downloadBtn.href = `/api/pages/${encodeURIComponent(data.pages[0].id)}/download`;
     downloadBtn.hidden = false;
-    pagesEl.innerHTML = data.pages.map((page, index) => `<figure class="svg-page"><img src="/api/pages/${encodeURIComponent(page.id)}/preview?v=${encodeURIComponent(page.updatedAt || data.updatedAt || '')}" alt="${escapeHtml(page.name)}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${index === 0 ? 'high' : 'low'}"></figure>`).join('');
+    pagesEl.innerHTML = data.pages.map((page, index) => `<figure class="svg-page"><img src="/api/pages/${encodeURIComponent(page.id)}/preview.webp?v=${encodeURIComponent(page.updatedAt || data.updatedAt || '')}" alt="${escapeHtml(page.name)}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${index === 0 ? 'high' : 'low'}"></figure>`).join('');
   } catch {
     pagesEl.innerHTML = '<div class="no-menu"><div class="no-menu-icon"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></div><h2 class="no-menu-title">تعذر تحميل المنيو</h2><p class="no-menu-text">حاول تحديث الصفحة مرة أخرى.</p></div>';
   }
