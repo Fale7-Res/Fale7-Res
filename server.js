@@ -16,6 +16,7 @@ const sessionSecret = process.env.SESSION_SECRET || 'change-this-secret';
 const adminCookieName = 'fale7_admin';
 const previewCache = new Map();
 const previewImageCache = new Map();
+const previewWidths = [640, 1024, 1600, 2400];
 let stateCache = null;
 let stateCacheTime = 0;
 
@@ -238,8 +239,11 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
-  if (!page.changes?.length && page.previewFile) {
-    return res.sendFile(path.join(root, page.previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
+  const requestedWidth = Number.parseInt(req.query.w, 10);
+  const width = previewWidths.includes(requestedWidth) ? requestedWidth : 1600;
+  const previewFile = page.previewFiles?.[String(width)] || (width === 1600 ? page.previewFile : null);
+  if (!page.changes?.length && previewFile) {
+    return res.sendFile(path.join(root, previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
   }
   let source;
   try {
@@ -252,7 +256,7 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
   let image = previewImageCache.get(key);
   if (!image) {
     const svg = applyTextChanges(source, page.changes || []);
-    image = await sharp(Buffer.from(svg)).resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 84, effort: 3 }).toBuffer();
+    image = await sharp(Buffer.from(svg)).resize({ width, withoutEnlargement: true }).webp({ quality: 84, effort: 3 }).toBuffer();
     previewImageCache.clear();
     previewImageCache.set(key, image);
   }
@@ -292,7 +296,7 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/pages/:id/download', async (req, res) => {
+app.get('/api/pages/:id/download', auth, async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
