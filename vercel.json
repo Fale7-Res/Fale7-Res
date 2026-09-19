@@ -5,13 +5,11 @@
       "src": "api/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["uploads/**", "data/**", "previews/**"]
+        "includeFiles": ["uploads/**", "data/**", "previews/**"],
+        "maxDuration": 60
       }
     }
   ],
-  "functions": {
-    "api/index.js": { "maxDuration": 60 }
-  },
   "routes": [
     { "src": "/(.*)", "dest": "api/index.js" }
   ]
