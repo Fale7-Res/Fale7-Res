@@ -9,7 +9,8 @@
     <header class="admin-head"><div><p class="eyebrow">Fale7 / Menu Studio</p><h1>إدارة صفحات المنيو</h1><p class="subtitle">أضف صفحات SVG، عدّل الأسعار، ونزّل النسخة المحدثة في أي وقت.</p></div><div><a class="btn" href="/">← عرض العميل</a><button class="btn" id="logoutBtn" hidden>خروج</button></div></header>
     <section id="loginPanel" class="panel" style="max-width:440px;margin:auto"><h2>دخول المدير</h2><form id="loginForm"><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required></div><button class="btn btn-primary full-btn">دخول لوحة الإدارة</button><p id="loginError" class="notice"></p></form></section>
     <section id="dashboard" hidden>
-      <div class="panel admin-note"><h2>تعديل المنيو المنشورة</h2><p class="subtitle">اختر الصفحة من القائمة لتعديل الأسعار والأصناف فقط. ملفات المنيو الأساسية تتم إدارتها من مستودع GitHub.</p></div>
+      <div class="panel admin-note"><h2>إدارة المنيو المنشورة</h2><p class="subtitle">ارفع أو احذف صفحات SVG، أو افتح الصفحة لتعديل الأسعار والأصناف.</p></div>
+      <form id="uploadForm" class="panel upload-panel"><label class="dropzone" for="svgFile"><input id="svgFile" type="file" accept=".svg,image/svg+xml" required><div><strong>رفع ملف SVG</strong><span id="fileLabel">ملف واحد أو ملف متعدد الصفحات</span></div></label><div><div class="field"><label for="pageName">اسم المنيو</label><input id="pageName" placeholder="مثال: منيو المطعم"></div><button class="btn btn-primary full-btn">إضافة المنيو</button><p id="uploadStatus" class="notice"></p></div></form>
       <section><div class="admin-head" style="margin:28px 0 12px"><div><p class="eyebrow">Published pages</p><h2 style="margin:0">صفحات المنيو</h2></div></div><div id="pageGrid" class="page-grid"></div></section>
     </section>
   </main>

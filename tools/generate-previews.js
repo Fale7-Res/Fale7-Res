@@ -9,6 +9,7 @@ const widths = [640, 1024, 1600, 2400];
 async function run() {
   const state = JSON.parse(await fs.readFile(path.join(root, 'data/menu.json'), 'utf8'));
   await fs.mkdir(path.join(root, 'previews'), { recursive: true });
+  const expected = new Set();
   for (const page of state.pages) {
     const source = await fs.readFile(path.join(root, 'uploads', page.fileName), 'utf8');
     const svg = applyChanges(source, page.changes || []);
@@ -19,11 +20,14 @@ async function run() {
     page.previewFiles = {};
     for (const width of widths) {
       const fileName = `previews/${baseName}-${version}-${width}.webp`;
+      expected.add(fileName);
       await sharp(Buffer.from(svg)).resize({ width }).webp({ quality: 84, effort: 3 }).toFile(path.join(root, fileName));
       page.previewFiles[String(width)] = fileName;
     }
     page.previewFile = page.previewFiles['1600'];
   }
+  const existing = await fs.readdir(path.join(root, 'previews'));
+  await Promise.all(existing.filter((file) => file.endsWith('.webp') && !expected.has(`previews/${file}`)).map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
   await fs.writeFile(path.join(root, 'data/menu.json'), JSON.stringify(state, null, 2) + '\n');
 }
 

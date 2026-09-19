@@ -3,6 +3,10 @@ const dashboard = document.getElementById('dashboard');
 const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
 const logoutBtn = document.getElementById('logoutBtn');
+const uploadForm = document.getElementById('uploadForm');
+const fileInput = document.getElementById('svgFile');
+const fileLabel = document.getElementById('fileLabel');
+const uploadStatus = document.getElementById('uploadStatus');
 const pageGrid = document.getElementById('pageGrid');
 const editor = document.getElementById('editor');
 const editorPreview = document.getElementById('editorPreview');
@@ -53,6 +57,20 @@ loginForm.addEventListener('submit', async (event) => {
 });
 
 logoutBtn.addEventListener('click', async () => { await request('/api/logout', { method: 'POST' }); setAuthenticated(false); });
+fileInput.addEventListener('change', () => { fileLabel.textContent = fileInput.files[0]?.name || 'ملف واحد أو ملف متعدد الصفحات'; });
+uploadForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!fileInput.files[0]) return;
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+  formData.append('name', document.getElementById('pageName').value.trim());
+  uploadStatus.textContent = 'جاري رفع المنيو...';
+  try {
+    const result = await request('/api/pages', { method: 'POST', body: formData });
+    uploadStatus.textContent = `تمت إضافة ${result.count} صفحة. جاري تجهيز صور العميل...`;
+    uploadForm.reset(); fileLabel.textContent = 'ملف واحد أو ملف متعدد الصفحات'; loadPages();
+  } catch (error) { uploadStatus.textContent = error.message; }
+});
 async function loadPages() {
   const data = await request('/api/menu');
   pageGrid.innerHTML = data.pages.length ? data.pages.map((page) => `<article class="page-card"><div class="page-thumb"><img src="/api/pages/${page.id}/preview.webp?v=${encodeURIComponent(page.updatedAt || data.updatedAt || '')}" alt="" loading="lazy" decoding="async"></div><div class="page-info"><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';

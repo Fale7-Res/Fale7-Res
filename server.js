@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const multer = require('multer');
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
@@ -17,6 +18,7 @@ const adminCookieName = 'fale7_admin';
 const previewCache = new Map();
 const previewImageCache = new Map();
 const previewWidths = [640, 1024, 1600, 2400];
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
 let stateCache = null;
 let stateCacheTime = 0;
 
@@ -190,6 +192,30 @@ app.post('/api/logout', (req, res) => {
 });
 app.get('/api/session', (req, res) => res.json({ isAdmin: Boolean(req.session.isAdmin || hasAdminCookie(req)) }));
 
+app.post('/api/pages', auth, upload.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ message: 'اختر ملف SVG أولاً' });
+  try {
+    const svgs = splitSvgFile(req.file.buffer);
+    const state = await readState();
+    const created = [];
+    for (let index = 0; index < svgs.length; index += 1) {
+      const id = crypto.randomUUID();
+      const fileName = `${id}.svg`;
+      const page = { id, name: svgs.length > 1 ? `${req.body.name || req.file.originalname} - صفحة ${index + 1}` : (req.body.name || req.file.originalname), fileName, createdAt: new Date().toISOString() };
+      if (!isVercel) await fs.writeFile(path.join(uploadDir, fileName), svgs[index]);
+      await commitToGitHub(`uploads/${fileName}`, svgs[index], `Add menu page ${page.name}`);
+      state.pages.push(page);
+      created.push(page);
+    }
+    state.updatedAt = new Date().toISOString();
+    await writeState(state);
+    await commitToGitHub('data/menu.json', JSON.stringify(state, null, 2), 'Register uploaded menu pages');
+    stateCache = state;
+    stateCacheTime = Date.now();
+    res.json({ success: true, count: created.length, pages: created });
+  } catch (error) { res.status(400).json({ message: error.message || 'تعذر رفع ملف SVG' }); }
+});
+
 app.get('/api/pages/:id/file', async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
@@ -290,6 +316,10 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
   const [page] = state.pages.splice(pageIndex, 1);
   if (isVercel && (!githubToken || !githubRepository)) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة في Vercel' });
   if (!isVercel) await fs.rm(path.join(uploadDir, page.fileName), { force: true });
+  for (const previewPath of Object.values(page.previewFiles || {})) {
+    if (!isVercel) await fs.rm(path.join(root, previewPath), { force: true });
+    await deleteFromGitHub(previewPath, `Delete preview for ${page.name}`);
+  }
   await writeState(state);
   await deleteFromGitHub(`uploads/${page.fileName}`, `Delete menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Delete menu page ${page.name}`);
