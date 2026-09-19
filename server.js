@@ -360,6 +360,62 @@ app.get('/api/pages/:id/download', auth, async (req, res) => {
   res.sendFile(path.join(uploadDir, page.fileName));
 });
 
+
+// POST /api/upload/blob — store one chunk as a GitHub Git blob, returns SHA
+app.post('/api/upload/blob', auth, async (req, res) => {
+  if (!githubToken || !githubRepository) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة' });
+  const { data } = req.body;
+  if (typeof data !== 'string' || !data) return res.status(400).json({ message: 'بيانات الجزء غير صالحة' });
+  try {
+    const response = await fetch(`https://api.github.com/repos/${githubRepository}/git/blobs`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: data, encoding: 'base64' })
+    });
+    if (!response.ok) { const e = await response.json().catch(() => ({})); throw new Error(e.message || `GitHub ${response.status}`); }
+    const { sha } = await response.json();
+    res.json({ sha });
+  } catch (err) { res.status(500).json({ message: err.message || 'فشل تخزين الجزء' }); }
+});
+
+// POST /api/upload/finalize — reassemble blobs into an SVG page
+app.post('/api/upload/finalize', auth, async (req, res) => {
+  const { name, originalName, blobs } = req.body;
+  if (!Array.isArray(blobs) || !blobs.length) return res.status(400).json({ message: 'لا توجد أجزاء للتجميع' });
+  if (!githubToken || !githubRepository) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة' });
+  try {
+    const parts = await Promise.all(blobs.map(async (sha) => {
+      const r = await fetch(`https://api.github.com/repos/${githubRepository}/git/blobs/${sha}`, {
+        headers: { Authorization: `Bearer ${githubToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+      });
+      if (!r.ok) throw new Error(`فشل قراءة الجزء ${sha}`);
+      const b = await r.json();
+      return Buffer.from(b.content.replace(/\s/g, ''), 'base64');
+    }));
+    const fullBuffer = Buffer.concat(parts);
+    const svgs = splitSvgFile(fullBuffer);
+    const state = await readState();
+    const created = [];
+    const pageName = ((name || originalName || 'منيو').trim());
+    for (let index = 0; index < svgs.length; index++) {
+      const id = crypto.randomUUID();
+      const fileName = `${id}.svg`;
+      const page = { id, name: svgs.length > 1 ? `${pageName} - صفحة ${index + 1}` : pageName, fileName, createdAt: new Date().toISOString() };
+      if (!isVercel) await fs.writeFile(path.join(uploadDir, fileName), svgs[index]);
+      await commitToGitHub(`uploads/${fileName}`, svgs[index], `Add menu page ${page.name}`);
+      state.pages.push(page);
+      created.push(page);
+    }
+    state.updatedAt = new Date().toISOString();
+    await writeState(state);
+    await commitToGitHub('data/menu.json', JSON.stringify(state, null, 2), 'Register uploaded menu pages');
+    stateCache = state;
+    stateCacheTime = Date.now();
+    triggerPreviewGeneration();
+    res.json({ success: true, count: created.length, pages: created });
+  } catch (error) { res.status(500).json({ message: error.message || 'فشل تجميع الملف' }); }
+});
+
 app.get('/admin', (req, res) => res.sendFile(path.join(root, 'public', 'admin.html')));
 app.get('*', (req, res) => res.sendFile(path.join(root, 'public', 'index.html')));
 

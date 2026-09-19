@@ -58,16 +58,66 @@ loginForm.addEventListener('submit', async (event) => {
 
 logoutBtn.addEventListener('click', async () => { await request('/api/logout', { method: 'POST' }); setAuthenticated(false); });
 fileInput.addEventListener('change', () => { fileLabel.textContent = fileInput.files[0]?.name || 'ملف واحد أو ملف متعدد الصفحات'; });
+// Convert Uint8Array chunk to base64 safely (no stack overflow for large chunks)
+function chunkToBase64(bytes) {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+const CHUNK_SIZE = 2 * 1024 * 1024; // 2 MB per chunk (safe under Vercel's 4.5 MB limit)
+
 uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  if (!fileInput.files[0]) return;
-  const formData = new FormData();
-  formData.append('file', fileInput.files[0]);
-  formData.append('name', document.getElementById('pageName').value.trim());
-  uploadStatus.textContent = 'جاري رفع المنيو...';
+  const file = fileInput.files[0];
+  if (!file) return;
+  const name = document.getElementById('pageName').value.trim() || file.name;
+
+  // ── Small file: single request ──────────────────────────────────────────
+  if (file.size <= CHUNK_SIZE) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', name);
+    uploadStatus.textContent = 'جاري رفع المنيو...';
+    try {
+      const result = await request('/api/pages', { method: 'POST', body: formData });
+      uploadStatus.textContent = `تمت إضافة ${result.count} صفحة ✓`;
+      uploadForm.reset(); fileLabel.textContent = 'ملف واحد أو ملف متعدد الصفحات'; loadPages();
+    } catch (error) { uploadStatus.textContent = error.message; }
+    return;
+  }
+
+  // ── Large file: chunked upload via GitHub Blobs API ─────────────────────
+  uploadStatus.textContent = 'جاري قراءة الملف...';
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  const totalChunks = Math.ceil(bytes.length / CHUNK_SIZE);
+  const blobShas = [];
+
+  for (let i = 0; i < totalChunks; i++) {
+    uploadStatus.textContent = `جاري رفع الجزء ${i + 1} من ${totalChunks}...`;
+    const chunk = bytes.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+    try {
+      const { sha } = await request('/api/upload/blob', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: chunkToBase64(chunk) })
+      });
+      blobShas.push(sha);
+    } catch (err) {
+      uploadStatus.textContent = `فشل رفع الجزء ${i + 1}: ${err.message}`;
+      return;
+    }
+  }
+
+  uploadStatus.textContent = 'جاري تجميع الأجزاء وحفظ الملف...';
   try {
-    const result = await request('/api/pages', { method: 'POST', body: formData });
-    uploadStatus.textContent = `تمت إضافة ${result.count} صفحة. جاري تجهيز صور العميل...`;
+    const result = await request('/api/upload/finalize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, originalName: file.name, blobs: blobShas })
+    });
+    uploadStatus.textContent = `تمت إضافة ${result.count} صفحة ✓`;
     uploadForm.reset(); fileLabel.textContent = 'ملف واحد أو ملف متعدد الصفحات'; loadPages();
   } catch (error) { uploadStatus.textContent = error.message; }
 });
