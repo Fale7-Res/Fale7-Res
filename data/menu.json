@@ -1125,9 +1125,5 @@
       "updatedAt": "2026-09-19T05:02:46.593Z"
     }
   ],
-<<<<<<< HEAD
   "updatedAt": "2026-09-19T05:02:46.593Z"
-=======
-  "updatedAt": "2026-09-19T04:49:56.867Z"
->>>>>>> ba62276 (invalidate stale webp previews)
 }
