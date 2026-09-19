@@ -16,6 +16,8 @@ const sessionSecret = process.env.SESSION_SECRET || 'change-this-secret';
 const adminCookieName = 'fale7_admin';
 const previewCache = new Map();
 const previewImageCache = new Map();
+let stateCache = null;
+let stateCacheTime = 0;
 
 app.use(express.json({ limit: '25mb' }));
 app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
@@ -29,11 +31,18 @@ async function ensureStore() {
 
 async function readState() {
   await ensureStore();
+  if (isVercel && stateCache && Date.now() - stateCacheTime < 30000) return stateCache;
   if (isVercel && githubToken && githubRepository) {
     const remote = await readFromGitHub('data/menu.json');
-    if (remote) return JSON.parse(remote);
+    if (remote) {
+      stateCache = JSON.parse(remote);
+      stateCacheTime = Date.now();
+      return stateCache;
+    }
   }
-  return JSON.parse(await fs.readFile(stateFile, 'utf8'));
+  const state = JSON.parse(await fs.readFile(stateFile, 'utf8'));
+  if (isVercel) { stateCache = state; stateCacheTime = Date.now(); }
+  return state;
 }
 
 async function writeState(state) {
@@ -136,7 +145,7 @@ async function commitToGitHub(filePath, content, message) {
 }
 
 async function readFromGitHub(filePath) {
-  if (filePath.startsWith('uploads/')) {
+  if (filePath.startsWith('uploads/') || filePath === 'data/menu.json') {
     const rawUrl = `https://raw.githubusercontent.com/${githubRepository}/${encodeURIComponent(githubBranch)}/${filePath.split('/').map(encodeURIComponent).join('/')}`;
     const rawResponse = await fetch(rawUrl, { cache: 'no-store' });
     if (!rawResponse.ok) return null;
