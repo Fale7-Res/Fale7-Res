@@ -229,6 +229,9 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
+  if (!page.changes?.length && page.previewFile) {
+    return res.sendFile(path.join(root, page.previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
+  }
   let source;
   try {
     source = await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
