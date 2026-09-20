@@ -95,10 +95,19 @@ h1 { margin-bottom:8px; font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; }
 @media (max-width:640px) { .top-bar { padding:.75rem; } .social-icons { gap:1rem; } .action-buttons { gap:.5rem; } .social-icon { width:45px; height:45px; font-size:18px; } .svg-viewer { top:80px; } .btn { padding:.375rem .75rem; font-size:.75rem; } .no-menu-icon { font-size:3rem; } .no-menu-title { font-size:1.25rem; } .no-menu-text { font-size:.875rem; } }
 @media (max-width:720px) { .admin-body { padding:18px 12px; } .admin-head { align-items:start; flex-direction:column; } .upload-panel, .editor-layout { grid-template-columns:1fr; } .editor { padding:10px; } }
 
-/* SEO Brand Badge & Accessible Semantic Menu */
+/* SEO Brand Badge & Accessible Machine-Readable Menu (Visually hidden for clean UX) */
 .brand-badge { display:flex; align-items:center; }
 .brand-title { font-weight:700; font-size:1.05rem; color:#1e293b; }
-.seo-semantic-container { width:min(100%,1100px); margin:0 auto; padding:0.75rem 1rem 1.5rem; }
+.seo-semantic-container {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
+}
 .seo-menu-accordion { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.75rem 1.25rem; }
 .seo-menu-summary { cursor:pointer; font-size:.9rem; font-weight:600; color:#2563eb; outline:0; user-select:none; }
 .seo-menu-summary:hover { color:#1d4ed8; }
