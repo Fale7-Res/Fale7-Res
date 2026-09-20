@@ -133,10 +133,51 @@ function parsePage2(svgContent) {
     const name = texts[i];
     const price = texts[i + 1];
     if (name && price && /^\d+$/.test(price)) {
+      const cleanName = name.replace(/^[(\s]+|[)\s]+$/g, '').trim();
+      let mealDesc = "وجبة متكاملة تشمل أرز وبطاطس وسلطات وخبز";
+      
+      if (cleanName.includes("اقتصادية ورك")) {
+        mealDesc = "ربع دجاجة (ورك) مشوية على الفحم، تقدم مع أرز، بطاطس، طعمية، مخلل، سحاوي (دقوس)، وخبز الصمون العراقي";
+      } else if (cleanName.includes("اقتصادية صدر")) {
+        mealDesc = "ربع دجاجة (صدر) مشوية على الفحم، تقدم مع أرز، بطاطس، طعمية، مخلل، سحاوي (دقوس)، وخبز الصمون العراقي";
+      } else if (cleanName.includes("كبسة") || cleanName.includes("كابسة")) {
+        mealDesc = "نصف دجاجة مشوية على الفحم، تقدم مع أرز، بطاطس، سلطات (طعمية، مخلل، سحاوي)، وخبز الصمون";
+      } else if (cleanName.includes("عائلية مسحب")) {
+        mealDesc = "دجاجة كاملة مخلية من العظم مشوية على الفحم، تقدم مع أرز، بطاطس، تشكيلة سلطات، وخبز الصمون";
+      } else if (cleanName.includes("عائلية شيش")) {
+        mealDesc = "دجاجة كاملة مقطعة ومشوية بتتبيلة الشيش، تقدم مع أرز، بطاطس، صوصات، سلطات، وخبز الصمون";
+      } else if (cleanName.includes("عائلية")) {
+        mealDesc = "دجاجة كاملة مشوية على الفحم، تقدم مع أرز، بطاطس، تشكيلة سلطات، وخبز الصمون";
+      } else if (cleanName === "مسحب" || cleanName === "وجبة مسحب") {
+        mealDesc = "نصف دجاجة مخلية من العظم مشوية، تقدم مع أرز، بطاطس، سلطات، وخبز الصمون";
+      } else if (cleanName.includes("موفرة ورك")) {
+        mealDesc = "3 قطع كفتة مشوية وربع دجاجة (ورك)، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("موفرة صدر")) {
+        mealDesc = "3 قطع كفتة مشوية وربع دجاجة (صدر)، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("شيش + كفتة") || cleanName.includes("شيش على كفتة")) {
+        mealDesc = "3 قطع شيش طاووق و 3 قطع كفتة، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName === "كفتة" || cleanName === "وجبة كفتة") {
+        mealDesc = "6 قطع كفتة مشوية على الفحم، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName === "شيش" || cleanName === "وجبة شيش" || cleanName.includes("شيش طاووق")) {
+        mealDesc = "6 قطع شيش طاووق بتتبيلة فالح، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("مكس جريل ورك")) {
+        mealDesc = "3 قطع شيش طاووق، 3 قطع كفتة، وربع دجاجة (ورك)، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("مكس جريل صدر")) {
+        mealDesc = "3 قطع شيش طاووق، 3 قطع كفتة، وربع دجاجة (صدر)، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("بانيه, زنجر, كرسبي, فاهيتا")) {
+        mealDesc = "وجبات الفاهيتا (فراخ مشوية مع طماطم، فلفل، جبنة، وزيتون) أو البانيه/الزنجر (3 قطع مقرمشة)، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("فاهيتا")) {
+        mealDesc = "قطع دجاج مشوية على الجريل مع طماطم وفلفل مغطاة بجبنة الموزاريلا والزيتون، تقدم مع أرز، بطاطس، سلطات، وخبز";
+      } else if (cleanName.includes("بانيه") || cleanName.includes("زنجر") || cleanName.includes("كرسبي")) {
+        mealDesc = "حوالي 3 قطع دجاج مقرمشة، تقدم مع أرز، بطاطس، سلطات، وخبز الصمون";
+      } else if (cleanName === "حبة كبيبة") {
+        mealDesc = "حبة كبيبة محشية طازجة";
+      }
+
       mealItems.push({
-        name: name.replace(/^[(\s]+|[)\s]+$/g, '').trim(),
+        name: cleanName,
         price,
-        description: "وجبة متكاملة تشمل أرز وبطاطس وسلطات وخبز"
+        description: mealDesc
       });
       i += 2;
     } else {
@@ -164,7 +205,7 @@ function parsePage2(svgContent) {
       grillItems.push({
         name,
         price,
-        description: "مشويات عراقية على الفحم تقدم مع خبز وسلطات بدون أرز وبطاطس"
+        description: "مشويات طازجة على الفحم، تقدم مع تشكيلة سلطات وخبز الصمون العراقي (بدون أرز وبطاطس)"
       });
       i += 2;
     } else {
@@ -189,10 +230,12 @@ function parsePage2(svgContent) {
     const name = texts[i];
     const price = texts[i + 1];
     if (name && price && /^\d+$/.test(price)) {
+      // Remove any unwanted "فطيرة" prefixes if we want to call them "معجنات" as requested.
+      let finalName = name;
       pastryItems.push({
-        name: name.startsWith('فطيرة') || name.startsWith('لحمة') || name.startsWith('مسخن') ? name : `فطيرة ${name}`,
+        name: finalName,
         price,
-        description: `فطيرة ومخبوزات طازجة`
+        description: `معجنات ومخبوزات طازجة`
       });
       i += 2;
     } else {
@@ -202,8 +245,8 @@ function parsePage2(svgContent) {
 
   sections.push({
     id: "pastries",
-    name: "المعجنات والفطائر",
-    description: "فطائر ومعجنات طازجة ومسخن ولحمة بعجين",
+    name: "المعجنات",
+    description: "معجنات طازجة ومسخن ولحمة بعجين",
     items: pastryItems
   });
 
