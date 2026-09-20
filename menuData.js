@@ -1,179 +1,395 @@
 const fs = require('fs');
 const path = require('path');
 
-// Base menu data representing all verified items from the official menu pages (Page 1 & Page 2)
-const defaultMenuSections = [
-  {
+function cleanText(txt) {
+  return String(txt || '').replace(/<[^>]+>/g, '').trim();
+}
+
+function applyTextChanges(svg, changes) {
+  if (!Array.isArray(changes) || changes.length === 0) return svg;
+  const values = new Map();
+  for (const change of changes) {
+    const index = Number.parseInt(change.index, 10);
+    const value = String(change.value ?? '').trim();
+    if (Number.isInteger(index) && value) {
+      values.set(`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${index}`, value);
+    }
+  }
+  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
+    const value = values.get(`${attribute.toLowerCase()}:${index}`);
+    return value === undefined ? match : `${start}${value}${end}`;
+  });
+}
+
+function parsePage1(svgContent) {
+  const matches = [...svgContent.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/gi)];
+  const texts = matches.map(m => cleanText(m[1])).filter(Boolean);
+  const sections = [];
+
+  // Section 1: سندوتشات فالح
+  const falahItems = [];
+  let i = 6;
+  while (i < 70 && i + 3 < texts.length) {
+    const name = texts[i];
+    const pFransawi = texts[i + 1];
+    const pSaj = texts[i + 2];
+    const pSamoon = texts[i + 3];
+
+    if (/^\d+$/.test(pFransawi) && /^\d+$/.test(pSaj) && /^\d+$/.test(pSamoon)) {
+      falahItems.push({
+        name,
+        price: pSamoon,
+        priceMax: pFransawi,
+        description: `سندوتش ${name} بخبز الصمون العراقي، الصاج، أو الفرنساوي`,
+        variants: [
+          { name: "صمون عراقي", price: pSamoon },
+          { name: "صاج", price: pSaj },
+          { name: "فرنساوي", price: pFransawi }
+        ]
+      });
+      i += 4;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
     id: "faleh-sandwiches",
-    name: "سندوتشات فالح",
-    description: "سندوتشات فالح متوفرة بخبز فرنساوي، صاج، أو صمون",
-    items: [
-      { name: "فلافل", price: "25", priceMax: "30", variants: [{ name: "صمون", price: "25" }, { name: "صاج", price: "25" }, { name: "فرنساوي", price: "30" }] },
-      { name: "بطاطس", price: "30", priceMax: "35", variants: [{ name: "صمون", price: "30" }, { name: "صاج", price: "30" }, { name: "فرنساوي", price: "35" }] },
-      { name: "مكس (بطاطس + فلافل)", price: "30", priceMax: "35", variants: [{ name: "صمون", price: "30" }, { name: "صاج", price: "30" }, { name: "فرنساوي", price: "35" }] },
-      { name: "مكس باذنجان", price: "40", priceMax: "45", variants: [{ name: "صمون", price: "40" }, { name: "صاج", price: "40" }, { name: "فرنساوي", price: "45" }] },
-      { name: "مكس فالح", price: "40", priceMax: "45", variants: [{ name: "صمون", price: "40" }, { name: "صاج", price: "40" }, { name: "فرنساوي", price: "45" }] },
-      { name: "بطاطس رومي", price: "45", priceMax: "50", variants: [{ name: "صمون", price: "45" }, { name: "صاج", price: "45" }, { name: "فرنساوي", price: "50" }] },
-      { name: "بطاطس موزاريلا", price: "45", priceMax: "50", variants: [{ name: "صمون", price: "45" }, { name: "صاج", price: "45" }, { name: "فرنساوي", price: "50" }] },
-      { name: "بطاطس شيدر", price: "45", priceMax: "50", variants: [{ name: "صمون", price: "45" }, { name: "صاج", price: "45" }, { name: "فرنساوي", price: "50" }] },
-      { name: "بطاطس 2 نوع جبنة", price: "55", priceMax: "60", variants: [{ name: "صمون", price: "55" }, { name: "صاج", price: "55" }, { name: "فرنساوي", price: "60" }] },
-      { name: "بطاطس 3 نوع جبنة", price: "65", priceMax: "70", variants: [{ name: "صمون", price: "65" }, { name: "صاج", price: "65" }, { name: "فرنساوي", price: "70" }] },
-      { name: "أومليت ساده", price: "35", priceMax: "40", variants: [{ name: "صمون", price: "35" }, { name: "صاج", price: "35" }, { name: "فرنساوي", price: "40" }] },
-      { name: "أومليت جبنة", price: "45", priceMax: "50", variants: [{ name: "صمون", price: "45" }, { name: "صاج", price: "45" }, { name: "فرنساوي", price: "50" }] },
-      { name: "بيض بالبسطرمة", price: "50", priceMax: "65", variants: [{ name: "صمون", price: "50" }, { name: "صاج", price: "50" }, { name: "فرنساوي", price: "65" }] },
-      { name: "كبيبة", price: "45", priceMax: "50", variants: [{ name: "صمون", price: "45" }, { name: "صاج", price: "45" }, { name: "فرنساوي", price: "50" }] },
-      { name: "جبنة مقلية", price: "45", priceMax: "50", variants: [{ name: "صمون", price: "45" }, { name: "صاج", price: "45" }, { name: "فرنساوي", price: "50" }] },
-      { name: "لبنة", price: "25", priceMax: "30", variants: [{ name: "صمون", price: "25" }, { name: "صاج", price: "25" }, { name: "فرنساوي", price: "30" }] }
-    ]
-  },
-  {
+    name: "سندوتشات فالح (صمون عراقي - صاج - فرنساوي)",
+    description: "سندوتشات فالح الشهيرة بخبز الصمون العراقي الهش أو الصاج أو الفرنساوي",
+    items: falahItems
+  });
+
+  // Section 2: سندوتشات اللحوم والمشويات
+  const meatItems = [];
+  while (i < texts.length && texts[i] !== 'كفتة') i++;
+  while (i < texts.length && texts[i] !== 'الأكثر' && i + 3 < texts.length) {
+    const name = texts[i];
+    const pFransawi = texts[i + 1];
+    const pSaj = texts[i + 2];
+    const pSamoon = texts[i + 3];
+
+    if (/^\d+$/.test(pFransawi) && /^\d+$/.test(pSaj) && /^\d+$/.test(pSamoon)) {
+      meatItems.push({
+        name,
+        price: pSamoon,
+        priceMax: pFransawi,
+        description: `سندوتش ${name} طازج على الفحم بخبز الصمون العراقي، الصاج، أو الفرنساوي`,
+        variants: [
+          { name: "صمون عراقي", price: pSamoon },
+          { name: "صاج", price: pSaj },
+          { name: "فرنساوي", price: pFransawi }
+        ]
+      });
+      i += 4;
+    } else {
+      break;
+    }
+  }
+
+  sections.push({
     id: "meat-grill-sandwiches",
-    name: "سندوتشات اللحوم والمشويات",
-    description: "تشكيلة لحوم ومشويات طازجة بخبز فرنساوي، صاج، أو صمون",
-    items: [
-      { name: "كفتة", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "كفتة موزاريلا", price: "100", priceMax: "105", variants: [{ name: "صمون", price: "100" }, { name: "صاج", price: "100" }, { name: "فرنساوي", price: "105" }] },
-      { name: "شيش", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "شيش موزاريلا", price: "100", priceMax: "105", variants: [{ name: "صمون", price: "100" }, { name: "صاج", price: "100" }, { name: "فرنساوي", price: "105" }] },
-      { name: "كبدة جريل", price: "70", priceMax: "75", variants: [{ name: "صمون", price: "70" }, { name: "صاج", price: "70" }, { name: "فرنساوي", price: "75" }] },
-      { name: "برجر", price: "80", priceMax: "85", variants: [{ name: "صمون", price: "80" }, { name: "صاج", price: "80" }, { name: "فرنساوي", price: "85" }] },
-      { name: "برجر بالجبنة", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "برجر بالبيض", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "برجر كينج (بيض + جبنة)", price: "100", priceMax: "105", variants: [{ name: "صمون", price: "100" }, { name: "صاج", price: "100" }, { name: "فرنساوي", price: "105" }] },
-      { name: "بانيه بلدي", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "بانيه بالجبنة", price: "100", priceMax: "105", variants: [{ name: "صمون", price: "100" }, { name: "صاج", price: "100" }, { name: "فرنساوي", price: "105" }] },
-      { name: "كريسبي", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "زنجر", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "مكسيكان", price: "70", priceMax: "75", variants: [{ name: "صمون", price: "70" }, { name: "صاج", price: "70" }, { name: "فرنساوي", price: "75" }] },
-      { name: "فاهيتا فراخ", price: "90", priceMax: "95", variants: [{ name: "صمون", price: "90" }, { name: "صاج", price: "90" }, { name: "فرنساوي", price: "95" }] },
-      { name: "بيض باللحمة", price: "75", priceMax: "80", variants: [{ name: "صمون", price: "75" }, { name: "صاج", price: "75" }, { name: "فرنساوي", price: "80" }] }
-    ]
-  },
-  {
-    id: "meals",
-    name: "وجبات فالح المتكاملة",
-    description: "وجبات تشمل أرز وبطاطس وسلطات وخبز",
-    items: [
-      { name: "وجبة اقتصادية ورك", price: "110", description: "أرز وبطاطس وسلطات وخبز" },
-      { name: "وجبة اقتصادية صدر", price: "140", description: "أرز وبطاطس وسلطات وخبز" },
-      { name: "وجبة كبسة", price: "190", description: "كبسة مع صوص وسلطات وخبز" },
-      { name: "وجبة عائلية", price: "380", description: "تشكيلة وجبة عائلية مع أرز وبطاطس وسلطات" },
-      { name: "وجبة عائلية مسحب", price: "390", description: "دجاج مسحب عائلي مع أرز وبطاطس وسلطات" },
-      { name: "وجبة مسحب", price: "200", description: "دجاج مسحب مع أرز وبطاطس وسلطات" },
-      { name: "وجبة عائلية شيش", price: "385", description: "شيش طاووق عائلي مع أرز وبطاطس وسلطات" },
-      { name: "وجبة موفرة ورك", price: "170", description: "أرز وبطاطس وسلطات وخبز" },
-      { name: "وجبة موفرة صدر", price: "180", description: "أرز وبطاطس وسلطات وخبز" },
-      { name: "وجبة كفتة", price: "170", description: "كفتة مشوية مع أرز وبطاطس وسلطات وخبز" },
-      { name: "وجبة شيش", price: "170", description: "شيش طاووق مع أرز وبطاطس وسلطات وخبز" },
-      { name: "وجبة شيش + كفتة", price: "170", description: "مكس شيش وكفتة مع أرز وبطاطس وسلطات" },
-      { name: "وجبة مكس جريل ورك", price: "220", description: "مكس جريل ورك مع أرز وبطاطس وسلطات" },
-      { name: "وجبة مكس جريل صدر", price: "230", description: "مكس جريل صدر مع أرز وبطاطس وسلطات" },
-      { name: "وجبة بانيه / زنجر / كرسبي / فاهيتا", price: "175", description: "اختيارك من الدجاج المقلي أو الفاهيتا مع أرز وبطاطس وسلطات" }
-    ]
-  },
-  {
-    id: "grills",
-    name: "مشويات فالح على الفحم",
-    description: "تقدم مع خبز وسلطات فقط بدون أرز وبطاطس",
-    items: [
-      { name: "ربع فرخة ورك مشوي", price: "100" },
-      { name: "ربع فرخة صدر مشوي", price: "120" },
-      { name: "نصف فرخة مشوية", price: "165" },
-      { name: "نصف فرخة شيش", price: "170" },
-      { name: "نصف فرخة مسحب", price: "170" },
-      { name: "فرخة مسحب كاملة", price: "350" },
-      { name: "فرخة فحم كاملة", price: "340" },
-      { name: "فرخة شيش كاملة", price: "345" },
-      { name: "كفتة مشوية", price: "150", priceMax: "600", variants: [{ name: "ربع كيلو", price: "150" }, { name: "نصف كيلو", price: "300" }, { name: "كيلو", price: "600" }] },
-      { name: "شيش طاووق مشوي", price: "150", priceMax: "600", variants: [{ name: "ربع كيلو", price: "150" }, { name: "نصف كيلو", price: "300" }, { name: "كيلو", price: "600" }] }
-    ]
-  },
-  {
-    id: "pastries",
-    name: "المعجنات والفطائر",
-    description: "فطائر طازجة مخبوزة بأجود المكونات",
-    items: [
-      { name: "فطيرة جبنة بيضاء", price: "15" },
-      { name: "فطيرة جبنة رومي", price: "15" },
-      { name: "فطيرة جبنة شيدر", price: "15" },
-      { name: "فطيرة جبنة كيري", price: "15" },
-      { name: "لحمة بعجين", price: "20" },
-      { name: "فطيرة سوسيس", price: "15" },
-      { name: "فطيرة سبانخ", price: "15" },
-      { name: "فطيرة زعتر", price: "15" },
-      { name: "فطيرة زعتر جبنة", price: "20" },
-      { name: "مسخن", price: "50" }
-    ]
-  },
-  {
-    id: "platters",
-    name: "أطباق فالح",
-    description: "أطباق مقبلات وإفطار بأحجام مختلفة (صغير - وسط - كبير)",
-    items: [
-      { name: "طبق فلافل (5 حبات)", price: "5", priceMax: "15", variants: [{ name: "صغير", price: "5" }, { name: "وسط", price: "10" }, { name: "كبير", price: "15" }] },
-      { name: "طبق بطاطس", price: "25", priceMax: "50", variants: [{ name: "صغير", price: "25" }, { name: "وسط", price: "30" }, { name: "كبير", price: "50" }] },
-      { name: "طبق أومليت سادة", price: "30", priceMax: "50", variants: [{ name: "صغير", price: "30" }, { name: "وسط", price: "40" }, { name: "كبير", price: "50" }] },
-      { name: "طبق أومليت بالجبنة", price: "40", priceMax: "50", variants: [{ name: "صغير", price: "40" }, { name: "وسط", price: "45" }, { name: "كبير", price: "50" }] },
-      { name: "طبق بيض بالبسطرمة", price: "50", priceMax: "70", variants: [{ name: "صغير", price: "50" }, { name: "وسط", price: "60" }, { name: "كبير", price: "70" }] },
-      { name: "طبق كبيبة (3 قطع)", price: "90" },
-      { name: "طبق باذنجان", price: "15", priceMax: "30", variants: [{ name: "صغير", price: "15" }, { name: "وسط", price: "25" }, { name: "كبير", price: "30" }] },
-      { name: "طبق بطاطس بالجبنة", price: "45", priceMax: "60", variants: [{ name: "صغير", price: "45" }, { name: "وسط", price: "55" }, { name: "كبير", price: "60" }] },
-      { name: "طبق كبدة", price: "70", priceMax: "120", variants: [{ name: "صغير", price: "70" }, { name: "كبير", price: "120" }] },
-      { name: "طبق لبنة", price: "30" }
-    ]
-  },
-  {
-    id: "appetizers",
-    name: "المقبلات والسلطات",
-    description: "مقبلات وسلطات طازجة متنوعة",
-    items: [
-      { name: "عنبة", price: "15", priceMax: "30", variants: [{ name: "صغير", price: "15" }, { name: "وسط", price: "20" }, { name: "كبير", price: "30" }] },
-      { name: "مسبحة", price: "25" },
-      { name: "طحينة", price: "15", priceMax: "25", variants: [{ name: "وسط", price: "15" }, { name: "كبير", price: "25" }] },
-      { name: "سلطة خضراء", price: "20", priceMax: "30", variants: [{ name: "وسط", price: "20" }, { name: "كبير", price: "30" }] },
-      { name: "ثومية", price: "15", priceMax: "30", variants: [{ name: "وسط", price: "15" }, { name: "كبير", price: "30" }] },
-      { name: "حبة كبيبة", price: "30" }
-    ]
-  },
-  {
-    id: "rice-pasta",
-    name: "الأرز والمكرونة",
-    items: [
-      { name: "طبق أرز", price: "35", priceMax: "55", variants: [{ name: "صغير", price: "35" }, { name: "وسط", price: "45" }, { name: "كبير", price: "55" }] },
-      { name: "مكرونة بشاميل", price: "50" },
-      { name: "مكرونة نجرسكو", price: "50" }
-    ]
-  },
-  {
-    id: "beverages-addons",
-    name: "المشروبات والإضافات",
-    items: [
-      { name: "مياه معدنية", price: "10" },
-      { name: "مشروب كانز (أنواع)", price: "25" },
-      { name: "مشروب لتر (أنواع)", price: "35" },
-      { name: "إضافة بيض", price: "10" },
-      { name: "إضافة باذنجان", price: "5" },
-      { name: "إضافة مسبحة", price: "5" },
-      { name: "إضافة لبنة", price: "5" },
-      { name: "إضافة جبنة رومي", price: "15" },
-      { name: "إضافة جبنة شيدر", price: "15" },
-      { name: "إضافة جبنة موزاريلا", price: "15" }
-    ]
-  },
-  {
+    name: "سندوتشات اللحوم والمشويات العراقية",
+    description: "تشكيلة لحوم ومشويات طازجة على الفحم بخبز الصمون العراقي أو الصاج أو الفرنساوي",
+    items: meatItems
+  });
+
+  // Section 3: الأكثر طلباً
+  const popularNames = ["فلافل صمون", "مكس صمون", "فاهيتا فراخ", "كفتة صمون"];
+  const popularItems = [];
+  for (const pName of popularNames) {
+    const match = [...falahItems, ...meatItems].find(it => pName.includes(it.name));
+    popularItems.push({
+      name: pName,
+      price: match ? match.price : "30",
+      description: `سندوتش ${pName} الأكثر طلباً بمطعم فالح أبو العنبة`
+    });
+  }
+  sections.push({
     id: "most-popular",
     name: "الأكثر طلباً",
-    items: [
-      { name: "فلافل صمون", price: "25", description: "سندوتش فلافل بخبز الصمون المميز" },
-      { name: "مكس صمون", price: "30", description: "مكس بطاطس وفلافل بخبز الصمون" },
-      { name: "فاهيتا فراخ", price: "90", description: "فاهيتا فراخ مميزة مع خضار" },
-      { name: "كفتة صمون", price: "90", description: "كفتة مشوية على الفحم بخبز الصمون" }
-    ]
+    description: "الأصناف الأكثر طلباً ومحبة لدى زبائن مطعم فالح أبو العنبة",
+    items: popularItems
+  });
+
+  return sections;
+}
+
+function parsePage2(svgContent) {
+  const matches = [...svgContent.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/gi)];
+  const texts = matches.map(m => cleanText(m[1])).filter(Boolean);
+  const sections = [];
+
+  // 1. وجبات فالح
+  const mealItems = [];
+  let i = 0;
+  while (i < texts.length && texts[i] !== 'وجبة اقتصادية ورك') i++;
+
+  while (i < texts.length && texts[i] !== 'مشويات فالح') {
+    if (texts[i] === 'الوجبة' || texts[i] === 'السعر (جنيه)') {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const price = texts[i + 1];
+    if (name && price && /^\d+$/.test(price)) {
+      mealItems.push({
+        name: name.replace(/^[(\s]+|[)\s]+$/g, '').trim(),
+        price,
+        description: "وجبة متكاملة تشمل أرز وبطاطس وسلطات وخبز"
+      });
+      i += 2;
+    } else {
+      i++;
+    }
   }
-];
+
+  sections.push({
+    id: "meals",
+    name: "وجبات فالح المتكاملة",
+    description: "وجبات تقدم مع أرز وبطاطس وسلطات وخبز",
+    items: mealItems
+  });
+
+  // 2. مشويات فالح
+  const grillItems = [];
+  while (i < texts.length && texts[i] !== 'المعجنات') {
+    if (texts[i] === 'الصنف' || texts[i] === 'السعر (جنيه)' || texts[i] === 'مشويات فالح' || texts[i].includes('خبز و سلطات')) {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const price = texts[i + 1];
+    if (name && price && /^\d+$/.test(price)) {
+      grillItems.push({
+        name,
+        price,
+        description: "مشويات عراقية على الفحم تقدم مع خبز وسلطات بدون أرز وبطاطس"
+      });
+      i += 2;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
+    id: "grills",
+    name: "مشويات فالح على الفحم",
+    description: "مشويات عراقية على الفحم تقدم مع خبز وسلطات فقط بدون أرز وبطاطس",
+    items: grillItems
+  });
+
+  // 3. المعجنات
+  const pastryItems = [];
+  while (i < texts.length && texts[i] !== 'أطباق فالح') {
+    if (texts[i] === 'الصنف' || texts[i] === 'السعر (جنيه)' || texts[i] === 'المعجنات') {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const price = texts[i + 1];
+    if (name && price && /^\d+$/.test(price)) {
+      pastryItems.push({
+        name: name.startsWith('فطيرة') || name.startsWith('لحمة') || name.startsWith('مسخن') ? name : `فطيرة ${name}`,
+        price,
+        description: `فطيرة ومخبوزات طازجة`
+      });
+      i += 2;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
+    id: "pastries",
+    name: "المعجنات والفطائر",
+    description: "فطائر ومعجنات طازجة ومسخن ولحمة بعجين",
+    items: pastryItems
+  });
+
+  // 4. أطباق فالح
+  const platterItems = [];
+  while (i < texts.length && texts[i] !== 'المقبلات') {
+    if (texts[i] === 'الصنف' || texts[i] === 'أطباق فالح' || texts[i] === 'كبير' || texts[i] === 'وسط' || texts[i] === 'صغير') {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const p1 = texts[i + 1];
+    const p2 = texts[i + 2];
+    const p3 = texts[i + 3];
+
+    if (name.startsWith('طبق')) {
+      const variants = [];
+      if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
+      if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
+      if (/^\d+$/.test(p1)) variants.push({ name: "كبير", price: p1 });
+
+      const price = variants.length > 0 ? variants[0].price : "30";
+      platterItems.push({
+        name,
+        price,
+        priceMax: variants.length > 1 ? variants[variants.length - 1].price : undefined,
+        description: `${name} بأحجام مختلفة`,
+        variants: variants.length > 1 ? variants : undefined
+      });
+      i += 4;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
+    id: "platters",
+    name: "أطباق فالح",
+    description: "أطباق فطور ومقبلات بأحجام مختلفة (صغير - وسط - كبير)",
+    items: platterItems
+  });
+
+  // 5. المقبلات
+  const appetizerItems = [];
+  while (i < texts.length && texts[i] !== 'الأرز و المكرونة') {
+    if (texts[i] === 'الصنف' || texts[i] === 'المقبلات' || texts[i] === 'كبير' || texts[i] === 'وسط' || texts[i] === 'صغير') {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const p1 = texts[i + 1];
+    const p2 = texts[i + 2];
+    const p3 = texts[i + 3];
+
+    const variants = [];
+    if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
+    if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
+    if (/^\d+$/.test(p1)) variants.push({ name: "كبير", price: p1 });
+
+    if (variants.length > 0) {
+      appetizerItems.push({
+        name,
+        price: variants[0].price,
+        priceMax: variants.length > 1 ? variants[variants.length - 1].price : undefined,
+        description: `مقبلات عراقية طازجة (${name})`,
+        variants: variants.length > 1 ? variants : undefined
+      });
+      i += 4;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
+    id: "appetizers",
+    name: "المقبلات العراقية والسلطات",
+    description: "عنبة عراقية أصلية، مسبحة، طحينة، سلطة خضراء، وثومية",
+    items: appetizerItems
+  });
+
+  // 6. الأرز والمكرونة
+  const pastaItems = [];
+  while (i < texts.length && texts[i] !== 'المشروبات') {
+    if (texts[i] === 'الصنف' || texts[i] === 'الأرز و المكرونة' || texts[i] === 'كبير' || texts[i] === 'وسط' || texts[i] === 'صغير') {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const p1 = texts[i + 1];
+    const p2 = texts[i + 2];
+    const p3 = texts[i + 3];
+
+    if (/^\d+$/.test(p1) || /^\d+$/.test(p2) || /^\d+$/.test(p3)) {
+      const variants = [];
+      if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
+      if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
+      if (/^\d+$/.test(p1)) variants.push({ name: "كبير", price: p1 });
+      pastaItems.push({
+        name: name === 'الأرز' ? 'طبق أرز' : name,
+        price: variants[0].price,
+        priceMax: variants.length > 1 ? variants[variants.length - 1].price : undefined,
+        description: `${name} شهي وساخن`,
+        variants: variants.length > 1 ? variants : undefined
+      });
+      i += 4;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
+    id: "rice-pasta",
+    name: "الأرز والمكرونة",
+    description: "أرز مصري وبسمتي، مكرونة بشاميل، ومكرونة نجرسكو",
+    items: pastaItems
+  });
+
+  // 7. المشروبات والإضافات
+  const drinkItems = [];
+  while (i < texts.length && texts[i] !== 'خدمة التوصيل') {
+    if (texts[i] === 'الصنف' || texts[i] === 'السعر (جنيه)' || texts[i] === 'المشروبات' || texts[i] === 'الإضافات' || texts[i] === 'صواني فالح' || texts[i] === 'قريبًا') {
+      i++;
+      continue;
+    }
+    const name = texts[i];
+    const price = texts[i + 1];
+    if (name && price && /^\d+$/.test(price)) {
+      drinkItems.push({
+        name: name.includes('كانز') ? 'مشروب كانز (أنواع)' : name.includes('لتر') ? 'مشروب لتر (أنواع)' : name,
+        price,
+        description: `${name}`
+      });
+      i += 2;
+    } else {
+      i++;
+    }
+  }
+
+  sections.push({
+    id: "beverages-addons",
+    name: "المشروبات والإضافات",
+    description: "مشروبات غازية، مياه معدنية، وإضافات متنوعة",
+    items: drinkItems
+  });
+
+  return sections;
+}
 
 function getMenuSections() {
-  const filePath = path.join(__dirname, '..', 'data', 'menu-data.json');
+  const root = __dirname;
+  const menuJsonPath = path.join(root, 'data', 'menu.json');
+  const uploadDir = path.join(root, 'uploads');
+
+  try {
+    if (fs.existsSync(menuJsonPath)) {
+      const state = JSON.parse(fs.readFileSync(menuJsonPath, 'utf8'));
+      if (Array.isArray(state.pages) && state.pages.length >= 2) {
+        const p1 = state.pages[0];
+        const p2 = state.pages[1];
+
+        const p1Path = path.join(uploadDir, p1.fileName);
+        const p2Path = path.join(uploadDir, p2.fileName);
+
+        if (fs.existsSync(p1Path) && fs.existsSync(p2Path)) {
+          let svg1 = fs.readFileSync(p1Path, 'utf8');
+          let svg2 = fs.readFileSync(p2Path, 'utf8');
+
+          if (p1.changes) svg1 = applyTextChanges(svg1, p1.changes);
+          if (p2.changes) svg2 = applyTextChanges(svg2, p2.changes);
+
+          const sec1 = parsePage1(svg1);
+          const sec2 = parsePage2(svg2);
+          const dynamicSections = [...sec1, ...sec2];
+
+          if (dynamicSections.length > 0) {
+            return dynamicSections;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Dynamic SVG extraction error, falling back to cached json:', err.message);
+  }
+
+  // Fallback to data/menu-data.json if exists
+  const filePath = path.join(root, 'data', 'menu-data.json');
   try {
     if (fs.existsSync(filePath)) {
       const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -181,10 +397,9 @@ function getMenuSections() {
         return data.sections;
       }
     }
-  } catch (err) {
-    console.error('Error loading custom menu-data.json, falling back to defaults:', err);
-  }
-  return defaultMenuSections;
+  } catch (e) {}
+
+  return [];
 }
 
 function generateSchemaGraph(sections) {
@@ -228,7 +443,7 @@ function generateSchemaGraph(sections) {
         "@id": `${baseUrl}/#website`,
         "url": `${baseUrl}/`,
         "name": "فالح أبو العنبة",
-        "description": "منيو سندوتشات ومأكولات مطعم فالح أبو العنبة الرسمي - ألذ سندوتشات ومشويات على أصولها",
+        "description": "منيو سندوتشات ومأكولات مطعم فالح أبو العنبة الرسمي (منذ 1961) - أكل ومطعم عراقي في مصر",
         "inLanguage": "ar"
       },
       {
@@ -307,8 +522,8 @@ function generateSchemaGraph(sections) {
 function renderHtmlMenu(sections) {
   let html = `<div class="geo-menu-wrapper" itemscope itemtype="https://schema.org/Menu">
     <header class="geo-menu-header">
-      <h1 itemprop="name">منيو مطعم فالح أبو العنبة الرسمي</h1>
-      <p class="geo-tagline" itemprop="description">ألذ سندوتشات ومشويات ووجبات على أصولها - الأسعار الرسمية المعتمدة</p>
+      <h1 itemprop="name">منيو مطعم فالح أبو العنبة الرسمي (منذ 1961)</h1>
+      <p class="geo-tagline" itemprop="description">أكل ومطعم عراقي في مصر - ألذ سندوتشات صمون ومشويات ووجبات على أصولها بالأسعار الرسمية المعتمدة</p>
     </header>
 
     <div class="geo-sections-grid">`;
@@ -402,9 +617,11 @@ function renderQuickFacts() {
 }
 
 module.exports = {
-  defaultMenuSections,
   getMenuSections,
   generateSchemaGraph,
   renderHtmlMenu,
-  renderQuickFacts
+  renderQuickFacts,
+  parsePage1,
+  parsePage2,
+  applyTextChanges
 };
