@@ -24,11 +24,22 @@ async function run() {
     const oldFiles = (await fs.readdir(path.join(root, 'previews'))).filter((file) => file.startsWith(`${baseName}-`) && file.endsWith('.webp'));
     await Promise.all(oldFiles.map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
     
-    const b64 = Buffer.from(svg).toString('base64');
-    await page.goto(`data:image/svg+xml;base64,${b64}`, { waitUntil: 'networkidle0' });
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;overflow:hidden;background:#fff;}svg{display:block;width:100%;height:100%;}</style></head><body>${svg}</body></html>`;
+    await page.setContent(html, { waitUntil: 'domcontentloaded' });
     const dimensions = await page.evaluate(() => {
-      const el = document.documentElement;
-      return { width: parseInt(el.getAttribute('width') || el.clientWidth || 1054), height: parseInt(el.getAttribute('height') || el.clientHeight || 1492) };
+      const el = document.querySelector('svg');
+      if (!el) return { width: 1054, height: 1492 };
+      const viewBox = el.getAttribute('viewBox');
+      if (viewBox) {
+        const parts = viewBox.trim().split(/\s+/).map(Number);
+        if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+          return { width: Math.round(parts[2]), height: Math.round(parts[3]) };
+        }
+      }
+      return {
+        width: Math.round(el.clientWidth || 1054),
+        height: Math.round(el.clientHeight || 1492)
+      };
     });
     
     await page.setViewport({ width: dimensions.width, height: dimensions.height, deviceScaleFactor: 2 });

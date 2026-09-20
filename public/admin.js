@@ -139,10 +139,16 @@ async function openEditor(page) {
   editorTitle.textContent = page.name;
   editorStatus.textContent = 'جاري فتح الصفحة...';
   editor.classList.add('open'); editor.setAttribute('aria-hidden', 'false');
-  currentSvg = await fetch(`/api/pages/${page.id}/file?v=${Date.now()}`).then((response) => response.text());
-  renderEditor();
-  editorStatus.textContent = '';
-  document.getElementById('downloadEditor').href = `/api/pages/${page.id}/download?v=${Date.now()}`;
+  try {
+    const response = await fetch(`/api/pages/${page.id}/file?v=${Date.now()}`);
+    if (!response.ok) throw new Error(`تعذر تحميل ملف الصفحة (كود ${response.status})`);
+    currentSvg = await response.text();
+    renderEditor();
+    editorStatus.textContent = '';
+    document.getElementById('downloadEditor').href = `/api/pages/${page.id}/download?v=${Date.now()}`;
+  } catch (err) {
+    editorStatus.textContent = err.message || 'فشل فتح الصفحة';
+  }
 }
 
 function renderEditor() {

@@ -170,10 +170,9 @@ async function commitToGitHub(filePath, content, message) {
 
 async function readFromGitHub(filePath) {
   if (filePath.startsWith('uploads/') || filePath === 'data/menu.json') {
-    const rawUrl = `https://raw.githubusercontent.com/${githubRepository}/${encodeURIComponent(githubBranch)}/${filePath.split('/').map(encodeURIComponent).join('/')}`;
+    const rawUrl = `https://raw.githubusercontent.com/${githubRepository}/${encodeURIComponent(githubBranch)}/${filePath.split('/').map(encodeURIComponent).join('/')}?t=${Date.now()}`;
     const rawResponse = await fetch(rawUrl, { cache: 'no-store' });
-    if (!rawResponse.ok) return null;
-    return rawResponse.text();
+    if (rawResponse.ok) return rawResponse.text();
   }
   const encodedPath = filePath.split('/').map(encodeURIComponent).join('/');
   const response = await fetch(`https://api.github.com/repos/${githubRepository}/contents/${encodedPath}?ref=${encodeURIComponent(githubBranch)}`, {
@@ -254,11 +253,15 @@ app.get('/api/pages/:id/file', async (req, res) => {
   const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
-  res.set('Cache-Control', 'no-store');
-  if (!page.changes?.length) return res.sendFile(path.join(uploadDir, page.fileName));
+  res.set({
+    'Cache-Control': 'no-store',
+    'Content-Type': 'image/svg+xml; charset=utf-8'
+  });
+
   const cacheKey = `${page.id}:${page.updatedAt || ''}`;
   const cached = renderedSvgCache.get(cacheKey);
-  if (cached) return res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(cached);
+  if (cached) return res.end(cached);
+
   let source;
   try {
     source = await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
@@ -268,10 +271,14 @@ app.get('/api/pages/:id/file', async (req, res) => {
       : null;
   }
   if (typeof source !== 'string') return res.sendStatus(404);
-  const file = Buffer.from(applyTextChanges(source, page.changes || []));
+
+  const file = page.changes?.length
+    ? Buffer.from(applyTextChanges(source, page.changes || []))
+    : Buffer.from(source);
+
   renderedSvgCache.clear();
   renderedSvgCache.set(cacheKey, file);
-  res.set('Content-Type', 'image/svg+xml; charset=utf-8').end(file);
+  res.end(file);
 });
 
 app.get('/api/pages/:id/preview', async (req, res) => {
