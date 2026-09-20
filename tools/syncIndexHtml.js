@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { getMenuSections, generateSchemaGraph, renderHtmlMenu, renderQuickFacts } = require('../menuData');
+const { getMenuSections, generateSchemaGraph } = require('../menuData');
 
 function syncIndexHtml() {
   const root = path.join(__dirname, '..');
@@ -35,37 +35,27 @@ function syncIndexHtml() {
           return `<figure class="svg-page"><img src="${base}?w=1024&v=${version}" srcset="${base}?w=640&v=${version} 640w, ${base}?w=1024&v=${version} 1024w, ${base}?w=1600&v=${version} 1600w, ${base}?w=2400&v=${version} 2400w" sizes="(max-width: 700px) 100vw, min(1100px, 100vw)" width="1054" height="1492" alt="${altText}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"></figure>`;
         }).join('\n      ');
 
-        const pagesRegex = /<div id="pages" class="svg-pages">[\s\S]*?<\/div>/i;
-        content = content.replace(pagesRegex, `<div id="pages" class="svg-pages">\n      ${pagesHtml}\n    </div>`);
+        const mainRegex = /<main class="svg-viewer" id="mainContent">[\s\S]*?<\/main>/i;
+        content = content.replace(mainRegex, `<main class="svg-viewer" id="mainContent">\n    <div id="pages" class="svg-pages">\n      ${pagesHtml}\n    </div>\n  </main>`);
       }
     } catch (e) {
       console.error('Error pre-rendering pages:', e);
     }
   }
 
-  // 3. Replace or inject SEO / GEO Semantic Container
-  const renderedMenu = renderHtmlMenu(sections);
-  const renderedQuickFacts = renderQuickFacts();
-
-  const newGeoContainer = `<aside class="seo-semantic-container" aria-label="قائمة طعام وتفاصيل مطعم فالح أبو العنبة المكتوبة">
-      <details class="seo-menu-accordion" open>
-        <summary class="seo-menu-summary"><i class="fas fa-utensils" aria-hidden="true"></i> تفاصيل المنيو وقائمة الأسعار المكتوبة (Machine-Readable Menu)</summary>
-        <div class="seo-menu-body">
-          ${renderedQuickFacts}
-          ${renderedMenu}
-        </div>
-      </details>
-    </aside>`;
-
-  const geoRegex = /<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i;
+  // 3. Remove any visual SEO / GEO semantic container or accordion from Customer UI
+  const geoRegex = /<!-- Crawlable Semantic Menu Content[\s\S]*?<\/aside>/i;
   if (geoRegex.test(content)) {
-    content = content.replace(geoRegex, newGeoContainer);
+    content = content.replace(geoRegex, '');
   } else {
-    content = content.replace('</main>', `  ${newGeoContainer}\n  </main>`);
+    content = content.replace(/<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i, '');
   }
 
+  // Clean any trailing whitespace or duplicated closing tags in main
+  content = content.replace(/<\/div><p>جاري تحميل المنيو\.\.\.<\/p><\/div>/g, '');
+
   fs.writeFileSync(indexPath, content, 'utf8');
-  console.log('Successfully synced public/index.html with pre-rendered pages, GEO structured data and dynamic menu!');
+  console.log('Successfully synced public/index.html: Clean minimal customer UI + full background Schema.org!');
 }
 
 if (require.main === module) {

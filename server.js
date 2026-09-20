@@ -64,7 +64,7 @@ app.use('/previews', express.static(path.join(root, 'previews'), {
 }));
 
 // Real-time GEO and Schema.org synchronization for customer homepage
-const { getMenuSections, generateSchemaGraph, renderHtmlMenu, renderQuickFacts } = require('./menuData');
+const { getMenuSections, generateSchemaGraph } = require('./menuData');
 
 app.get('/', async (req, res) => {
   try {
@@ -75,20 +75,7 @@ app.get('/', async (req, res) => {
     const jsonLd = JSON.stringify(schema, null, 2);
 
     content = content.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">\n${jsonLd}\n  </script>`);
-
-    const renderedMenu = renderHtmlMenu(sections);
-    const renderedQuickFacts = renderQuickFacts();
-    const geoContainer = `<aside class="seo-semantic-container" aria-label="قائمة طعام وتفاصيل مطعم فالح أبو العنبة المكتوبة">
-      <details class="seo-menu-accordion" open>
-        <summary class="seo-menu-summary"><i class="fas fa-utensils" aria-hidden="true"></i> تفاصيل المنيو وقائمة الأسعار المكتوبة (Machine-Readable Menu)</summary>
-        <div class="seo-menu-body">
-          ${renderedQuickFacts}
-          ${renderedMenu}
-        </div>
-      </details>
-    </aside>`;
-
-    content = content.replace(/<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i, geoContainer);
+    content = content.replace(/<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i, '');
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
