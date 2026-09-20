@@ -376,7 +376,6 @@ h1 { margin-bottom:8px; font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; }
 
 /* Geo menu wrapper (from menuData.js renderHtmlMenu) — make it look great */
 .geo-menu-wrapper { width: 100%; }
-.geo-menu-header { display: none; } /* Title already in section header */
 .geo-sections-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -495,12 +494,12 @@ h1 { margin-bottom:8px; font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; }
 
 /* Responsive tweaks */
 @media (max-width: 480px) {
-  .about-header { padding: .6rem .9rem; }
-  .about-back-btn span { display: none; }
+  .about-header { padding: .6rem .75rem; }
+  .about-back-btn { padding: .4rem .7rem; font-size: .8rem; }
   .about-hero { padding: 2rem 1rem 1.75rem; }
   .about-hero-title { font-size: 1.6rem; }
-  .about-social-nav { gap: .6rem; }
-  .about-social-icon { width: 36px; height: 36px; font-size: .9rem; }
+  .about-social-nav { gap: .5rem; }
+  .about-social-icon { width: 34px; height: 34px; font-size: .85rem; }
   .about-footer-nav { gap: 1rem; }
 }
 

@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 
 function cleanText(txt) {
@@ -137,11 +137,11 @@ function parsePage2(svgContent) {
       let mealDesc = "وجبة متكاملة تشمل أرز وبطاطس وسلطات وخبز";
       
       if (cleanName.includes("اقتصادية ورك")) {
-        mealDesc = "ربع دجاجة (ورك) مشوية على الفحم، تقدم مع أرز، بطاطس، طعمية، مخلل، سحاوي (دقوس)، وخبز الصمون العراقي";
+        mealDesc = "ربع دجاجة (ورك) مشوية على الفحم، تقدم مع أرز، بطاطس، تومية، مخلل، سحاوي (دقوس)، وخبز الصمون العراقي";
       } else if (cleanName.includes("اقتصادية صدر")) {
-        mealDesc = "ربع دجاجة (صدر) مشوية على الفحم، تقدم مع أرز، بطاطس، طعمية، مخلل، سحاوي (دقوس)، وخبز الصمون العراقي";
+        mealDesc = "ربع دجاجة (صدر) مشوية على الفحم، تقدم مع أرز، بطاطس، تومية، مخلل، سحاوي (دقوس)، وخبز الصمون العراقي";
       } else if (cleanName.includes("كبسة") || cleanName.includes("كابسة")) {
-        mealDesc = "نصف دجاجة مشوية على الفحم، تقدم مع أرز، بطاطس، سلطات (طعمية، مخلل، سحاوي)، وخبز الصمون";
+        mealDesc = "نصف دجاجة مشوية على الفحم، تقدم مع أرز، بطاطس، سلطات (تومية، مخلل، سحاوي)، وخبز الصمون";
       } else if (cleanName.includes("عائلية مسحب")) {
         mealDesc = "دجاجة كاملة مخلية من العظم مشوية على الفحم، تقدم مع أرز، بطاطس، تشكيلة سلطات، وخبز الصمون";
       } else if (cleanName.includes("عائلية شيش")) {
@@ -263,17 +263,20 @@ function parsePage2(svgContent) {
     const p3 = texts[i + 3];
 
     if (name.startsWith('طبق')) {
+      // SVG columns order: كبير | وسط | صغير → p1=كبير, p2=وسط, p3=صغير
       const variants = [];
-      if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
-      if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
       if (/^\d+$/.test(p1)) variants.push({ name: "كبير", price: p1 });
+      if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
+      if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
 
-      const price = variants.length > 0 ? variants[0].price : "30";
+      // Display price = cheapest (صغير = last in array), priceMax = most expensive (كبير = first)
+      const displayPrice = variants.length > 0 ? variants[variants.length - 1].price : "0";
+      const displayPriceMax = variants.length > 1 ? variants[0].price : undefined;
       platterItems.push({
         name,
-        price,
-        priceMax: variants.length > 1 ? variants[variants.length - 1].price : undefined,
-        description: `${name} بأحجام مختلفة`,
+        price: displayPrice,
+        priceMax: displayPriceMax,
+        description: `${name} — متوفر بأحجام مختلفة`,
         variants: variants.length > 1 ? variants : undefined
       });
       i += 4;
@@ -301,16 +304,18 @@ function parsePage2(svgContent) {
     const p2 = texts[i + 2];
     const p3 = texts[i + 3];
 
+    // SVG columns: كبير | وسط | صغير → p1=كبير, p2=وسط, p3=صغير
     const variants = [];
-    if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
-    if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
     if (/^\d+$/.test(p1)) variants.push({ name: "كبير", price: p1 });
+    if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
+    if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
 
     if (variants.length > 0) {
+      // Display price = cheapest (last), priceMax = most expensive (first)
       appetizerItems.push({
         name,
-        price: variants[0].price,
-        priceMax: variants.length > 1 ? variants[variants.length - 1].price : undefined,
+        price: variants[variants.length - 1].price,
+        priceMax: variants.length > 1 ? variants[0].price : undefined,
         description: `مقبلات عراقية طازجة (${name})`,
         variants: variants.length > 1 ? variants : undefined
       });
@@ -340,14 +345,15 @@ function parsePage2(svgContent) {
     const p3 = texts[i + 3];
 
     if (/^\d+$/.test(p1) || /^\d+$/.test(p2) || /^\d+$/.test(p3)) {
+      // SVG columns: كبير | وسط | صغير → p1=كبير, p2=وسط, p3=صغير
       const variants = [];
-      if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
-      if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
       if (/^\d+$/.test(p1)) variants.push({ name: "كبير", price: p1 });
+      if (/^\d+$/.test(p2)) variants.push({ name: "وسط", price: p2 });
+      if (/^\d+$/.test(p3)) variants.push({ name: "صغير", price: p3 });
       pastaItems.push({
         name: name === 'الأرز' ? 'طبق أرز' : name,
-        price: variants[0].price,
-        priceMax: variants.length > 1 ? variants[variants.length - 1].price : undefined,
+        price: variants[variants.length - 1].price, // cheapest = صغير
+        priceMax: variants.length > 1 ? variants[0].price : undefined, // most expensive = كبير
         description: `${name} شهي وساخن`,
         variants: variants.length > 1 ? variants : undefined
       });
@@ -517,7 +523,7 @@ function generateSchemaGraph(sections) {
         "url": `${baseUrl}/`,
         "telephone": ["+201000602832", "+201144741115"],
         "servesCuisine": ["Iraqi", "Middle Eastern", "Sandwiches", "Grill"],
-        "priceRange": "$$",
+        "priceRange": "$",
         "currenciesAccepted": "EGP",
         "paymentAccepted": "Cash, Credit Card, Visa, InstaPay, Mobile Wallets",
         "openingHoursSpecification": [
@@ -564,16 +570,11 @@ function generateSchemaGraph(sections) {
 
 function renderHtmlMenu(sections) {
   let html = `<div class="geo-menu-wrapper" itemscope itemtype="https://schema.org/Menu">
-    <header class="geo-menu-header">
-      <h1 itemprop="name">منيو مطعم فالح أبو العنبة الرسمي (منذ 1961)</h1>
-      <p class="geo-tagline" itemprop="description">أكل ومطعم عراقي في مصر - ألذ سندوتشات صمون ومشويات ووجبات على أصولها بالأسعار الرسمية المعتمدة</p>
-    </header>
-
     <div class="geo-sections-grid">`;
 
   for (const sec of sections) {
     html += `\n      <section class="geo-menu-section" id="${sec.id}" itemscope itemtype="https://schema.org/MenuSection">
-        <h2 class="geo-section-title" itemprop="name">${sec.name}</h2>
+        <h3 class="geo-section-title" itemprop="name">${sec.name}</h3>
         ${sec.description ? `<p class="geo-section-desc" itemprop="description">${sec.description}</p>` : ''}
         <ul class="geo-items-list">`;
 
