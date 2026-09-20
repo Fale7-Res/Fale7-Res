@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Allow: /api/menu
+Allow: /api/menu/data
 Allow: /api/pages/*/preview.webp
 Allow: /previews/
 Disallow: /admin

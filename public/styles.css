@@ -110,3 +110,32 @@ h1 { margin-bottom:8px; font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; }
 .seo-menu-body li { margin-bottom:.3rem; }
 .noscript-menu { padding:1.5rem; text-align:center; color:#b91c1c; background:#fee2e2; border-radius:8px; margin:1rem; }
 
+/* Generative Engine Optimization (GEO) & Semantic Presentation */
+.geo-quick-facts { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+.geo-quick-facts h2 { font-size: 1.1rem; color: #1e293b; margin-top: 0; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; }
+.geo-facts-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem; margin: 0; }
+.geo-fact-item { background: #f8fafc; border-radius: 6px; padding: 0.6rem 0.85rem; border: 1px solid #edf2f7; }
+.geo-fact-item dt { font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; font-size: 0.85rem; }
+.geo-fact-item dd { margin: 0; color: #475569; font-size: 0.85rem; line-height: 1.5; }
+.geo-fact-item dd a { color: #2563eb; text-decoration: none; }
+.geo-fact-item dd a:hover { text-decoration: underline; }
+
+.geo-sections-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; }
+.geo-menu-section { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; }
+.geo-section-title { font-size: 1.1rem; color: #1e293b; margin: 0 0 0.35rem 0; border-bottom: 2px solid #3b82f6; padding-bottom: 0.4rem; }
+.geo-section-desc { font-size: 0.8rem; color: #64748b; margin-bottom: 0.75rem; }
+.geo-items-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.geo-item-card { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.6rem; border-radius: 6px; background: #f8fafc; border: 1px solid #f1f5f9; gap: 0.5rem; }
+.geo-item-main { display: flex; flex-direction: column; }
+.geo-item-name { font-weight: 600; color: #1e293b; font-size: 0.9rem; }
+.geo-item-desc { font-size: 0.75rem; color: #64748b; }
+.geo-item-price { white-space: nowrap; }
+.price-val { color: #059669; font-size: 0.95rem; }
+.price-curr { font-size: 0.75rem; color: #64748b; margin-right: 2px; }
+.geo-item-variants { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+.geo-variant { font-size: 0.75rem; background: #edf2f7; padding: 0.15rem 0.4rem; border-radius: 4px; white-space: nowrap; }
+.variant-type { color: #475569; }
+.variant-price { color: #059669; font-weight: 700; margin: 0 2px; }
+.variant-currency { color: #64748b; font-size: 0.7rem; }
+
+

@@ -45,120 +45,2040 @@
 
   <!-- Structured Data: Restaurant, Menu, WebSite, Breadcrumbs -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://fale7-res.vercel.app/#website",
-        "url": "https://fale7-res.vercel.app/",
-        "name": "فالح أبو العنبة",
-        "description": "منيو مطعم فالح أبو العنبة الرسمي - ألذ سندوتشات ومشويات على أصولها",
-        "inLanguage": "ar"
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://fale7-res.vercel.app/#website",
+      "url": "https://fale7-res.vercel.app/",
+      "name": "فالح أبو العنبة",
+      "description": "منيو سندوتشات ومأكولات مطعم فالح أبو العنبة الرسمي - ألذ سندوتشات ومشويات على أصولها",
+      "inLanguage": "ar"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://fale7-res.vercel.app/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "الرئيسية",
+          "item": "https://fale7-res.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "المنيو وقائمة الطعام",
+          "item": "https://fale7-res.vercel.app/#menu"
+        }
+      ]
+    },
+    {
+      "@type": "Restaurant",
+      "@id": "https://fale7-res.vercel.app/#restaurant",
+      "name": "مطعم فالح أبو العنبة",
+      "alternateName": [
+        "فالح أبو العنبة",
+        "Fale7 Restaurant",
+        "مطعم فالح 1961"
+      ],
+      "description": "مطعم متخصص في تقديم سندوتشات الفلافل، اللحوم والمشويات، الكفتة، الشيش طاووق، البرجر، الوجبات العائلية، الدجاج، والمعجنات بالإسماعيلية.",
+      "url": "https://fale7-res.vercel.app/",
+      "telephone": [
+        "+201000602832",
+        "+201144741115"
+      ],
+      "servesCuisine": [
+        "Egyptian",
+        "Fast Food",
+        "Sandwiches",
+        "Grill"
+      ],
+      "priceRange": "$",
+      "currenciesAccepted": "EGP",
+      "paymentAccepted": "Cash",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Ismailia",
+        "addressRegion": "Ismailia Governorate",
+        "addressCountry": "EG"
       },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://fale7-res.vercel.app/#breadcrumb",
-        "itemListElement": [
+      "hasMap": "https://maps.app.goo.gl/DqNEo521pyEbMpD49",
+      "sameAs": [
+        "https://www.facebook.com/share/1FTjzqpHv8/",
+        "https://www.tiktok.com/@fale7_1961",
+        "https://maps.app.goo.gl/DqNEo521pyEbMpD49"
+      ],
+      "image": "https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp",
+      "hasMenu": {
+        "@type": "Menu",
+        "@id": "https://fale7-res.vercel.app/#menu",
+        "name": "قائمة طعام ومنيو مطعم فالح أبو العنبة",
+        "inLanguage": "ar",
+        "hasMenuSection": [
           {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "الرئيسية",
-            "item": "https://fale7-res.vercel.app/"
+            "@type": "MenuSection",
+            "name": "سندوتشات فالح",
+            "description": "سندوتشات فالح متوفرة بخبز فرنساوي، صاج، أو صمون",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "فلافل",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "فلافل (صمون)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "فلافل (صاج)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "فلافل (فرنساوي)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بطاطس",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس (صمون)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس (صاج)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس (فرنساوي)",
+                    "price": "35",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكس (بطاطس + فلافل)",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "مكس (بطاطس + فلافل) (صمون)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكس (بطاطس + فلافل) (صاج)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكس (بطاطس + فلافل) (فرنساوي)",
+                    "price": "35",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكس باذنجان",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "مكس باذنجان (صمون)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكس باذنجان (صاج)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكس باذنجان (فرنساوي)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكس فالح",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "مكس فالح (صمون)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكس فالح (صاج)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكس فالح (فرنساوي)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بطاطس رومي",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس رومي (صمون)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس رومي (صاج)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس رومي (فرنساوي)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بطاطس موزاريلا",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس موزاريلا (صمون)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس موزاريلا (صاج)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس موزاريلا (فرنساوي)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بطاطس شيدر",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس شيدر (صمون)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس شيدر (صاج)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس شيدر (فرنساوي)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بطاطس 2 نوع جبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس 2 نوع جبنة (صمون)",
+                    "price": "55",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس 2 نوع جبنة (صاج)",
+                    "price": "55",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس 2 نوع جبنة (فرنساوي)",
+                    "price": "60",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بطاطس 3 نوع جبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس 3 نوع جبنة (صمون)",
+                    "price": "65",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس 3 نوع جبنة (صاج)",
+                    "price": "65",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بطاطس 3 نوع جبنة (فرنساوي)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "أومليت ساده",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "أومليت ساده (صمون)",
+                    "price": "35",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "أومليت ساده (صاج)",
+                    "price": "35",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "أومليت ساده (فرنساوي)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "أومليت جبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "أومليت جبنة (صمون)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "أومليت جبنة (صاج)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "أومليت جبنة (فرنساوي)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بيض بالبسطرمة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بيض بالبسطرمة (صمون)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بيض بالبسطرمة (صاج)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بيض بالبسطرمة (فرنساوي)",
+                    "price": "65",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "كبيبة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "كبيبة (صمون)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كبيبة (صاج)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كبيبة (فرنساوي)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "جبنة مقلية",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "جبنة مقلية (صمون)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "جبنة مقلية (صاج)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "جبنة مقلية (فرنساوي)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "لبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "لبنة (صمون)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "لبنة (صاج)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "لبنة (فرنساوي)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              }
+            ]
           },
           {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "المنيو وقائمة الطعام",
-            "item": "https://fale7-res.vercel.app/#menu"
+            "@type": "MenuSection",
+            "name": "سندوتشات اللحوم والمشويات",
+            "description": "تشكيلة لحوم ومشويات طازجة بخبز فرنساوي، صاج، أو صمون",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "كفتة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "كفتة موزاريلا",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة موزاريلا (صمون)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة موزاريلا (صاج)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة موزاريلا (فرنساوي)",
+                    "price": "105",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "شيش",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "شيش (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "شيش (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "شيش (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "شيش موزاريلا",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "شيش موزاريلا (صمون)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "شيش موزاريلا (صاج)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "شيش موزاريلا (فرنساوي)",
+                    "price": "105",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "كبدة جريل",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "كبدة جريل (صمون)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كبدة جريل (صاج)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كبدة جريل (فرنساوي)",
+                    "price": "75",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "برجر",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "برجر (صمون)",
+                    "price": "80",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر (صاج)",
+                    "price": "80",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر (فرنساوي)",
+                    "price": "85",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "برجر بالجبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "برجر بالجبنة (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر بالجبنة (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر بالجبنة (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "برجر بالبيض",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "برجر بالبيض (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر بالبيض (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر بالبيض (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "برجر كينج (بيض + جبنة)",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "برجر كينج (بيض + جبنة) (صمون)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر كينج (بيض + جبنة) (صاج)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "برجر كينج (بيض + جبنة) (فرنساوي)",
+                    "price": "105",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بانيه بلدي",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بانيه بلدي (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بانيه بلدي (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بانيه بلدي (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بانيه بالجبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بانيه بالجبنة (صمون)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بانيه بالجبنة (صاج)",
+                    "price": "100",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بانيه بالجبنة (فرنساوي)",
+                    "price": "105",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "كريسبي",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "كريسبي (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كريسبي (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كريسبي (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "زنجر",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "زنجر (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "زنجر (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "زنجر (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكسيكان",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "مكسيكان (صمون)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكسيكان (صاج)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "مكسيكان (فرنساوي)",
+                    "price": "75",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فاهيتا فراخ",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "فاهيتا فراخ (صمون)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "فاهيتا فراخ (صاج)",
+                    "price": "90",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "فاهيتا فراخ (فرنساوي)",
+                    "price": "95",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "بيض باللحمة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "بيض باللحمة (صمون)",
+                    "price": "75",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بيض باللحمة (صاج)",
+                    "price": "75",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "بيض باللحمة (فرنساوي)",
+                    "price": "80",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "وجبات فالح المتكاملة",
+            "description": "وجبات تشمل أرز وبطاطس وسلطات وخبز",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "وجبة اقتصادية ورك",
+                "description": "أرز وبطاطس وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "110",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة اقتصادية صدر",
+                "description": "أرز وبطاطس وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "140",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة كبسة",
+                "description": "كبسة مع صوص وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "190",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة عائلية",
+                "description": "تشكيلة وجبة عائلية مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "380",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة عائلية مسحب",
+                "description": "دجاج مسحب عائلي مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "390",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة مسحب",
+                "description": "دجاج مسحب مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "200",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة عائلية شيش",
+                "description": "شيش طاووق عائلي مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "385",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة موفرة ورك",
+                "description": "أرز وبطاطس وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "170",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة موفرة صدر",
+                "description": "أرز وبطاطس وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "180",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة كفتة",
+                "description": "كفتة مشوية مع أرز وبطاطس وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "170",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة شيش",
+                "description": "شيش طاووق مع أرز وبطاطس وسلطات وخبز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "170",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة شيش + كفتة",
+                "description": "مكس شيش وكفتة مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "170",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة مكس جريل ورك",
+                "description": "مكس جريل ورك مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "220",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة مكس جريل صدر",
+                "description": "مكس جريل صدر مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "230",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "وجبة بانيه / زنجر / كرسبي / فاهيتا",
+                "description": "اختيارك من الدجاج المقلي أو الفاهيتا مع أرز وبطاطس وسلطات",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "175",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "مشويات فالح على الفحم",
+            "description": "تقدم مع خبز وسلطات فقط بدون أرز وبطاطس",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "ربع فرخة ورك مشوي",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "100",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "ربع فرخة صدر مشوي",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "120",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "نصف فرخة مشوية",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "165",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "نصف فرخة شيش",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "170",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "نصف فرخة مسحب",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "170",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فرخة مسحب كاملة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "350",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فرخة فحم كاملة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "340",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فرخة شيش كاملة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "345",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "كفتة مشوية",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة مشوية (ربع كيلو)",
+                    "price": "150",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة مشوية (نصف كيلو)",
+                    "price": "300",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "كفتة مشوية (كيلو)",
+                    "price": "600",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "شيش طاووق مشوي",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "شيش طاووق مشوي (ربع كيلو)",
+                    "price": "150",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "شيش طاووق مشوي (نصف كيلو)",
+                    "price": "300",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "شيش طاووق مشوي (كيلو)",
+                    "price": "600",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "المعجنات والفطائر",
+            "description": "فطائر طازجة مخبوزة بأجود المكونات",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة جبنة بيضاء",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة جبنة رومي",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة جبنة شيدر",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة جبنة كيري",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "لحمة بعجين",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "20",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة سوسيس",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة سبانخ",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة زعتر",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فطيرة زعتر جبنة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "20",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مسخن",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "50",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "أطباق فالح",
+            "description": "أطباق مقبلات وإفطار بأحجام مختلفة (صغير - وسط - كبير)",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "طبق فلافل (5 حبات)",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق فلافل (5 حبات) (صغير)",
+                    "price": "5",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق فلافل (5 حبات) (وسط)",
+                    "price": "10",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق فلافل (5 حبات) (كبير)",
+                    "price": "15",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق بطاطس",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بطاطس (صغير)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بطاطس (وسط)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بطاطس (كبير)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق أومليت سادة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أومليت سادة (صغير)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أومليت سادة (وسط)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أومليت سادة (كبير)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق أومليت بالجبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أومليت بالجبنة (صغير)",
+                    "price": "40",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أومليت بالجبنة (وسط)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أومليت بالجبنة (كبير)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق بيض بالبسطرمة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بيض بالبسطرمة (صغير)",
+                    "price": "50",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بيض بالبسطرمة (وسط)",
+                    "price": "60",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بيض بالبسطرمة (كبير)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق كبيبة (3 قطع)",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "90",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق باذنجان",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق باذنجان (صغير)",
+                    "price": "15",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق باذنجان (وسط)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق باذنجان (كبير)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق بطاطس بالجبنة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بطاطس بالجبنة (صغير)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بطاطس بالجبنة (وسط)",
+                    "price": "55",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق بطاطس بالجبنة (كبير)",
+                    "price": "60",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق كبدة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق كبدة (صغير)",
+                    "price": "70",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق كبدة (كبير)",
+                    "price": "120",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طبق لبنة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "30",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "المقبلات والسلطات",
+            "description": "مقبلات وسلطات طازجة متنوعة",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "عنبة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "عنبة (صغير)",
+                    "price": "15",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "عنبة (وسط)",
+                    "price": "20",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "عنبة (كبير)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مسبحة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "25",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "طحينة",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طحينة (وسط)",
+                    "price": "15",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طحينة (كبير)",
+                    "price": "25",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "سلطة خضراء",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "سلطة خضراء (وسط)",
+                    "price": "20",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "سلطة خضراء (كبير)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "ثومية",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "ثومية (وسط)",
+                    "price": "15",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "ثومية (كبير)",
+                    "price": "30",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "حبة كبيبة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "30",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "الأرز والمكرونة",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "طبق أرز",
+                "inLanguage": "ar",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أرز (صغير)",
+                    "price": "35",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أرز (وسط)",
+                    "price": "45",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "طبق أرز (كبير)",
+                    "price": "55",
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكرونة بشاميل",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "50",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكرونة نجرسكو",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "50",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "المشروبات والإضافات",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "مياه معدنية",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "10",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مشروب كانز (أنواع)",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "25",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مشروب لتر (أنواع)",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "35",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة بيض",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "10",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة باذنجان",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "5",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة مسبحة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "5",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة لبنة",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "5",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة جبنة رومي",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة جبنة شيدر",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "إضافة جبنة موزاريلا",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "15",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "الأكثر طلباً",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "فلافل صمون",
+                "description": "سندوتش فلافل بخبز الصمون المميز",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "25",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "مكس صمون",
+                "description": "مكس بطاطس وفلافل بخبز الصمون",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "30",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "فاهيتا فراخ",
+                "description": "فاهيتا فراخ مميزة مع خضار",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "90",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              },
+              {
+                "@type": "MenuItem",
+                "name": "كفتة صمون",
+                "description": "كفتة مشوية على الفحم بخبز الصمون",
+                "inLanguage": "ar",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "90",
+                  "priceCurrency": "EGP",
+                  "availability": "https://schema.org/InStock"
+                }
+              }
+            ]
           }
         ]
-      },
-      {
-        "@type": "Restaurant",
-        "@id": "https://fale7-res.vercel.app/#restaurant",
-        "name": "فالح أبو العنبة",
-        "alternateName": ["Fale7 Restaurant", "مطعم فالح أبو العنبة"],
-        "description": "مطعم فالح أبو العنبة - ألذ سندوتشات ومشويات على أصولها. تشكيلة مميزة من سندوتشات فالح وسندوتشات اللحوم والكفتة والبرجر والفراخ.",
-        "url": "https://fale7-res.vercel.app/",
-        "telephone": ["+201000602832", "+201144741115"],
-        "servesCuisine": ["Egyptian", "Fast Food", "Sandwiches", "Grill"],
-        "priceRange": "$$",
-        "currenciesAccepted": "EGP",
-        "paymentAccepted": "Cash",
-        "hasMap": "https://maps.app.goo.gl/DqNEo521pyEbMpD49",
-        "sameAs": [
-          "https://www.facebook.com/share/1FTjzqpHv8/",
-          "https://www.tiktok.com/@fale7_1961",
-          "https://maps.app.goo.gl/DqNEo521pyEbMpD49"
-        ],
-        "image": "https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp",
-        "hasMenu": {
-          "@type": "Menu",
-          "@id": "https://fale7-res.vercel.app/#menu",
-          "name": "قائمة طعام مطعم فالح",
-          "inLanguage": "ar",
-          "hasMenuSection": [
-            {
-              "@type": "MenuSection",
-              "name": "سندوتشات فالح",
-              "description": "سندوتشات فالح متوفرة بخبز فرنساوي، صاج، أو صمون",
-              "hasMenuItem": [
-                { "@type": "MenuItem", "name": "فلافل", "offers": { "@type": "Offer", "price": "25", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بطاطس", "offers": { "@type": "Offer", "price": "30", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "مكس (بطاطس + فلافل)", "offers": { "@type": "Offer", "price": "30", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "مكس باذنجان", "offers": { "@type": "Offer", "price": "40", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "مكس فالح", "offers": { "@type": "Offer", "price": "40", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بطاطس رومي", "offers": { "@type": "Offer", "price": "45", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بطاطس موزاريلا", "offers": { "@type": "Offer", "price": "45", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بطاطس شيدر", "offers": { "@type": "Offer", "price": "45", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بطاطس 2 نوع جبنة", "offers": { "@type": "Offer", "price": "55", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بطاطس 3 نوع جبنة", "offers": { "@type": "Offer", "price": "65", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "أومليت ساده", "offers": { "@type": "Offer", "price": "30", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "أومليت جبنة", "offers": { "@type": "Offer", "price": "40", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بيض بالبسطرمة", "offers": { "@type": "Offer", "price": "50", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "كبيبة", "offers": { "@type": "Offer", "price": "45", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "جبنة مقلية", "offers": { "@type": "Offer", "price": "40", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "لبنة", "offers": { "@type": "Offer", "price": "35", "priceCurrency": "EGP" } }
-              ]
-            },
-            {
-              "@type": "MenuSection",
-              "name": "سندوتشات اللحوم والمشويات",
-              "description": "تشكيلة لحوم طازجة ومشويات على أصولها",
-              "hasMenuItem": [
-                { "@type": "MenuItem", "name": "كفتة", "offers": { "@type": "Offer", "price": "90", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "كفتة موزاريلا", "offers": { "@type": "Offer", "price": "100", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "شيش", "offers": { "@type": "Offer", "price": "90", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "شيش موزاريلا", "offers": { "@type": "Offer", "price": "100", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "كبدة جريل", "offers": { "@type": "Offer", "price": "75", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "برجر", "offers": { "@type": "Offer", "price": "80", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "برجر بالجبنة", "offers": { "@type": "Offer", "price": "85", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "برجر بالبيض", "offers": { "@type": "Offer", "price": "85", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "برجر كينج (بيض + جبنة)", "offers": { "@type": "Offer", "price": "95", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بانيه بلدي", "offers": { "@type": "Offer", "price": "80", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بانيه بالجبنة", "offers": { "@type": "Offer", "price": "90", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "كريسبي", "offers": { "@type": "Offer", "price": "80", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "زنجر", "offers": { "@type": "Offer", "price": "80", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "مكسيكان", "offers": { "@type": "Offer", "price": "80", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "فاهيتا فراخ", "offers": { "@type": "Offer", "price": "80", "priceCurrency": "EGP" } },
-                { "@type": "MenuItem", "name": "بيض باللحمة", "offers": { "@type": "Offer", "price": "60", "priceCurrency": "EGP" } }
-              ]
-            },
-            {
-              "@type": "MenuSection",
-              "name": "الأكثر طلباً",
-              "hasMenuItem": [
-                { "@type": "MenuItem", "name": "فلافل صمون" },
-                { "@type": "MenuItem", "name": "مكس صمون" },
-                { "@type": "MenuItem", "name": "كفتة صمون" }
-              ]
-            }
-          ]
-        }
       }
-    ]
-  }
+    }
+  ]
+}
   </script>
 </head>
 <body class="client-body">
@@ -182,66 +2102,1705 @@
     </div>
 
     <!-- Crawlable Semantic Menu Content for Search Engines & Accessibility -->
-    <aside class="seo-semantic-container" aria-label="قائمة طعام وتفاصيل مطعم فالح المكتوبة">
-      <details class="seo-menu-accordion">
-        <summary class="seo-menu-summary"><i class="fas fa-utensils" aria-hidden="true"></i> تفاصيل المنيو وقائمة الأسعار المكتوبة</summary>
+    <aside class="seo-semantic-container" aria-label="قائمة طعام وتفاصيل مطعم فالح أبو العنبة المكتوبة">
+      <details class="seo-menu-accordion" open>
+        <summary class="seo-menu-summary"><i class="fas fa-utensils" aria-hidden="true"></i> تفاصيل المنيو وقائمة الأسعار المكتوبة (Machine-Readable Menu)</summary>
         <div class="seo-menu-body">
-          <header>
-            <h1>منيو مطعم فالح أبو العنبة</h1>
-            <p class="tagline">ألذ سندوتشات ومشويات على أصولها</p>
-          </header>
+          <section class="geo-quick-facts" id="restaurant-facts" aria-label="معلومات وحقائق سريعة عن مطعم فالح أبو العنبة">
+    <h2>معلومات مطعم فالح أبو العنبة وإجابات سريعة (Facts & Overview)</h2>
+    <dl class="geo-facts-list">
+      <div class="geo-fact-item">
+        <dt>اسم المطعم الرسمي:</dt>
+        <dd>سندوتشات ومأكولات مطعم فالح أبو العنبة (فالح أبو العنبة)</dd>
+      </div>
+      <div class="geo-fact-item">
+        <dt>نوع المأكولات (Cuisine):</dt>
+        <dd>مأكولات مصرية، سندوتشات فلافل وبطاطس، مشويات على الفحم، كفتة، شيش طاووق، برجر، وجبات عائلية، معجنات، مقبلات.</dd>
+      </div>
+      <div class="geo-fact-item">
+        <dt>أرقام خدمة التوصيل والدليفري (Delivery Phones):</dt>
+        <dd>
+          <a href="tel:01000602832" dir="ltr">0100 060 2832</a> / 
+          <a href="tel:01144741115" dir="ltr">0114 474 1115</a>
+        </dd>
+      </div>
+      <div class="geo-fact-item">
+        <dt>الموقع الجغرافي والعنوان:</dt>
+        <dd>محافظة الإسماعيلية، جمهورية مصر العربية - <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" rel="noopener noreferrer">عرض الموقع المباشر على خرائط جوجل</a></dd>
+      </div>
+      <div class="geo-fact-item">
+        <dt>طرق الدفع والعملة:</dt>
+        <dd>الدفع نقدًا (Cash) بالجنيه المصري (EGP).</dd>
+      </div>
+      <div class="geo-fact-item">
+        <dt>منصات التواصل الرسمية:</dt>
+        <dd>
+          <a href="https://www.facebook.com/share/1FTjzqpHv8/" target="_blank" rel="noopener noreferrer">فيسبوك (Facebook)</a> | 
+          <a href="https://www.tiktok.com/@fale7_1961" target="_blank" rel="noopener noreferrer">تيك توك (TikTok)</a>
+        </dd>
+      </div>
+    </dl>
+  </section>
+          <div class="geo-menu-wrapper" itemscope itemtype="https://schema.org/Menu">
+    <header class="geo-menu-header">
+      <h1 itemprop="name">منيو مطعم فالح أبو العنبة الرسمي</h1>
+      <p class="geo-tagline" itemprop="description">ألذ سندوتشات ومشويات ووجبات على أصولها - الأسعار الرسمية المعتمدة</p>
+    </header>
 
-          <section>
-            <h2>خدمة التوصيل والطلب</h2>
-            <p>أرقام الدليفري والتوصيل المباشر: <a href="tel:01000602832" dir="ltr">0100 060 2832</a> - <a href="tel:01144741115" dir="ltr">0114 474 1115</a></p>
-            <p>الموقع الجغرافي: <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" rel="noopener noreferrer">عرض المطعم على خرائط جوجل</a></p>
-          </section>
-
-          <section>
-            <h2>سندوتشات فالح (فرنساوي - صاج - صمون)</h2>
-            <ul>
-              <li>فلافل: 25 - 30 ج.م</li>
-              <li>بطاطس: 30 - 35 ج.م</li>
-              <li>مكس (بطاطس + فلافل): 30 - 35 ج.م</li>
-              <li>مكس باذنجان: 40 - 45 ج.م</li>
-              <li>مكس فالح: 40 - 45 ج.م</li>
-              <li>بطاطس رومي: 45 - 50 ج.م</li>
-              <li>بطاطس موزاريلا / شيدر: 45 ج.م</li>
-              <li>بطاطس 2 نوع جبنة: 55 - 60 ج.م</li>
-              <li>بطاطس 3 نوع جبنة: 65 - 70 ج.م</li>
-              <li>أومليت ساده: 30 ج.م</li>
-              <li>أومليت جبنة: 40 ج.م</li>
-              <li>بيض بالبسطرمة: 50 ج.م</li>
-              <li>كبيبة: 45 ج.م</li>
-              <li>جبنة مقلية: 40 ج.م</li>
-              <li>لبنة: 35 ج.م</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>سندوتشات اللحوم والمشويات</h2>
-            <ul>
-              <li>كفتة: 90 - 95 ج.م</li>
-              <li>كفتة موزاريلا: 100 - 105 ج.م</li>
-              <li>شيش: 90 ج.م | شيش موزاريلا: 100 ج.م</li>
-              <li>كبدة جريل: 75 ج.م</li>
-              <li>برجر: 80 - 85 ج.م</li>
-              <li>برجر بالجبنة / بالبيض: 85 ج.م</li>
-              <li>برجر كينج (بيض + جبنة): 95 ج.م</li>
-              <li>بانيه بلدي: 80 ج.م | بانيه بالجبنة: 90 ج.م</li>
-              <li>كريسبي / زنجر / مكسيكان / فاهيتا فراخ: 80 ج.م</li>
-              <li>بيض باللحمة: 60 ج.م</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>الأكثر طلباً</h2>
-            <ul>
-              <li>فلافل صمون</li>
-              <li>مكس صمون</li>
-              <li>كفتة صمون</li>
-            </ul>
-          </section>
+    <div class="geo-sections-grid">
+      <section class="geo-menu-section" id="faleh-sandwiches" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">سندوتشات فالح</h2>
+        <p class="geo-section-desc" itemprop="description">سندوتشات فالح متوفرة بخبز فرنساوي، صاج، أو صمون</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فلافل</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بطاطس</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">35</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكس (بطاطس + فلافل)</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">35</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكس باذنجان</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكس فالح</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بطاطس رومي</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بطاطس موزاريلا</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بطاطس شيدر</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بطاطس 2 نوع جبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">55</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">55</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">60</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بطاطس 3 نوع جبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">65</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">65</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">أومليت ساده</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">35</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">35</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">أومليت جبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بيض بالبسطرمة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">65</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كبيبة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">جبنة مقلية</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">لبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="meat-grill-sandwiches" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">سندوتشات اللحوم والمشويات</h2>
+        <p class="geo-section-desc" itemprop="description">تشكيلة لحوم ومشويات طازجة بخبز فرنساوي، صاج، أو صمون</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كفتة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كفتة موزاريلا</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">105</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">شيش</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">شيش موزاريلا</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">105</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كبدة جريل</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">75</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">برجر</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">80</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">80</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">85</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">برجر بالجبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">برجر بالبيض</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">برجر كينج (بيض + جبنة)</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">105</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بانيه بلدي</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بانيه بالجبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">100</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">105</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كريسبي</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">زنجر</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكسيكان</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">75</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فاهيتا فراخ</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">90</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">95</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">بيض باللحمة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صمون:</span>
+                <strong class="variant-price" itemprop="price">75</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صاج:</span>
+                <strong class="variant-price" itemprop="price">75</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">فرنساوي:</span>
+                <strong class="variant-price" itemprop="price">80</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="meals" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">وجبات فالح المتكاملة</h2>
+        <p class="geo-section-desc" itemprop="description">وجبات تشمل أرز وبطاطس وسلطات وخبز</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة اقتصادية ورك</span>
+              <span class="geo-item-desc" itemprop="description">أرز وبطاطس وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">110</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة اقتصادية صدر</span>
+              <span class="geo-item-desc" itemprop="description">أرز وبطاطس وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">140</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة كبسة</span>
+              <span class="geo-item-desc" itemprop="description">كبسة مع صوص وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">190</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة عائلية</span>
+              <span class="geo-item-desc" itemprop="description">تشكيلة وجبة عائلية مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">380</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة عائلية مسحب</span>
+              <span class="geo-item-desc" itemprop="description">دجاج مسحب عائلي مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">390</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة مسحب</span>
+              <span class="geo-item-desc" itemprop="description">دجاج مسحب مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">200</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة عائلية شيش</span>
+              <span class="geo-item-desc" itemprop="description">شيش طاووق عائلي مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">385</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة موفرة ورك</span>
+              <span class="geo-item-desc" itemprop="description">أرز وبطاطس وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">170</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة موفرة صدر</span>
+              <span class="geo-item-desc" itemprop="description">أرز وبطاطس وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">180</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة كفتة</span>
+              <span class="geo-item-desc" itemprop="description">كفتة مشوية مع أرز وبطاطس وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">170</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة شيش</span>
+              <span class="geo-item-desc" itemprop="description">شيش طاووق مع أرز وبطاطس وسلطات وخبز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">170</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة شيش + كفتة</span>
+              <span class="geo-item-desc" itemprop="description">مكس شيش وكفتة مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">170</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة مكس جريل ورك</span>
+              <span class="geo-item-desc" itemprop="description">مكس جريل ورك مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">220</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة مكس جريل صدر</span>
+              <span class="geo-item-desc" itemprop="description">مكس جريل صدر مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">230</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">وجبة بانيه / زنجر / كرسبي / فاهيتا</span>
+              <span class="geo-item-desc" itemprop="description">اختيارك من الدجاج المقلي أو الفاهيتا مع أرز وبطاطس وسلطات</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">175</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="grills" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">مشويات فالح على الفحم</h2>
+        <p class="geo-section-desc" itemprop="description">تقدم مع خبز وسلطات فقط بدون أرز وبطاطس</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">ربع فرخة ورك مشوي</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">100</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">ربع فرخة صدر مشوي</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">120</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">نصف فرخة مشوية</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">165</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">نصف فرخة شيش</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">170</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">نصف فرخة مسحب</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">170</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فرخة مسحب كاملة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">350</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فرخة فحم كاملة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">340</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فرخة شيش كاملة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">345</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كفتة مشوية</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">ربع كيلو:</span>
+                <strong class="variant-price" itemprop="price">150</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">نصف كيلو:</span>
+                <strong class="variant-price" itemprop="price">300</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كيلو:</span>
+                <strong class="variant-price" itemprop="price">600</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">شيش طاووق مشوي</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">ربع كيلو:</span>
+                <strong class="variant-price" itemprop="price">150</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">نصف كيلو:</span>
+                <strong class="variant-price" itemprop="price">300</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كيلو:</span>
+                <strong class="variant-price" itemprop="price">600</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="pastries" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">المعجنات والفطائر</h2>
+        <p class="geo-section-desc" itemprop="description">فطائر طازجة مخبوزة بأجود المكونات</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة جبنة بيضاء</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة جبنة رومي</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة جبنة شيدر</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة جبنة كيري</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">لحمة بعجين</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">20</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة سوسيس</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة سبانخ</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة زعتر</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فطيرة زعتر جبنة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">20</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مسخن</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">50</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="platters" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">أطباق فالح</h2>
+        <p class="geo-section-desc" itemprop="description">أطباق مقبلات وإفطار بأحجام مختلفة (صغير - وسط - كبير)</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق فلافل (5 حبات)</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">5</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">10</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">15</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق بطاطس</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق أومليت سادة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق أومليت بالجبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">40</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق بيض بالبسطرمة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">50</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">60</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق كبيبة (3 قطع)</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">90</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق باذنجان</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">15</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق بطاطس بالجبنة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">55</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">60</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق كبدة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">70</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">120</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق لبنة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">30</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="appetizers" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">المقبلات والسلطات</h2>
+        <p class="geo-section-desc" itemprop="description">مقبلات وسلطات طازجة متنوعة</p>
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">عنبة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">15</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">20</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مسبحة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">25</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طحينة</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">15</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">25</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">سلطة خضراء</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">20</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">ثومية</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">15</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">30</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">حبة كبيبة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">30</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="rice-pasta" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">الأرز والمكرونة</h2>
+        
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">طبق أرز</span>
+              
+            </div>
+            <div class="geo-item-variants">
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">صغير:</span>
+                <strong class="variant-price" itemprop="price">35</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">وسط:</span>
+                <strong class="variant-price" itemprop="price">45</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+              <span class="geo-variant" itemscope itemtype="https://schema.org/Offer">
+                <span class="variant-type">كبير:</span>
+                <strong class="variant-price" itemprop="price">55</strong>
+                <span class="variant-currency" itemprop="priceCurrency" content="EGP">ج.م</span>
+              </span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكرونة بشاميل</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">50</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكرونة نجرسكو</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">50</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="beverages-addons" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">المشروبات والإضافات</h2>
+        
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مياه معدنية</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">10</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مشروب كانز (أنواع)</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">25</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مشروب لتر (أنواع)</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">35</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة بيض</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">10</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة باذنجان</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">5</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة مسبحة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">5</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة لبنة</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">5</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة جبنة رومي</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة جبنة شيدر</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">إضافة جبنة موزاريلا</span>
+              
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">15</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="geo-menu-section" id="most-popular" itemscope itemtype="https://schema.org/MenuSection">
+        <h2 class="geo-section-title" itemprop="name">الأكثر طلباً</h2>
+        
+        <ul class="geo-items-list">
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فلافل صمون</span>
+              <span class="geo-item-desc" itemprop="description">سندوتش فلافل بخبز الصمون المميز</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">25</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">مكس صمون</span>
+              <span class="geo-item-desc" itemprop="description">مكس بطاطس وفلافل بخبز الصمون</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">30</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">فاهيتا فراخ</span>
+              <span class="geo-item-desc" itemprop="description">فاهيتا فراخ مميزة مع خضار</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">90</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+          <li class="geo-item-card" itemscope itemtype="https://schema.org/MenuItem">
+            <div class="geo-item-main">
+              <span class="geo-item-name" itemprop="name">كفتة صمون</span>
+              <span class="geo-item-desc" itemprop="description">كفتة مشوية على الفحم بخبز الصمون</span>
+            </div>
+            <div class="geo-item-price" itemscope itemtype="https://schema.org/Offer">
+              <strong class="price-val" itemprop="price">90</strong>
+              <span class="price-curr" itemprop="priceCurrency" content="EGP">ج.م</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
         </div>
       </details>
     </aside>

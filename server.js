@@ -63,6 +63,41 @@ app.use('/previews', express.static(path.join(root, 'previews'), {
   immutable: true
 }));
 
+// Real-time GEO and Schema.org synchronization for customer homepage
+const { getMenuSections, generateSchemaGraph, renderHtmlMenu, renderQuickFacts } = require('./menuData');
+
+app.get('/', async (req, res) => {
+  try {
+    const indexPath = path.join(root, 'public', 'index.html');
+    let content = await fs.readFile(indexPath, 'utf8');
+    const sections = getMenuSections();
+    const schema = generateSchemaGraph(sections);
+    const jsonLd = JSON.stringify(schema, null, 2);
+
+    content = content.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">\n${jsonLd}\n  </script>`);
+
+    const renderedMenu = renderHtmlMenu(sections);
+    const renderedQuickFacts = renderQuickFacts();
+    const geoContainer = `<aside class="seo-semantic-container" aria-label="قائمة طعام وتفاصيل مطعم فالح أبو العنبة المكتوبة">
+      <details class="seo-menu-accordion" open>
+        <summary class="seo-menu-summary"><i class="fas fa-utensils" aria-hidden="true"></i> تفاصيل المنيو وقائمة الأسعار المكتوبة (Machine-Readable Menu)</summary>
+        <div class="seo-menu-body">
+          ${renderedQuickFacts}
+          ${renderedMenu}
+        </div>
+      </details>
+    </aside>`;
+
+    content = content.replace(/<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i, geoContainer);
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+    return res.send(content);
+  } catch (err) {
+    return res.sendFile(path.join(root, 'public', 'index.html'));
+  }
+});
+
 app.use(express.static(path.join(root, 'public'), {
   maxAge: '1d'
 }));
@@ -247,9 +282,31 @@ async function triggerPreviewGeneration() {
 }
 
 app.get('/api/menu', async (req, res) => {
-
   const state = await readState();
   res.json({ pages: state.pages, updatedAt: state.updatedAt || null });
+});
+
+app.get('/api/menu/data', (req, res) => {
+  res.json({ sections: getMenuSections() });
+});
+
+app.put('/api/menu/data', auth, async (req, res) => {
+  if (!Array.isArray(req.body.sections)) return res.status(400).json({ message: 'بيانات الأقسام غير صحيحة' });
+  const targetFile = path.join(dataDir, 'menu-data.json');
+  const payload = {
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    sections: req.body.sections
+  };
+  await fs.writeFile(targetFile, JSON.stringify(payload, null, 2), 'utf8');
+  const { syncIndexHtml } = require('./tools/syncIndexHtml');
+  syncIndexHtml();
+  if (isVercel && githubToken && githubRepository) {
+    await commitToGitHub('data/menu-data.json', JSON.stringify(payload, null, 2), 'Update structured menu data');
+    const updatedIndex = await fs.readFile(path.join(root, 'public', 'index.html'), 'utf8');
+    await commitToGitHub('public/index.html', updatedIndex, 'Sync GEO and Schema.org menu data');
+  }
+  res.json({ success: true, sections: payload.sections });
 });
 
 app.post('/api/login', (req, res) => {
@@ -381,6 +438,14 @@ app.put('/api/pages/:id', auth, async (req, res) => {
   await writeState(state);
   if (nextSvg !== null) await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Update menu metadata for ${page.name}`);
+  try {
+    const { syncIndexHtml } = require('./tools/syncIndexHtml');
+    syncIndexHtml();
+    const updatedIndex = await fs.readFile(path.join(root, 'public', 'index.html'), 'utf8');
+    await commitToGitHub('public/index.html', updatedIndex, `Sync GEO and Schema.org for ${page.name}`);
+  } catch (syncErr) {
+    console.error('Failed to sync index.html on update:', syncErr.message);
+  }
   stateCache = null; // invalidate cache so next read fetches fresh data
   triggerPreviewGeneration(); // fire-and-forget: regenerate WebP previews
   res.json({ success: true, page });
