@@ -555,7 +555,7 @@ function generateSchemaGraph(sections) {
           "https://www.tiktok.com/@fale7_1961",
           "https://maps.app.goo.gl/DqNEo521pyEbMpD49"
         ],
-        "image": `${baseUrl}/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp`,
+        "image": `${baseUrl}/favicon.png`,
         "hasMenu": {
           "@type": "Menu",
           "@id": `${baseUrl}/#menu`,

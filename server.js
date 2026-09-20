@@ -151,15 +151,15 @@ function buildAboutPage({ jsonLd, menuHtml, factsHtml }) {
   <meta property="og:title" content="اعرفنا أكتر — مطعم فالح أبو العنبة | منذ 1961">
   <meta property="og:description" content="مطعم عراقي أصيل في 6 أكتوبر منذ 1961. سندوتشات صمون عراقي، مشويات، وجبات، فلافل، مقبلات وأكتر. تصفح المنيو الكاملة بالأسعار.">
   <meta property="og:url" content="https://fale7-res.vercel.app/about">
-  <meta property="og:image" content="https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp">
-  <meta property="og:image:alt" content="منيو مطعم فالح أبو العنبة">
+  <meta property="og:image" content="https://fale7-res.vercel.app/favicon.png">
+  <meta property="og:image:alt" content="شعار مطعم فالح أبو العنبة">
   <meta property="og:locale" content="ar_EG">
 
   <!-- Twitter/X Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="اعرفنا أكتر — مطعم فالح أبو العنبة | منذ 1961">
   <meta name="twitter:description" content="مطعم عراقي أصيل في 6 أكتوبر منذ 1961 — سندوتشات، مشويات، وجبات، فلافل. المنيو الكاملة بالأسعار.">
-  <meta name="twitter:image" content="https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp">
+  <meta name="twitter:image" content="https://fale7-res.vercel.app/favicon.png">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/styles.css">
