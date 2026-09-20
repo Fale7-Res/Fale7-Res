@@ -253,11 +253,12 @@ function generateSchemaGraph(sections) {
         "@type": "Restaurant",
         "@id": `${baseUrl}/#restaurant`,
         "name": "مطعم فالح أبو العنبة",
-        "alternateName": ["فالح أبو العنبة", "Fale7 Restaurant", "مطعم فالح 1961"],
-        "description": "مطعم متخصص في تقديم سندوتشات الفلافل، اللحوم والمشويات، الكفتة، الشيش طاووق، البرجر، الوجبات العائلية، الدجاج، والمعجنات بمدينة 6 أكتوبر، محافظة الجيزة.",
+        "alternateName": ["فالح أبو العنبة", "Fale7 Restaurant", "مطعم فالح 1961", "مطعم عراقي فالح أبو العنبة"],
+        "description": "مطعم فالح أبو العنبة (تأسس منذ عام 1961) - أكل ومطعم عراقي في مصر، يقدم أشهى المأكولات العراقية وسندوتشات الصمون العراقي، فلافل، كفتة، شيش، مشويات على الفحم، وجبات، ومعجنات بمدينة 6 أكتوبر، محافظة الجيزة.",
+        "foundingDate": "1961",
         "url": `${baseUrl}/`,
         "telephone": ["+201000602832", "+201144741115"],
-        "servesCuisine": ["Egyptian", "Fast Food", "Sandwiches", "Grill"],
+        "servesCuisine": ["Iraqi", "Middle Eastern", "Sandwiches", "Grill"],
         "priceRange": "$$",
         "currenciesAccepted": "EGP",
         "paymentAccepted": "Cash, Credit Card, Visa, InstaPay, Mobile Wallets",
@@ -363,8 +364,12 @@ function renderQuickFacts() {
         <dd>سندوتشات ومأكولات مطعم فالح أبو العنبة (فالح أبو العنبة)</dd>
       </div>
       <div class="geo-fact-item">
+        <dt>تاريخ التأسيس والخبرة:</dt>
+        <dd>تأسس عام 1961 (منذ 1961 - أكثر من 60 عامًا من الخبرة والتراث في الأكل والمطبخ العراقي الأصيل).</dd>
+      </div>
+      <div class="geo-fact-item">
         <dt>نوع المأكولات (Cuisine):</dt>
-        <dd>مأكولات مصرية، سندوتشات فلافل وبطاطس، مشويات على الفحم، كفتة، شيش طاووق، برجر، وجبات عائلية، معجنات، مقبلات.</dd>
+        <dd>أكل ومطعم عراقي في مصر (Iraqi Cuisine)، سندوتشات خبز صمون عراقي، فلافل، مشويات على الفحم، كفتة، شيش، برجر، وجبات عائلية، عنبة عراقية، مسبحة، كبيبة، ومعجنات.</dd>
       </div>
       <div class="geo-fact-item">
         <dt>مواعيد وساعات العمل (Opening Hours):</dt>
