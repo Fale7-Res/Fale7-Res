@@ -12,7 +12,7 @@
         "2400": "previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-2400.webp"
       },
       "previewFile": "previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp",
-      "updatedAt": "2026-09-20T00:39:35.866Z"
+      "updatedAt": "2026-09-20T22:02:47.341Z"
     },
     {
       "id": "e50f1da9-7181-4555-b0bc-d2ca166374f4",
@@ -20,13 +20,13 @@
       "fileName": "e50f1da9-7181-4555-b0bc-d2ca166374f4.svg",
       "createdAt": "2026-09-20T00:39:01.920Z",
       "previewFiles": {
-        "640": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-ff3e792e3624-640.webp",
-        "1024": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-ff3e792e3624-1024.webp",
-        "1600": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-ff3e792e3624-1600.webp",
-        "2400": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-ff3e792e3624-2400.webp"
+        "640": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-0acbc83bd1e3-640.webp",
+        "1024": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-0acbc83bd1e3-1024.webp",
+        "1600": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-0acbc83bd1e3-1600.webp",
+        "2400": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-0acbc83bd1e3-2400.webp"
       },
-      "previewFile": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-ff3e792e3624-1600.webp",
-      "updatedAt": "2026-09-20T22:01:40.402Z",
+      "previewFile": "previews/e50f1da9-7181-4555-b0bc-d2ca166374f4-0acbc83bd1e3-1600.webp",
+      "updatedAt": "2026-09-20T22:02:50.899Z",
       "changes": [
         {
           "type": "price",
@@ -1126,5 +1126,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-09-20T22:01:40.403Z"
+  "updatedAt": "2026-09-20T22:02:51.010Z"
 }
