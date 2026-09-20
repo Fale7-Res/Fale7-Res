@@ -51,11 +51,17 @@ function syncIndexHtml() {
     content = content.replace(/<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i, '');
   }
 
+  // 4. Ensure CTA bar linking to /about is present (inject if missing)
+  if (!content.includes('about-cta-bar')) {
+    const ctaBar = `\n  <!-- CTA bar linking to /about — اعرفنا أكتر -->\n  <div class="about-cta-bar" role="complementary" aria-label="تعرف أكتر على المطعم">\n    <a href="/about" class="about-cta-bar-link" aria-label="اعرفنا أكتر عن مطعم فالح أبو العنبة — المنيو النصية والمعلومات">\n      <i class="fas fa-info-circle" aria-hidden="true"></i>\n      <span>اعرفنا أكتر عن فالح</span>\n      <i class="fas fa-arrow-left" aria-hidden="true"></i>\n    </a>\n  </div>\n`;
+    content = content.replace('<noscript>', ctaBar + '  <noscript>');
+  }
+
   // Clean any trailing whitespace or duplicated closing tags in main
   content = content.replace(/<\/div><p>جاري تحميل المنيو\.\.\.<\/p><\/div>/g, '');
 
   fs.writeFileSync(indexPath, content, 'utf8');
-  console.log('Successfully synced public/index.html: Clean minimal customer UI + full background Schema.org!');
+  console.log('Successfully synced public/index.html: Clean minimal customer UI + CTA bar + full background Schema.org!');
 }
 
 if (require.main === module) {

@@ -64,7 +64,7 @@ app.use('/previews', express.static(path.join(root, 'previews'), {
 }));
 
 // Real-time GEO and Schema.org synchronization for customer homepage
-const { getMenuSections, generateSchemaGraph } = require('./menuData');
+const { getMenuSections, generateSchemaGraph, renderHtmlMenu, renderQuickFacts } = require('./menuData');
 
 app.get('/', async (req, res) => {
   try {
@@ -84,6 +84,253 @@ app.get('/', async (req, res) => {
     return res.sendFile(path.join(root, 'public', 'index.html'));
   }
 });
+
+// Canonical redirect: /about.html → /about
+app.get('/about.html', (req, res) => res.redirect(301, '/about'));
+
+// About page — "اعرفنا أكتر" — dynamically rendered for freshness
+app.get('/about', async (req, res) => {
+  try {
+    const sections = getMenuSections();
+    const schema = generateSchemaGraph(sections);
+    // Override some schema fields for the /about page URL
+    if (schema && schema['@graph']) {
+      schema['@graph'].forEach(node => {
+        if (node['@type'] === 'BreadcrumbList') {
+          node.itemListElement = [
+            { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://fale7-res.vercel.app/' },
+            { '@type': 'ListItem', position: 2, name: 'اعرفنا أكتر — المطعم والمنيو', item: 'https://fale7-res.vercel.app/about' }
+          ];
+        }
+        if (node['@type'] === 'Restaurant') {
+          node.url = 'https://fale7-res.vercel.app/';
+          node['@id'] = 'https://fale7-res.vercel.app/#restaurant';
+        }
+        if (node['@type'] === 'WebSite') {
+          node['@id'] = 'https://fale7-res.vercel.app/#website';
+        }
+      });
+    }
+    const jsonLd = JSON.stringify(schema, null, 2);
+    const menuHtml = renderHtmlMenu(sections);
+    const factsHtml = renderQuickFacts();
+
+    const html = buildAboutPage({ jsonLd, menuHtml, factsHtml });
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+    return res.send(html);
+  } catch (err) {
+    console.error('/about render error:', err);
+    return res.status(500).send('Server error');
+  }
+});
+
+function buildAboutPage({ jsonLd, menuHtml, factsHtml }) {
+  return `<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>اعرفنا أكتر — مطعم فالح أبو العنبة | منذ 1961 | أكل عراقي في 6 أكتوبر</title>
+  <meta name="description" content="تعرف على مطعم فالح أبو العنبة (منذ 1961) — مطعم عراقي أصيل في مدينة 6 أكتوبر، الجيزة. تصفح قائمة الطعام الكاملة بالأسعار، المشويات، السندوتشات، الوجبات، المقبلات، مواعيد العمل، وطرق التوصيل.">
+  <meta name="robots" content="index, follow, max-snippet:-1">
+  <meta name="author" content="مطعم فالح أبو العنبة">
+  <meta name="theme-color" content="#b45309">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://fale7-res.vercel.app/about">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="فالح أبو العنبة">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="اعرفنا أكتر — مطعم فالح أبو العنبة | منذ 1961">
+  <meta property="og:description" content="مطعم عراقي أصيل في 6 أكتوبر منذ 1961. سندوتشات صمون عراقي، مشويات، وجبات، فلافل، مقبلات وأكتر. تصفح المنيو الكاملة بالأسعار.">
+  <meta property="og:url" content="https://fale7-res.vercel.app/about">
+  <meta property="og:image" content="https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp">
+  <meta property="og:image:alt" content="منيو مطعم فالح أبو العنبة">
+  <meta property="og:locale" content="ar_EG">
+
+  <!-- Twitter/X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="اعرفنا أكتر — مطعم فالح أبو العنبة | منذ 1961">
+  <meta name="twitter:description" content="مطعم عراقي أصيل في 6 أكتوبر منذ 1961 — سندوتشات، مشويات، وجبات، فلافل. المنيو الكاملة بالأسعار.">
+  <meta name="twitter:image" content="https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+${jsonLd}
+  </script>
+</head>
+<body class="about-body">
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="about-header" role="banner">
+    <a href="/" class="about-back-btn" aria-label="رجوع للمنيو المصورة">
+      <i class="fas fa-arrow-right" aria-hidden="true"></i>
+      <span>رجوع للمنيو</span>
+    </a>
+    <div class="about-brand" aria-label="اسم المطعم">
+      <span class="about-brand-name">مطعم فالح أبو العنبة</span>
+      <span class="about-brand-year">منذ 1961</span>
+    </div>
+    <nav class="about-social-nav" aria-label="روابط التواصل الاجتماعي">
+      <a href="https://www.tiktok.com/@fale7_1961" target="_blank" rel="noopener noreferrer" class="about-social-icon" aria-label="تيك توك فالح">
+        <i class="fab fa-tiktok" aria-hidden="true"></i>
+      </a>
+      <a href="https://www.facebook.com/share/1FTjzqpHv8/" target="_blank" rel="noopener noreferrer" class="about-social-icon" aria-label="فيسبوك فالح">
+        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+      </a>
+      <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" rel="noopener noreferrer" class="about-social-icon" aria-label="موقع المطعم على الخريطة">
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+      </a>
+    </nav>
+  </header>
+
+  <main class="about-main" id="main-content">
+
+    <!-- ===== HERO STRIP ===== -->
+    <section class="about-hero" aria-labelledby="about-hero-title">
+      <div class="about-hero-inner">
+        <p class="about-hero-eyebrow">منذ عام 1961</p>
+        <h1 id="about-hero-title" class="about-hero-title">مطعم فالح أبو العنبة</h1>
+        <p class="about-hero-tagline">أكل عراقي أصيل في قلب مدينة 6 أكتوبر، الجيزة</p>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT THE RESTAURANT ===== -->
+    <section class="about-section" aria-labelledby="about-restaurant-title">
+      <div class="about-section-inner">
+        <h2 id="about-restaurant-title" class="about-section-title">
+          <span class="about-section-icon" aria-hidden="true">🏪</span>
+          عن المطعم
+        </h2>
+        <div class="about-cards-row">
+          <article class="about-card about-card--story">
+            <h3 class="about-card-title">قصتنا</h3>
+            <p>مطعم فالح أبو العنبة بدأ رحلته منذ عام 1961، وعلى مدى أكثر من 60 عامًا أصبح وجهةً معروفة بين محبي الأكل العراقي الأصيل في مصر. يقدم المطعم أشهى السندوتشات والمأكولات العراقية بمكوناتٍ طازجة وأسعار مناسبة.</p>
+            <p>نتميز بخبز الصمون العراقي الهش الذي يُخبز طازجًا، والمشويات المُعدّة على الفحم، والفلافل المقرمشة، والعنبة العراقية الأصلية التي لا مثيل لها.</p>
+          </article>
+          <article class="about-card about-card--cuisine">
+            <h3 class="about-card-title">نوع الطعام</h3>
+            <ul class="about-cuisine-list" role="list">
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> أكل عراقي أصيل</li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> سندوتشات صمون عراقي</li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> مشويات على الفحم</li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> فلافل مقرمشة</li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> وجبات متكاملة</li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> معجنات وفطائر</li>
+              <li><i class="fas fa-check-circle" aria-hidden="true"></i> مقبلات عراقية (عنبة، مسبحة)</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INFO CARDS ===== -->
+    <section class="about-section about-section--info" aria-labelledby="about-info-title">
+      <div class="about-section-inner">
+        <h2 id="about-info-title" class="about-section-title">
+          <span class="about-section-icon" aria-hidden="true">📍</span>
+          معلومات المطعم
+        </h2>
+        <div class="about-info-grid">
+
+          <article class="about-info-card">
+            <div class="about-info-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
+            <h3 class="about-info-card-title">مواعيد العمل</h3>
+            <p class="about-info-value">يوميًا من <strong>7 الصبح</strong> حتى <strong>3 الفجر</strong></p>
+            <p class="about-info-note" dir="ltr">07:00 AM — 03:00 AM</p>
+          </article>
+
+          <article class="about-info-card">
+            <div class="about-info-icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></div>
+            <h3 class="about-info-card-title">الموقع والعنوان</h3>
+            <address class="about-info-value about-address">
+              محافظة الجيزة، مدينة 6 أكتوبر<br>
+              الحي السابع، شارع مكة المكرمة<br>
+              سنتر الأردنية<br>
+              بالقرب من قسم أول 6 أكتوبر
+            </address>
+            <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" rel="noopener noreferrer" class="about-info-link">
+              <i class="fas fa-directions" aria-hidden="true"></i> عرض على خرائط جوجل
+            </a>
+          </article>
+
+          <article class="about-info-card">
+            <div class="about-info-icon" aria-hidden="true"><i class="fas fa-phone-alt"></i></div>
+            <h3 class="about-info-card-title">التوصيل والطلبات</h3>
+            <p class="about-info-value">
+              <a href="tel:01000602832" class="about-phone-link" dir="ltr">0100 060 2832</a>
+            </p>
+            <p class="about-info-value">
+              <a href="tel:01144741115" class="about-phone-link" dir="ltr">0114 474 1115</a>
+            </p>
+          </article>
+
+          <article class="about-info-card">
+            <div class="about-info-icon" aria-hidden="true"><i class="fas fa-credit-card"></i></div>
+            <h3 class="about-info-card-title">طرق الدفع</h3>
+            <ul class="about-payment-list" role="list">
+              <li><i class="fas fa-money-bill-wave" aria-hidden="true"></i> كاش (نقدًا)</li>
+              <li><i class="fas fa-credit-card" aria-hidden="true"></i> فيزا (بطاقة بنكية)</li>
+              <li><i class="fas fa-mobile-alt" aria-hidden="true"></i> انستا باي (InstaPay)</li>
+              <li><i class="fas fa-wallet" aria-hidden="true"></i> محافظ إلكترونية</li>
+            </ul>
+            <p class="about-info-note">العملة: الجنيه المصري (EGP)</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MENU SECTIONS ===== -->
+    <section class="about-section about-section--menu" aria-labelledby="about-menu-title">
+      <div class="about-section-inner">
+        <h2 id="about-menu-title" class="about-section-title">
+          <span class="about-section-icon" aria-hidden="true">🍽️</span>
+          القائمة والأسعار
+        </h2>
+        <p class="about-menu-subtitle">جميع الأسعار بالجنيه المصري (EGP) — الأسعار تعكس المنيو الرسمي الحالي</p>
+        ${menuHtml}
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="about-footer" role="contentinfo">
+    <div class="about-footer-inner">
+      <p class="about-footer-brand">مطعم فالح أبو العنبة — منذ 1961</p>
+      <nav class="about-footer-nav" aria-label="روابط التنقل">
+        <a href="/" class="about-footer-link">
+          <i class="fas fa-utensils" aria-hidden="true"></i> المنيو المصورة
+        </a>
+        <a href="https://maps.app.goo.gl/DqNEo521pyEbMpD49" target="_blank" rel="noopener noreferrer" class="about-footer-link">
+          <i class="fas fa-map-marker-alt" aria-hidden="true"></i> الموقع
+        </a>
+        <a href="tel:01000602832" class="about-footer-link">
+          <i class="fas fa-phone-alt" aria-hidden="true"></i> اتصل بنا
+        </a>
+      </nav>
+      <a href="/" class="about-cta-back" aria-label="رجوع للمنيو المصورة">
+        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        رجوع للمنيو
+      </a>
+    </div>
+  </footer>
+
+</body>
+</html>`;
+}
 
 app.use(express.static(path.join(root, 'public'), {
   maxAge: '1d'
