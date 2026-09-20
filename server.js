@@ -24,7 +24,48 @@ let stateCacheTime = 0;
 
 app.use(express.json({ limit: '25mb' }));
 app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
-app.use(express.static(path.join(root, 'public')));
+
+// Security & SEO baseline headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+// Protect all private / admin / API routes with strict X-Robots-Tag
+app.use(['/admin', '/admin.html', '/api'], (req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  next();
+});
+
+// Canonical redirects: prevent duplicate indexing of /index.html and /admin.html
+app.get('/index.html', (req, res) => res.redirect(301, '/'));
+app.get('/admin.html', (req, res) => res.redirect(301, '/admin'));
+app.get('/menu', (req, res) => res.redirect(301, '/'));
+
+// Dedicated SEO routes
+app.get('/robots.txt', (req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.sendFile(path.join(root, 'public', 'robots.txt'));
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.sendFile(path.join(root, 'public', 'sitemap.xml'));
+});
+
+// Previews static cache
+app.use('/previews', express.static(path.join(root, 'previews'), {
+  maxAge: '365d',
+  immutable: true
+}));
+
+app.use(express.static(path.join(root, 'public'), {
+  maxAge: '1d'
+}));
 
 async function ensureStore() {
   await fs.mkdir(dataDir, { recursive: true });
@@ -436,7 +477,10 @@ app.post('/api/upload/finalize', auth, async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message || 'فشل تجميع الملف' }); }
 });
 
-app.get('/admin', (req, res) => res.sendFile(path.join(root, 'public', 'admin.html')));
+app.get('/admin', (req, res) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  res.sendFile(path.join(root, 'public', 'admin.html'));
+});
 app.get('*', (req, res) => res.sendFile(path.join(root, 'public', 'index.html')));
 
 app.use((error, req, res, next) => {

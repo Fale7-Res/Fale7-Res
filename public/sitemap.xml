@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://fale7-res.vercel.app/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://fale7-res.vercel.app/previews/24834de6-002c-49a7-b049-8682e47098e7-88a8ff393e10-1600.webp</image:loc>
+      <image:title>منيو مطعم فالح 1961</image:title>
+      <image:caption>قائمة طعام وأسعار سندوتشات ومأكولات مطعم فالح الرسمية</image:caption>
+    </image:image>
+  </url>
+</urlset>

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /api/menu
+Allow: /api/pages/*/preview.webp
+Allow: /previews/
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /api/
+Disallow: /data/
+Disallow: /uploads/
+
+Sitemap: https://fale7-res.vercel.app/sitemap.xml
