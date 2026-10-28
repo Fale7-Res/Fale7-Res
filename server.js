@@ -888,9 +888,22 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
 });
 
 app.put('/api/pages/order', auth, async (req, res) => {
-  const pageIds = req.body.pageIds;
-  if (!Array.isArray(pageIds) || pageIds.some((id) => typeof id !== 'string') || new Set(pageIds).size !== pageIds.length) {
-    return res.status(400).json({ message: 'ترتيب الصفحات غير صالح' });
+  let payload = req.body;
+  const parseBody = (value) => {
+    if (Buffer.isBuffer(value)) value = value.toString('utf8');
+    if (typeof value === 'string') {
+      try { return JSON.parse(value); } catch { return null; }
+    }
+    return value;
+  };
+  payload = parseBody(payload);
+  if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.rawBody) {
+    payload = parseBody(req.rawBody);
+  }
+  const submittedIds = Array.isArray(payload) ? payload : payload?.pageIds;
+  const pageIds = Array.isArray(submittedIds) ? submittedIds.map((id) => String(id ?? '').trim()) : null;
+  if (!pageIds || pageIds.some((id) => !id) || new Set(pageIds).size !== pageIds.length) {
+    return res.status(400).json({ message: 'طلب ترتيب الصفحات غير صالح: قائمة pageIds مفقودة أو تحتوي معرفات فارغة أو مكررة' });
   }
   try {
     const { state } = await mutateMenuState((latestState) => {
