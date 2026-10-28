@@ -908,7 +908,8 @@ app.put('/api/pages/order', auth, async (req, res) => {
   if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.rawBody) {
     payload = parseBody(req.rawBody);
   }
-  const submittedIds = Array.isArray(payload) ? payload : payload?.pageIds;
+  const queryPageIds = typeof req.query.pageIds === 'string' ? parseBody(req.query.pageIds) : null;
+  const submittedIds = Array.isArray(queryPageIds) ? queryPageIds : (Array.isArray(payload) ? payload : payload?.pageIds);
   const pageIds = Array.isArray(submittedIds) ? submittedIds.map((id) => String(id ?? '').trim()) : null;
   if (!pageIds || pageIds.some((id) => !id) || new Set(pageIds).size !== pageIds.length) {
     return res.status(400).json({ message: 'طلب ترتيب الصفحات غير صالح: قائمة pageIds مفقودة أو تحتوي معرفات فارغة أو مكررة' });
