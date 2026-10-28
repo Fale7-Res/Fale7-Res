@@ -22,6 +22,11 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 
 let stateCache = null;
 let stateCacheTime = 0;
 
+// Vercel may populate req.body before Express middleware consumes the stream.
+app.use((req, res, next) => {
+  req.preParsedBody = req.body;
+  next();
+});
 app.use(express.json({ limit: '25mb' }));
 app.use(session({ secret: sessionSecret, resave: false, saveUninitialized: false }));
 
@@ -897,6 +902,9 @@ app.put('/api/pages/order', auth, async (req, res) => {
     return value;
   };
   payload = parseBody(payload);
+  if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.preParsedBody) {
+    payload = parseBody(req.preParsedBody);
+  }
   if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.rawBody) {
     payload = parseBody(req.rawBody);
   }
