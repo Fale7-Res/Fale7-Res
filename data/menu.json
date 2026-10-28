@@ -13,7 +13,7 @@
         "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-df3d19fe1d08-2400.webp"
       },
       "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-df3d19fe1d08-1600.webp",
-      "updatedAt": "2026-10-28T09:04:22.826Z"
+      "updatedAt": "2026-10-28T09:08:32.476Z"
     },
     {
       "id": "6bfe3aa4-1dda-4871-86fd-f826d2918373",
@@ -28,15 +28,23 @@
         "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-88a8ff393e10-2400.webp"
       },
       "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-88a8ff393e10-1600.webp",
-      "updatedAt": "2026-10-28T09:04:26.925Z"
+      "updatedAt": "2026-10-28T09:08:37.774Z"
     },
     {
       "id": "4a40e76d-5ba1-4c04-a107-ad306e37ba5d",
       "name": "فالح الصفحه الاولي",
       "fileName": "4a40e76d-5ba1-4c04-a107-ad306e37ba5d.svg",
       "createdAt": "2026-10-28T09:07:53.397Z",
-      "ready": false
+      "ready": true,
+      "previewFiles": {
+        "640": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-640.webp",
+        "1024": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-1024.webp",
+        "1600": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-1600.webp",
+        "2400": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-2400.webp"
+      },
+      "previewFile": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-1600.webp",
+      "updatedAt": "2026-10-28T09:08:42.911Z"
     }
   ],
-  "updatedAt": "2026-10-28T09:07:59.603Z"
+  "updatedAt": "2026-10-28T09:08:43.032Z"
 }
