@@ -342,9 +342,9 @@ async function ensureStore() {
   try { await fs.access(stateFile); } catch { await fs.writeFile(stateFile, JSON.stringify({ pages: [] }, null, 2)); }
 }
 
-async function readState() {
+async function readState({ fresh = false } = {}) {
   await ensureStore();
-  if (isVercel && stateCache && Date.now() - stateCacheTime < 30000) return stateCache;
+  if (!fresh && isVercel && stateCache && Date.now() - stateCacheTime < 30000) return stateCache;
   if (isVercel && githubToken && githubRepository) {
     const remote = await readFromGitHub('data/menu.json');
     if (remote) {
@@ -560,7 +560,7 @@ app.post('/api/pages', auth, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'اختر ملف SVG أولاً' });
   try {
     const svgs = splitSvgFile(req.file.buffer);
-    const state = await readState();
+    const state = await readState({ fresh: true });
     const created = [];
     for (let index = 0; index < svgs.length; index += 1) {
       const id = crypto.randomUUID();
@@ -686,7 +686,7 @@ app.put('/api/pages/:id', auth, async (req, res) => {
 });
 
 app.delete('/api/pages/:id', auth, async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   const pageIndex = state.pages.findIndex((item) => item.id === req.params.id);
   if (pageIndex < 0) return res.sendStatus(404);
   const [page] = state.pages.splice(pageIndex, 1);
@@ -699,6 +699,10 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
   await writeState(state);
   await deleteFromGitHub(`uploads/${page.fileName}`, `Delete menu page ${page.name}`);
   await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Delete menu page ${page.name}`);
+  stateCache = state;
+  stateCacheTime = Date.now();
+  renderedSvgCache.clear();
+  previewCache.clear();
   res.json({ success: true });
 });
 
@@ -754,7 +758,7 @@ app.post('/api/upload/finalize', auth, async (req, res) => {
     }));
     const fullBuffer = Buffer.concat(parts);
     const svgs = splitSvgFile(fullBuffer);
-    const state = await readState();
+    const state = await readState({ fresh: true });
     const created = [];
     const pageName = ((name || originalName || 'منيو').trim());
     for (let index = 0; index < svgs.length; index++) {
