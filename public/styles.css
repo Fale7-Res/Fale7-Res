@@ -58,6 +58,10 @@ h1 { margin-bottom:8px; font-size:clamp(1.8rem,4vw,3rem); line-height:1.1; }
 .page-thumb img { max-width:100%; max-height:210px; }
 .page-thumb-light { background:linear-gradient(135deg,#eef4ff,#f8fbff); color:#3b82f6; font-size:2rem; font-weight:800; letter-spacing:.08em; }
 .page-info { padding:14px; }
+.page-order { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; color:var(--muted); font-size:.88rem; }
+.page-order > div { display:flex; gap:6px; }
+.page-order .btn { min-width:38px; padding:5px 10px; justify-content:center; }
+.page-order .btn:disabled { opacity:.4; cursor:not-allowed; }
 .page-info h3 { margin:0 0 12px; font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .page-actions { display:flex; gap:8px; }
 .page-actions .btn { flex:1; justify-content:center; padding:8px 10px; font-size:.85rem; }

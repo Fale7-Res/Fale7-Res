@@ -887,6 +887,29 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
   res.json({ success: true });
 });
 
+app.put('/api/pages/order', auth, async (req, res) => {
+  const pageIds = req.body.pageIds;
+  if (!Array.isArray(pageIds) || pageIds.some((id) => typeof id !== 'string') || new Set(pageIds).size !== pageIds.length) {
+    return res.status(400).json({ message: 'ترتيب الصفحات غير صالح' });
+  }
+  try {
+    const { state } = await mutateMenuState((latestState) => {
+      const visiblePages = latestState.pages.filter((page) => page.ready !== false);
+      if (pageIds.length !== visiblePages.length || pageIds.some((id) => !visiblePages.some((page) => page.id === id))) {
+        throw new Error('تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى');
+      }
+      const reordered = new Map(visiblePages.map((page) => [page.id, page]));
+      const orderedVisiblePages = pageIds.map((id) => reordered.get(id));
+      let visibleIndex = 0;
+      latestState.pages = latestState.pages.map((page) => page.ready === false ? page : orderedVisiblePages[visibleIndex++]);
+    }, 'Reorder menu pages');
+    res.json({ success: true, pages: state.pages.filter((page) => page.ready !== false) });
+  } catch (error) {
+    const status = error.message === 'تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى' ? 409 : 500;
+    res.status(status).json({ message: error.message || 'تعذر حفظ ترتيب الصفحات' });
+  }
+});
+
 app.get('/api/pages/:id/download', auth, async (req, res) => {
   const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
