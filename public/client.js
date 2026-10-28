@@ -1,5 +1,6 @@
 const pagesEl = document.getElementById('pages');
 const refreshBtn = document.getElementById('refreshBtn');
+let loadedMenuSignature = null;
 
 async function loadMenu(isManualRefresh = false) {
   if (isManualRefresh || !pagesEl.querySelector('.svg-page')) {
@@ -7,7 +8,11 @@ async function loadMenu(isManualRefresh = false) {
   }
   try {
     const response = await fetch('/api/menu', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Menu request failed (${response.status})`);
     const data = await response.json();
+    const signature = JSON.stringify([data.updatedAt, (data.pages || []).map((page) => [page.id, page.updatedAt || null])]);
+    if (!isManualRefresh && signature === loadedMenuSignature) return;
+    loadedMenuSignature = signature;
     if (!data.pages.length) {
       pagesEl.innerHTML = '<div class="no-menu"><div class="no-menu-icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></div><h2 class="no-menu-title">المنيو غير متوفر حاليًا</h2><p class="no-menu-text">لم يتم رفع ملف المنيو بعد، يرجى التحقق لاحقًا.</p></div>';
       return;
@@ -28,7 +33,13 @@ async function loadMenu(isManualRefresh = false) {
 function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[char])); }
 refreshBtn.addEventListener('click', () => loadMenu(true));
 
-// If not already server-rendered, load dynamically
-if (!pagesEl.querySelector('.svg-page')) {
-  loadMenu(false);
-}
+// Replace pre-rendered pages with the current menu state from GitHub.
+loadMenu(false);
+
+// Keep already-open customer pages in sync with admin changes.
+window.setInterval(() => {
+  if (!document.hidden) loadMenu(false);
+}, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) loadMenu(false);
+});

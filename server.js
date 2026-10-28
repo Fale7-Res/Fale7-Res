@@ -333,7 +333,12 @@ ${jsonLd}
 }
 
 app.use(express.static(path.join(root, 'public'), {
-  maxAge: '1d'
+  maxAge: '1d',
+  setHeaders(res, filePath) {
+    if (/\.(?:html|js)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    }
+  }
 }));
 
 async function ensureStore() {
@@ -588,6 +593,11 @@ async function triggerPreviewGeneration() {
 
 app.get('/api/menu', async (req, res) => {
   const state = await readState({ fresh: true });
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0'
+  });
   res.json({ pages: state.pages, updatedAt: state.updatedAt || null });
 });
 

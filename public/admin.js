@@ -28,7 +28,7 @@ const priceCenters = new WeakMap();
 const productRights = new WeakMap();
 
 async function request(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(url, { cache: 'no-store', ...options });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.message || 'حدث خطأ غير متوقع');
   return data;
@@ -130,8 +130,13 @@ async function loadPages() {
 
 async function deletePage(id) {
   if (!confirm('حذف هذه الصفحة؟')) return;
-  await request(`/api/pages/${id}`, { method: 'DELETE' });
-  loadPages();
+  try {
+    await request(`/api/pages/${id}`, { method: 'DELETE' });
+    await loadPages();
+  } catch (error) {
+    uploadStatus.textContent = error.message;
+    await loadPages().catch(() => {});
+  }
 }
 
 async function openEditor(page) {
