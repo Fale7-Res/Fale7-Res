@@ -827,6 +827,47 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
   res.redirect('/api/pages/' + page.id + '/file');
 });
 
+// Keep this specific route before /api/pages/:id, which would otherwise match "order" as an ID.
+app.put('/api/pages/order', auth, async (req, res) => {
+  let payload = req.body;
+  const parseBody = (value) => {
+    if (Buffer.isBuffer(value)) value = value.toString('utf8');
+    if (typeof value === 'string') {
+      try { return JSON.parse(value); } catch { return null; }
+    }
+    return value;
+  };
+  payload = parseBody(payload);
+  if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.preParsedBody) {
+    payload = parseBody(req.preParsedBody);
+  }
+  if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.rawBody) {
+    payload = parseBody(req.rawBody);
+  }
+  const queryPageIds = typeof req.query.pageIds === 'string' ? parseBody(req.query.pageIds) : null;
+  const submittedIds = Array.isArray(queryPageIds) ? queryPageIds : (Array.isArray(payload) ? payload : payload?.pageIds);
+  const pageIds = Array.isArray(submittedIds) ? submittedIds.map((id) => String(id ?? '').trim()) : null;
+  if (!pageIds || pageIds.some((id) => !id) || new Set(pageIds).size !== pageIds.length) {
+    return res.status(400).json({ message: 'طلب ترتيب الصفحات غير صالح: قائمة pageIds مفقودة أو تحتوي معرفات فارغة أو مكررة' });
+  }
+  try {
+    const { state } = await mutateMenuState((latestState) => {
+      const visiblePages = latestState.pages.filter((page) => page.ready !== false);
+      if (pageIds.length !== visiblePages.length || pageIds.some((id) => !visiblePages.some((page) => page.id === id))) {
+        throw new Error('تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى');
+      }
+      const reordered = new Map(visiblePages.map((page) => [page.id, page]));
+      const orderedVisiblePages = pageIds.map((id) => reordered.get(id));
+      let visibleIndex = 0;
+      latestState.pages = latestState.pages.map((page) => page.ready === false ? page : orderedVisiblePages[visibleIndex++]);
+    }, 'Reorder menu pages');
+    res.json({ success: true, pages: state.pages.filter((page) => page.ready !== false), updatedAt: state.updatedAt || null });
+  } catch (error) {
+    const status = error.message === 'تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى' ? 409 : 500;
+    res.status(status).json({ message: error.message || 'تعذر حفظ ترتيب الصفحات' });
+  }
+});
+
 app.put('/api/pages/:id', auth, async (req, res) => {
   const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
@@ -890,46 +931,6 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
     }
   }
   res.json({ success: true });
-});
-
-app.put('/api/pages/order', auth, async (req, res) => {
-  let payload = req.body;
-  const parseBody = (value) => {
-    if (Buffer.isBuffer(value)) value = value.toString('utf8');
-    if (typeof value === 'string') {
-      try { return JSON.parse(value); } catch { return null; }
-    }
-    return value;
-  };
-  payload = parseBody(payload);
-  if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.preParsedBody) {
-    payload = parseBody(req.preParsedBody);
-  }
-  if ((!payload || (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)) && req.rawBody) {
-    payload = parseBody(req.rawBody);
-  }
-  const queryPageIds = typeof req.query.pageIds === 'string' ? parseBody(req.query.pageIds) : null;
-  const submittedIds = Array.isArray(queryPageIds) ? queryPageIds : (Array.isArray(payload) ? payload : payload?.pageIds);
-  const pageIds = Array.isArray(submittedIds) ? submittedIds.map((id) => String(id ?? '').trim()) : null;
-  if (!pageIds || pageIds.some((id) => !id) || new Set(pageIds).size !== pageIds.length) {
-    return res.status(400).json({ message: 'طلب ترتيب الصفحات غير صالح: قائمة pageIds مفقودة أو تحتوي معرفات فارغة أو مكررة' });
-  }
-  try {
-    const { state } = await mutateMenuState((latestState) => {
-      const visiblePages = latestState.pages.filter((page) => page.ready !== false);
-      if (pageIds.length !== visiblePages.length || pageIds.some((id) => !visiblePages.some((page) => page.id === id))) {
-        throw new Error('تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى');
-      }
-      const reordered = new Map(visiblePages.map((page) => [page.id, page]));
-      const orderedVisiblePages = pageIds.map((id) => reordered.get(id));
-      let visibleIndex = 0;
-      latestState.pages = latestState.pages.map((page) => page.ready === false ? page : orderedVisiblePages[visibleIndex++]);
-    }, 'Reorder menu pages');
-    res.json({ success: true, pages: state.pages.filter((page) => page.ready !== false), updatedAt: state.updatedAt || null });
-  } catch (error) {
-    const status = error.message === 'تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى' ? 409 : 500;
-    res.status(status).json({ message: error.message || 'تعذر حفظ ترتيب الصفحات' });
-  }
 });
 
 app.get('/api/pages/:id/download', auth, async (req, res) => {
