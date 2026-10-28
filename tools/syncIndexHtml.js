@@ -25,8 +25,9 @@ function syncIndexHtml() {
   if (fs.existsSync(menuJsonPath)) {
     try {
       const state = JSON.parse(fs.readFileSync(menuJsonPath, 'utf8'));
-      if (Array.isArray(state.pages) && state.pages.length > 0) {
-        const pagesHtml = state.pages.map((page, index) => {
+      if (Array.isArray(state.pages)) {
+        const readyPages = state.pages.filter((page) => page.ready !== false);
+        const pagesHtml = readyPages.map((page, index) => {
           const base = `/api/pages/${encodeURIComponent(page.id)}/preview.webp`;
           const version = encodeURIComponent(page.updatedAt || state.updatedAt || '');
           const altText = `منيو ${page.name} - قائمة طعام وأسعار مطعم فالح أبو العنبة (منذ 1961)`;

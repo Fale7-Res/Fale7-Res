@@ -54,6 +54,7 @@ async function run() {
     }
     pageItem.previewFile = pageItem.previewFiles['1600'];
     pageItem.updatedAt = new Date().toISOString();
+    pageItem.ready = true;
   }
   
   await browser.close();

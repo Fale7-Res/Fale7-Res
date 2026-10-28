@@ -67,6 +67,37 @@ function chunkToBase64(bytes) {
 
 const CHUNK_SIZE = 2 * 1024 * 1024; // 2 MB per chunk (safe under Vercel's 4.5 MB limit)
 
+async function waitForPreviewPages(result) {
+  const pageIds = (result.pages || []).map((page) => page.id);
+  if (!pageIds.length) return true;
+  const deadline = Date.now() + 180000;
+  while (Date.now() < deadline) {
+    try {
+      const data = await request('/api/menu');
+      if (pageIds.every((id) => data.pages.some((page) => page.id === id))) return true;
+    } catch { /* keep polling while GitHub Actions is processing */ }
+    uploadStatus.textContent = 'تم رفع SVG. جاري تجهيز صور WebP قبل نشر الصفحة...';
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  }
+  return false;
+}
+
+async function finishUpload(result) {
+  const submitButton = uploadForm.querySelector('button[type="submit"], button:not([type])');
+  if (submitButton) submitButton.disabled = true;
+  try {
+    const previewsReady = await waitForPreviewPages(result);
+    uploadStatus.textContent = previewsReady
+      ? `تمت إضافة ${result.count} صفحة وتجهيز صورها ✓`
+      : 'تم حفظ SVG، لكن تجهيز صور WebP تأخر. الصفحة مخفية حتى يكتمل الـworkflow؛ لا تعِد رفع الملف الآن.';
+    uploadForm.reset();
+    fileLabel.textContent = 'ملف واحد أو ملف متعدد الصفحات';
+    await loadPages();
+  } finally {
+    if (submitButton) submitButton.disabled = false;
+  }
+}
+
 uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const file = fileInput.files[0];
@@ -81,8 +112,7 @@ uploadForm.addEventListener('submit', async (event) => {
     uploadStatus.textContent = 'جاري رفع المنيو...';
     try {
       const result = await request('/api/pages', { method: 'POST', body: formData });
-      uploadStatus.textContent = `تمت إضافة ${result.count} صفحة ✓`;
-      uploadForm.reset(); fileLabel.textContent = 'ملف واحد أو ملف متعدد الصفحات'; loadPages();
+      await finishUpload(result);
     } catch (error) { uploadStatus.textContent = error.message; }
     return;
   }
@@ -117,8 +147,7 @@ uploadForm.addEventListener('submit', async (event) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, originalName: file.name, blobs: blobShas })
     });
-    uploadStatus.textContent = `تمت إضافة ${result.count} صفحة ✓`;
-    uploadForm.reset(); fileLabel.textContent = 'ملف واحد أو ملف متعدد الصفحات'; loadPages();
+    await finishUpload(result);
   } catch (error) { uploadStatus.textContent = error.message; }
 });
 async function loadPages() {
