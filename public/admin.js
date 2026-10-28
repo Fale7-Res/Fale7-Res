@@ -173,13 +173,16 @@ async function movePage(pages, pageId, direction) {
   pageGrid.querySelectorAll('[data-move]').forEach((button) => { button.disabled = true; });
   pageOrderStatus.textContent = 'تم تحديث العرض مؤقتًا؛ جاري حفظ الترتيب...';
   try {
-    await request('/api/pages/order', {
+    const result = await request('/api/pages/order', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pageIds: reordered.map((page) => page.id) })
     });
+    if (!Array.isArray(result.pages) || result.pages.length !== reordered.length) {
+      throw new Error('تم الحفظ لكن لم يصل ترتيب الصفحات من الخادم؛ أعد تحميل لوحة الإدارة');
+    }
+    renderPages(result.pages, result.updatedAt);
     pageOrderStatus.textContent = 'تم حفظ ترتيب الصفحات ✓';
-    await loadPages();
   } catch (error) {
     pageOrderStatus.textContent = `تعذر حفظ الترتيب: ${error.message}`;
     await loadPages().catch(() => {});

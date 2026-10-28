@@ -903,7 +903,7 @@ app.put('/api/pages/order', auth, async (req, res) => {
       let visibleIndex = 0;
       latestState.pages = latestState.pages.map((page) => page.ready === false ? page : orderedVisiblePages[visibleIndex++]);
     }, 'Reorder menu pages');
-    res.json({ success: true, pages: state.pages.filter((page) => page.ready !== false) });
+    res.json({ success: true, pages: state.pages.filter((page) => page.ready !== false), updatedAt: state.updatedAt || null });
   } catch (error) {
     const status = error.message === 'تغيرت قائمة الصفحات؛ حدّث الصفحة وحاول مرة أخرى' ? 409 : 500;
     res.status(status).json({ message: error.message || 'تعذر حفظ ترتيب الصفحات' });
