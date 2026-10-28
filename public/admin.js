@@ -8,6 +8,7 @@ const fileInput = document.getElementById('svgFile');
 const fileLabel = document.getElementById('fileLabel');
 const uploadStatus = document.getElementById('uploadStatus');
 const pageGrid = document.getElementById('pageGrid');
+const pageOrderStatus = document.getElementById('pageOrderStatus');
 const editor = document.getElementById('editor');
 const editorPreview = document.getElementById('editorPreview');
 const textList = document.getElementById('textList');
@@ -152,8 +153,12 @@ uploadForm.addEventListener('submit', async (event) => {
 });
 async function loadPages() {
   const data = await request('/api/menu');
-  pageGrid.innerHTML = data.pages.length ? data.pages.map((page, index) => `<article class="page-card"><div class="page-thumb"><img src="/api/pages/${page.id}/preview.webp?v=${encodeURIComponent(page.updatedAt || data.updatedAt || '')}" alt="" loading="lazy" decoding="async"></div><div class="page-info"><div class="page-order"><strong>الترتيب ${index + 1}</strong><div><button class="btn" data-move="up" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأعلى" title="تحريك للأعلى" ${index === 0 ? 'disabled' : ''}>↑</button><button class="btn" data-move="down" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأسفل" title="تحريك للأسفل" ${index === data.pages.length - 1 ? 'disabled' : ''}>↓</button></div></div><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';
-  pageGrid.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => openEditor(data.pages.find((page) => page.id === button.dataset.edit))));
+  renderPages(data.pages, data.updatedAt);
+}
+
+function renderPages(pages, updatedAt) {
+  pageGrid.innerHTML = pages.length ? pages.map((page, index) => `<article class="page-card"><div class="page-thumb"><img src="/api/pages/${page.id}/preview.webp?v=${encodeURIComponent(page.updatedAt || updatedAt || '')}" alt="" loading="lazy" decoding="async"></div><div class="page-info"><div class="page-order"><strong>الترتيب ${index + 1}</strong><div><button class="btn" data-move="up" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأعلى" title="تحريك للأعلى" ${index === 0 ? 'disabled' : ''}>↑</button><button class="btn" data-move="down" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأسفل" title="تحريك للأسفل" ${index === pages.length - 1 ? 'disabled' : ''}>↓</button></div></div><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';
+  pageGrid.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => openEditor(pages.find((page) => page.id === button.dataset.edit))));
   pageGrid.querySelectorAll('[data-delete]').forEach((button) => button.addEventListener('click', () => deletePage(button.dataset.delete)));
   pageGrid.querySelectorAll('[data-move]').forEach((button) => button.addEventListener('click', () => movePage(data.pages, button.dataset.id, button.dataset.move)));
 }
@@ -164,18 +169,19 @@ async function movePage(pages, pageId, direction) {
   if (from < 0 || to < 0 || to >= pages.length) return;
   const reordered = [...pages];
   [reordered[from], reordered[to]] = [reordered[to], reordered[from]];
+  renderPages(reordered);
   pageGrid.querySelectorAll('[data-move]').forEach((button) => { button.disabled = true; });
-  uploadStatus.textContent = 'جاري حفظ ترتيب الصفحات...';
+  pageOrderStatus.textContent = 'تم تحديث العرض مؤقتًا؛ جاري حفظ الترتيب...';
   try {
     await request('/api/pages/order', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pageIds: reordered.map((page) => page.id) })
     });
-    uploadStatus.textContent = 'تم حفظ ترتيب الصفحات ✓';
+    pageOrderStatus.textContent = 'تم حفظ ترتيب الصفحات ✓';
     await loadPages();
   } catch (error) {
-    uploadStatus.textContent = error.message;
+    pageOrderStatus.textContent = `تعذر حفظ الترتيب: ${error.message}`;
     await loadPages().catch(() => {});
   }
 }
