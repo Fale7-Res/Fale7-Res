@@ -766,22 +766,7 @@
           "value": "ألذ سندوتشات ومشويات على أصولها"
         }
       ]
-    },
-    {
-      "id": "4a40e76d-5ba1-4c04-a107-ad306e37ba5d",
-      "name": "فالح الصفحه الاولي",
-      "fileName": "4a40e76d-5ba1-4c04-a107-ad306e37ba5d.svg",
-      "createdAt": "2026-10-28T09:07:53.397Z",
-      "ready": true,
-      "previewFiles": {
-        "640": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-640.webp",
-        "1024": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-1024.webp",
-        "1600": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-1600.webp",
-        "2400": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-2400.webp"
-      },
-      "previewFile": "previews/4a40e76d-5ba1-4c04-a107-ad306e37ba5d-88a8ff393e10-1600.webp",
-      "updatedAt": "2026-10-28T09:29:03.407Z"
     }
   ],
-  "updatedAt": "2026-10-28T09:29:03.526Z"
+  "updatedAt": "2026-10-28T09:31:54.329Z"
 }
