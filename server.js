@@ -345,13 +345,13 @@ async function ensureStore() {
 async function readState({ fresh = false } = {}) {
   await ensureStore();
   if (!fresh && isVercel && stateCache && Date.now() - stateCacheTime < 30000) return stateCache;
-  if (isVercel && githubToken && githubRepository) {
+  if (isVercel) {
+    if (!githubToken || !githubRepository) throw new Error('إعدادات GitHub غير مكتملة في Vercel');
     const remote = await readFromGitHub('data/menu.json');
-    if (remote) {
-      stateCache = JSON.parse(remote);
-      stateCacheTime = Date.now();
-      return stateCache;
-    }
+    if (!remote) throw new Error('تعذر قراءة حالة المنيو من GitHub');
+    stateCache = JSON.parse(remote);
+    stateCacheTime = Date.now();
+    return stateCache;
   }
   const state = JSON.parse(await fs.readFile(stateFile, 'utf8'));
   if (isVercel) { stateCache = state; stateCacheTime = Date.now(); }
@@ -361,6 +361,77 @@ async function readState({ fresh = false } = {}) {
 async function writeState(state) {
   if (isVercel) return;
   await fs.writeFile(stateFile, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2));
+}
+
+let menuMutationQueue = Promise.resolve();
+
+async function mutateMenuState(mutator, message) {
+  const run = async () => {
+    if (isVercel && (!githubToken || !githubRepository)) {
+      throw new Error('إعدادات GitHub غير مكتملة في Vercel');
+    }
+    if (isVercel && githubToken && githubRepository) {
+      const encodedPath = 'data/menu.json';
+      const apiUrl = `https://api.github.com/repos/${githubRepository}/contents/${encodedPath}`;
+      const headers = {
+        Authorization: `Bearer ${githubToken}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const currentResponse = await fetch(`${apiUrl}?ref=${encodeURIComponent(githubBranch)}`, { headers });
+        let currentState = { pages: [] };
+        let currentSha;
+        if (currentResponse.ok) {
+          const currentData = await currentResponse.json();
+          currentSha = currentData.sha;
+          currentState = JSON.parse(Buffer.from(currentData.content.replace(/\s/g, ''), 'base64').toString('utf8'));
+        } else if (currentResponse.status !== 404) {
+          throw new Error(`تعذر قراءة حالة المنيو من GitHub (${currentResponse.status})`);
+        }
+
+        const value = mutator(currentState);
+        currentState.updatedAt = new Date().toISOString();
+        const saveResponse = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message,
+            content: Buffer.from(JSON.stringify(currentState, null, 2)).toString('base64'),
+            branch: githubBranch,
+            ...(currentSha ? { sha: currentSha } : {})
+          })
+        });
+
+        if (saveResponse.ok) {
+          stateCache = currentState;
+          stateCacheTime = Date.now();
+          renderedSvgCache.clear();
+          previewCache.clear();
+          return { state: currentState, value };
+        }
+        if (saveResponse.status !== 409 && saveResponse.status !== 422) {
+          throw new Error(`تعذر حفظ حالة المنيو في GitHub (${saveResponse.status})`);
+        }
+      }
+      throw new Error('تعارضت تعديلات المنيو أكثر من مرة؛ أعد المحاولة بعد لحظة');
+    }
+
+    const state = await readState({ fresh: true });
+    const value = mutator(state);
+    state.updatedAt = new Date().toISOString();
+    await writeState(state);
+    await commitToGitHub('data/menu.json', JSON.stringify(state, null, 2), message);
+    stateCache = state;
+    stateCacheTime = Date.now();
+    return { state, value };
+  };
+
+  if (isVercel) return run();
+  const pending = menuMutationQueue.then(run, run);
+  menuMutationQueue = pending.then(() => undefined, () => undefined);
+  return pending;
 }
 
 function splitSvgFile(buffer) {
@@ -516,7 +587,7 @@ async function triggerPreviewGeneration() {
 }
 
 app.get('/api/menu', async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   res.json({ pages: state.pages, updatedAt: state.updatedAt || null });
 });
 
@@ -560,7 +631,6 @@ app.post('/api/pages', auth, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'اختر ملف SVG أولاً' });
   try {
     const svgs = splitSvgFile(req.file.buffer);
-    const state = await readState({ fresh: true });
     const created = [];
     for (let index = 0; index < svgs.length; index += 1) {
       const id = crypto.randomUUID();
@@ -568,21 +638,19 @@ app.post('/api/pages', auth, upload.single('file'), async (req, res) => {
       const page = { id, name: svgs.length > 1 ? `${req.body.name || req.file.originalname} - صفحة ${index + 1}` : (req.body.name || req.file.originalname), fileName, createdAt: new Date().toISOString() };
       if (!isVercel) await fs.writeFile(path.join(uploadDir, fileName), svgs[index]);
       await commitToGitHub(`uploads/${fileName}`, svgs[index], `Add menu page ${page.name}`);
-      state.pages.push(page);
       created.push(page);
     }
-    state.updatedAt = new Date().toISOString();
-    await writeState(state);
-    await commitToGitHub('data/menu.json', JSON.stringify(state, null, 2), 'Register uploaded menu pages');
-    stateCache = state;
-    stateCacheTime = Date.now();
+    await mutateMenuState((state) => {
+      state.pages ||= [];
+      state.pages.push(...created);
+    }, 'Register uploaded menu pages');
     triggerPreviewGeneration(); // fire-and-forget: generate WebP previews via GitHub Actions
     res.json({ success: true, count: created.length, pages: created });
   } catch (error) { res.status(400).json({ message: error.message || 'تعذر رفع ملف SVG' }); }
 });
 
 app.get('/api/pages/:id/file', async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   res.set({
@@ -614,7 +682,7 @@ app.get('/api/pages/:id/file', async (req, res) => {
 });
 
 app.get('/api/pages/:id/preview', async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   let source;
@@ -635,14 +703,19 @@ app.get('/api/pages/:id/preview', async (req, res) => {
 });
 
 app.get('/api/pages/:id/preview.webp', async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   const requestedWidth = Number.parseInt(req.query.w, 10);
   const width = previewWidths.includes(requestedWidth) ? requestedWidth : 1600;
   const previewFile = page.previewFiles?.[String(width)] || (width === 1600 ? page.previewFile : null);
   if (previewFile) {
-    return res.sendFile(path.join(root, previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
+    try {
+      await fs.access(path.join(root, previewFile));
+      return res.sendFile(path.join(root, previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
+    } catch {
+      // The preview workflow may not have deployed its generated file yet; serve the SVG meanwhile.
+    }
   }
   let source;
   try {
@@ -656,7 +729,7 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
 });
 
 app.put('/api/pages/:id', auth, async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.status(400).json({ message: 'بيانات الصفحة غير صحيحة' });
   let nextSvg = req.body.svg;
@@ -667,47 +740,53 @@ app.put('/api/pages/:id', auth, async (req, res) => {
   if (nextSvg !== null && (typeof nextSvg !== 'string' || !/^\s*<svg\b[\s\S]*<\/svg>\s*$/i.test(nextSvg))) return res.status(400).json({ message: 'المحتوى الناتج ليس SVG صالحًا' });
   if (isVercel && (!githubToken || !githubRepository)) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة في Vercel' });
   if (!isVercel && nextSvg !== null) await fs.writeFile(path.join(uploadDir, page.fileName), nextSvg);
-  if (typeof req.body.name === 'string' && req.body.name.trim()) page.name = req.body.name.trim();
-  page.updatedAt = new Date().toISOString();
-  await writeState(state);
   if (nextSvg !== null) await commitToGitHub(`uploads/${page.fileName}`, nextSvg, `Update menu page ${page.name}`);
-  await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Update menu metadata for ${page.name}`);
+  const { value: updatedPage } = await mutateMenuState((latestState) => {
+    const latestPage = latestState.pages.find((item) => item.id === req.params.id);
+    if (!latestPage) throw new Error('الصفحة لم تعد موجودة؛ حدّث القائمة وحاول مرة أخرى');
+    if (Array.isArray(req.body.changes)) latestPage.changes = req.body.changes;
+    if (typeof req.body.name === 'string' && req.body.name.trim()) latestPage.name = req.body.name.trim();
+    latestPage.updatedAt = new Date().toISOString();
+    return latestPage;
+  }, `Update menu metadata for ${page.name}`);
   try {
     const { syncIndexHtml } = require('./tools/syncIndexHtml');
     syncIndexHtml();
     const updatedIndex = await fs.readFile(path.join(root, 'public', 'index.html'), 'utf8');
-    await commitToGitHub('public/index.html', updatedIndex, `Sync GEO and Schema.org for ${page.name}`);
+    await commitToGitHub('public/index.html', updatedIndex, `Sync GEO and Schema.org for ${updatedPage.name}`);
   } catch (syncErr) {
     console.error('Failed to sync index.html on update:', syncErr.message);
   }
-  stateCache = null; // invalidate cache so next read fetches fresh data
   triggerPreviewGeneration(); // fire-and-forget: regenerate WebP previews
-  res.json({ success: true, page });
+  res.json({ success: true, page: updatedPage });
 });
 
 app.delete('/api/pages/:id', auth, async (req, res) => {
-  const state = await readState({ fresh: true });
-  const pageIndex = state.pages.findIndex((item) => item.id === req.params.id);
-  if (pageIndex < 0) return res.sendStatus(404);
-  const [page] = state.pages.splice(pageIndex, 1);
   if (isVercel && (!githubToken || !githubRepository)) return res.status(503).json({ message: 'إعدادات GitHub غير مكتملة في Vercel' });
+  let page;
+  try {
+    ({ value: page } = await mutateMenuState((state) => {
+      const pageIndex = state.pages.findIndex((item) => item.id === req.params.id);
+      if (pageIndex < 0) throw new Error('الصفحة غير موجودة أو سبق حذفها');
+      return state.pages.splice(pageIndex, 1)[0];
+    }, 'Delete menu page'));
+  } catch (error) {
+    if (error.message === 'الصفحة غير موجودة أو سبق حذفها') return res.sendStatus(404);
+    throw error;
+  }
   if (!isVercel) await fs.rm(path.join(uploadDir, page.fileName), { force: true });
   for (const previewPath of Object.values(page.previewFiles || {})) {
     if (!isVercel) await fs.rm(path.join(root, previewPath), { force: true });
     await deleteFromGitHub(previewPath, `Delete preview for ${page.name}`);
   }
-  await writeState(state);
   await deleteFromGitHub(`uploads/${page.fileName}`, `Delete menu page ${page.name}`);
-  await commitToGitHub('data/menu.json', JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2), `Delete menu page ${page.name}`);
-  stateCache = state;
-  stateCacheTime = Date.now();
   renderedSvgCache.clear();
   previewCache.clear();
   res.json({ success: true });
 });
 
 app.get('/api/pages/:id/download', auth, async (req, res) => {
-  const state = await readState();
+  const state = await readState({ fresh: true });
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   const safeName = (page.name.replace(/[^w؀-ۿ -]/g, '') || 'menu-page') + '.svg';
@@ -758,7 +837,6 @@ app.post('/api/upload/finalize', auth, async (req, res) => {
     }));
     const fullBuffer = Buffer.concat(parts);
     const svgs = splitSvgFile(fullBuffer);
-    const state = await readState({ fresh: true });
     const created = [];
     const pageName = ((name || originalName || 'منيو').trim());
     for (let index = 0; index < svgs.length; index++) {
@@ -767,14 +845,12 @@ app.post('/api/upload/finalize', auth, async (req, res) => {
       const page = { id, name: svgs.length > 1 ? `${pageName} - صفحة ${index + 1}` : pageName, fileName, createdAt: new Date().toISOString() };
       if (!isVercel) await fs.writeFile(path.join(uploadDir, fileName), svgs[index]);
       await commitToGitHub(`uploads/${fileName}`, svgs[index], `Add menu page ${page.name}`);
-      state.pages.push(page);
       created.push(page);
     }
-    state.updatedAt = new Date().toISOString();
-    await writeState(state);
-    await commitToGitHub('data/menu.json', JSON.stringify(state, null, 2), 'Register uploaded menu pages');
-    stateCache = state;
-    stateCacheTime = Date.now();
+    await mutateMenuState((state) => {
+      state.pages ||= [];
+      state.pages.push(...created);
+    }, 'Register uploaded menu pages');
     triggerPreviewGeneration();
     res.json({ success: true, count: created.length, pages: created });
   } catch (error) { res.status(500).json({ message: error.message || 'فشل تجميع الملف' }); }
