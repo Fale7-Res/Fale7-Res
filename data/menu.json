@@ -765,7 +765,7 @@
         "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-2400.webp"
       },
       "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-1600.webp",
-      "updatedAt": "2026-10-29T16:54:16.485Z",
+      "updatedAt": "2026-10-29T16:54:31.053Z",
       "changes": [
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-10-29T16:54:16.599Z"
+  "updatedAt": "2026-10-29T16:54:31.053Z"
 }
