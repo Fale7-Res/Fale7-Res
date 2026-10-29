@@ -13,14 +13,22 @@ async function run() {
   await fs.mkdir(path.join(root, 'previews'), { recursive: true });
   const expected = new Set();
   
-  const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox', '--font-render-hinting=none'] });
-  const page = await browser.newPage();
+  let browser;
+  let page;
 
   for (const pageItem of state.pages) {
-    const source = await fs.readFile(path.join(root, 'uploads', pageItem.fileName), 'utf8');
+    const source = (await fs.readFile(path.join(root, 'uploads', pageItem.fileName), 'utf8')).replace(/\r\n/g, '\n');
     const svg = applyChanges(source, pageItem.changes || []);
     const baseName = path.basename(pageItem.fileName, path.extname(pageItem.fileName)).replace(/[^a-zA-Z0-9_-]/g, '-');
     const version = crypto.createHash('sha1').update(svg).digest('hex').slice(0, 12);
+    const files = Object.fromEntries(widths.map(width => [String(width), `previews/${baseName}-${version}-${width}.webp`]));
+    Object.values(files).forEach(file => expected.add(file));
+    const reusable = pageItem.ready !== false && widths.every(width => pageItem.previewFiles?.[String(width)] === files[String(width)]);
+    if (reusable && (await Promise.all(Object.values(files).map(file => fs.access(path.join(root, file)).then(() => true, () => false)))).every(Boolean)) continue;
+    if (!browser) {
+      browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox', '--disable-setuid-sandbox', '--font-render-hinting=none'] });
+      page = await browser.newPage();
+    }
     
     const oldFiles = (await fs.readdir(path.join(root, 'previews'))).filter((file) => file.startsWith(`${baseName}-`) && file.endsWith('.webp'));
     await Promise.all(oldFiles.map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));
@@ -58,7 +66,7 @@ async function run() {
     pageItem.ready = true;
   }
   
-  await browser.close();
+  if (browser) await browser.close();
 
   const existing = await fs.readdir(path.join(root, 'previews'));
   await Promise.all(existing.filter((file) => file.endsWith('.webp') && !expected.has(`previews/${file}`)).map((file) => fs.rm(path.join(root, 'previews', file), { force: true })));

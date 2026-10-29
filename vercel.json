@@ -8,9 +8,11 @@
         "includeFiles": ["uploads/**", "data/**", "previews/**"],
         "maxDuration": 60
       }
-    }
+    },
+    { "src": "previews/**", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/previews/(.*)", "headers": { "Cache-Control": "public, max-age=31536000, immutable" }, "dest": "/previews/$1" },
     { "src": "/(.*)", "dest": "api/index.js" }
   ]
 }

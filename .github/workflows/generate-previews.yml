@@ -7,6 +7,8 @@ on:
       - data/menu.json
       - svgEdits.js
       - tools/generate-previews.js
+      - tools/syncIndexHtml.js
+      - public/menu-images.js
   workflow_dispatch:
 
 concurrency:

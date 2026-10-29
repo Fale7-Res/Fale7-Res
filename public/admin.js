@@ -74,7 +74,7 @@ async function waitForPreviewPages(result) {
   const deadline = Date.now() + 180000;
   while (Date.now() < deadline) {
     try {
-      const data = await request('/api/menu');
+      const data = await request('/api/menu?fresh=1');
       if (pageIds.every((id) => data.pages.some((page) => page.id === id))) return true;
     } catch { /* keep polling while GitHub Actions is processing */ }
     uploadStatus.textContent = 'تم رفع SVG. جاري تجهيز صور WebP قبل نشر الصفحة...';
@@ -152,12 +152,20 @@ uploadForm.addEventListener('submit', async (event) => {
   } catch (error) { uploadStatus.textContent = error.message; }
 });
 async function loadPages() {
-  const data = await request('/api/menu');
+  const data = await request('/api/menu?fresh=1');
   renderPages(data.pages, data.updatedAt);
 }
 
+pageGrid.addEventListener('error', event => {
+  const image = event.target;
+  if (!image.dataset?.previewFallback) return;
+  const fallback = image.dataset.previewFallback;
+  delete image.dataset.previewFallback;
+  image.src = fallback;
+}, true);
+
 function renderPages(pages, updatedAt) {
-  pageGrid.innerHTML = pages.length ? pages.map((page, index) => `<article class="page-card"><div class="page-thumb"><img src="/api/pages/${page.id}/preview.webp?v=${encodeURIComponent(page.updatedAt || updatedAt || '')}" alt="" loading="lazy" decoding="async"></div><div class="page-info"><div class="page-order"><strong>الترتيب ${index + 1}</strong><div><button class="btn" data-move="up" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأعلى" title="تحريك للأعلى" ${index === 0 ? 'disabled' : ''}>↑</button><button class="btn" data-move="down" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأسفل" title="تحريك للأسفل" ${index === pages.length - 1 ? 'disabled' : ''}>↓</button></div></div><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';
+  pageGrid.innerHTML = pages.length ? pages.map((page, index) => `<article class="page-card"><div class="page-thumb"><img src="${escapeHtml(menuImageUrl(page, 640, updatedAt))}" data-preview-fallback="/api/pages/${encodeURIComponent(page.id)}/preview.webp?w=640&amp;v=${encodeURIComponent(page.updatedAt || updatedAt || '')}" alt="" loading="lazy" decoding="async"></div><div class="page-info"><div class="page-order"><strong>الترتيب ${index + 1}</strong><div><button class="btn" data-move="up" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأعلى" title="تحريك للأعلى" ${index === 0 ? 'disabled' : ''}>↑</button><button class="btn" data-move="down" data-id="${page.id}" aria-label="تحريك ${escapeHtml(page.name)} للأسفل" title="تحريك للأسفل" ${index === pages.length - 1 ? 'disabled' : ''}>↓</button></div></div><h3 title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</h3><div class="page-actions"><button class="btn btn-primary" data-edit="${page.id}">تحرير الأسعار</button><a class="btn" href="/api/pages/${page.id}/download" download>تنزيل</a><button class="btn" data-delete="${page.id}" aria-label="حذف">×</button></div></div></article>`).join('') : '<div class="empty"><div><strong>لا توجد صفحات بعد</strong><span>أضف أول ملف SVG من الأعلى.</span></div></div>';
   pageGrid.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => openEditor(pages.find((page) => page.id === button.dataset.edit))));
   pageGrid.querySelectorAll('[data-delete]').forEach((button) => button.addEventListener('click', () => deletePage(button.dataset.delete)));
   pageGrid.querySelectorAll('[data-move]').forEach((button) => button.addEventListener('click', () => movePage(pages, button.dataset.id, button.dataset.move)));
@@ -358,7 +366,6 @@ function openPriceInput(node) {
     if (!activePriceInput) return;
     node.textContent = input.value.trim() || node.textContent;
     normalizePricePositions([node]);
-    currentSvg = new XMLSerializer().serializeToString(editorSvg);
     closePriceInput();
   };
   input.addEventListener('blur', commit, { once: true });
@@ -427,7 +434,6 @@ function applyBulkText(value) {
   const selected = selectionMode === 'products' ? selectedProducts : selectedNumbers;
   selected.forEach((node) => { node.textContent = nextValue; });
   if (selectionMode === 'products') normalizeProductPositions();
-  currentSvg = new XMLSerializer().serializeToString(editorSvg);
   updateTextSelection();
 }
 
@@ -459,7 +465,6 @@ function applyBulkPrice(value) {
   if (!/^\d+$/.test(nextValue) && !/^[٠-٩]+$/.test(nextValue)) return;
   selectedPrices.forEach((node) => { node.textContent = nextValue; });
   normalizePricePositions(selectedPrices);
-  currentSvg = new XMLSerializer().serializeToString(editorSvg);
   updatePriceSelection();
 }
 
@@ -502,8 +507,12 @@ function normalizePricePositions(nodes) {
   });
 }
 
-document.getElementById('saveEditor').addEventListener('click', async () => {
+document.getElementById('saveEditor').addEventListener('click', async (event) => {
+  const button = event.currentTarget;
+  if (button.disabled) return;
+  activePriceInput?.blur();
   closePriceInput();
+  button.disabled = true;
   const changes = [
     ...priceNodes.map((node) => ({ type: 'price', index: node.dataset.priceIndex, value: node.textContent.trim() })),
     ...textNodes.map((node) => ({ type: 'product', index: node.dataset.productIndex, value: node.textContent.trim() }))
@@ -515,6 +524,7 @@ document.getElementById('saveEditor').addEventListener('click', async () => {
     document.getElementById('downloadEditor').href = `/api/pages/${currentPage.id}/download?v=${Date.now()}`;
     loadPages();
   } catch (error) { editorStatus.textContent = error.message; }
+  finally { button.disabled = false; }
 });
 
 document.getElementById('closeEditor').addEventListener('click', () => {

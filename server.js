@@ -5,8 +5,10 @@ const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
+const compression = require('compression');
 
 const app = express();
+app.use(compression({ threshold: 1024, level: 6 }));
 const port = process.env.PORT || 3000;
 const root = __dirname;
 const dataDir = path.join(root, 'data');
@@ -68,26 +70,12 @@ app.use('/previews', express.static(path.join(root, 'previews'), {
   immutable: true
 }));
 
-// Real-time GEO and Schema.org synchronization for customer homepage
+// The preview workflow generates the homepage and schema when the menu changes.
 const { getMenuSections, generateSchemaGraph, renderHtmlMenu, renderQuickFacts } = require('./menuData');
 
 app.get('/', async (req, res) => {
-  try {
-    const indexPath = path.join(root, 'public', 'index.html');
-    let content = await fs.readFile(indexPath, 'utf8');
-    const sections = getMenuSections();
-    const schema = generateSchemaGraph(sections);
-    const jsonLd = JSON.stringify(schema, null, 2);
-
-    content = content.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">\n${jsonLd}\n  </script>`);
-    content = content.replace(/<aside class="seo-semantic-container"[\s\S]*?<\/aside>/i, '');
-
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
-    return res.send(content);
-  } catch (err) {
-    return res.sendFile(path.join(root, 'public', 'index.html'));
-  }
+  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=60');
+  res.sendFile(path.join(root, 'public', 'index.html'));
 });
 
 // Canonical redirect: /about.html → /about
@@ -354,7 +342,7 @@ async function ensureStore() {
 
 async function readState({ fresh = false } = {}) {
   await ensureStore();
-  if (!fresh && isVercel && stateCache && Date.now() - stateCacheTime < 30000) return stateCache;
+  if (!fresh && isVercel && stateCache && Date.now() - stateCacheTime < 5000) return stateCache;
   if (isVercel) {
     if (!githubToken || !githubRepository) throw new Error('إعدادات GitHub غير مكتملة في Vercel');
     const remote = await readFromGitHub('data/menu.json');
@@ -663,13 +651,13 @@ async function deleteMenuPageFromGitHub(pageId) {
 }
 
 app.get('/api/menu', async (req, res) => {
-  const state = await readState({ fresh: true });
+  const state = await readState({ fresh: req.query.fresh === '1' });
   res.set({
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
     Pragma: 'no-cache',
     Expires: '0'
   });
-  res.json({ pages: state.pages.filter((page) => page.ready !== false), updatedAt: state.updatedAt || null });
+  res.json({ pages: state.pages.filter((page) => page.ready !== false).map(({ changes, ...page }) => page), updatedAt: state.updatedAt || null });
 });
 
 app.get('/api/menu/data', (req, res) => {
@@ -784,7 +772,7 @@ app.get('/api/pages/:id/preview', async (req, res) => {
 });
 
 app.get('/api/pages/:id/preview.webp', async (req, res) => {
-  const state = await readState({ fresh: true });
+  const state = await readState();
   const page = state.pages.find((item) => item.id === req.params.id);
   if (!page) return res.sendStatus(404);
   const requestedWidth = Number.parseInt(req.query.w, 10);
@@ -795,7 +783,13 @@ app.get('/api/pages/:id/preview.webp', async (req, res) => {
       await fs.access(path.join(root, previewFile));
       return res.sendFile(path.join(root, previewFile), { headers: { 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Type': 'image/webp' } });
     } catch {
-      // The preview workflow may not have deployed its generated file yet; serve the SVG meanwhile.
+      // Newly generated images may exist on GitHub before this deployment has them.
+      if (isVercel && githubToken && githubRepository) {
+        const response = await fetch(`https://raw.githubusercontent.com/${githubRepository}/${encodeURIComponent(githubBranch)}/${previewFile}`, {
+          headers: { Authorization: `Bearer ${githubToken}` }
+        });
+        if (response.ok) return res.set({ 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=31536000, immutable' }).end(Buffer.from(await response.arrayBuffer()));
+      }
     }
   }
   let source;
@@ -851,12 +845,13 @@ app.put('/api/pages/order', auth, async (req, res) => {
 });
 
 app.put('/api/pages/:id', auth, async (req, res) => {
-  const state = await readState({ fresh: true });
-  const page = state.pages.find((item) => item.id === req.params.id);
+  // Metadata edits are resolved against the latest state inside the atomic mutation.
+  const page = Array.isArray(req.body.changes)
+    ? { id: req.params.id, name: req.params.id }
+    : (await readState({ fresh: true })).pages.find((item) => item.id === req.params.id);
   if (!page) return res.status(400).json({ message: 'بيانات الصفحة غير صحيحة' });
   let nextSvg = req.body.svg;
   if (Array.isArray(req.body.changes)) {
-    page.changes = req.body.changes;
     nextSvg = null;
   }
   if (nextSvg !== null && (typeof nextSvg !== 'string' || !/^\s*<svg\b[\s\S]*<\/svg>\s*$/i.test(nextSvg))) return res.status(400).json({ message: 'المحتوى الناتج ليس SVG صالحًا' });
@@ -871,14 +866,6 @@ app.put('/api/pages/:id', auth, async (req, res) => {
     latestPage.updatedAt = new Date().toISOString();
     return latestPage;
   }, `Update menu metadata for ${page.name}`);
-  try {
-    const { syncIndexHtml } = require('./tools/syncIndexHtml');
-    syncIndexHtml();
-    const updatedIndex = await fs.readFile(path.join(root, 'public', 'index.html'), 'utf8');
-    await commitToGitHub('public/index.html', updatedIndex, `Sync GEO and Schema.org for ${updatedPage.name}`);
-  } catch (syncErr) {
-    console.error('Failed to sync index.html on update:', syncErr.message);
-  }
   res.json({ success: true, page: updatedPage });
 });
 

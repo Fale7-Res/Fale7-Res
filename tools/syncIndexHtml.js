@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { menuImageUrl } = require('../public/menu-images');
 const { getMenuSections, generateSchemaGraph } = require('../menuData');
 
 function syncIndexHtml() {
@@ -28,12 +29,13 @@ function syncIndexHtml() {
       if (Array.isArray(state.pages)) {
         const readyPages = state.pages.filter((page) => page.ready !== false);
         const pagesHtml = readyPages.map((page, index) => {
-          const base = `/api/pages/${encodeURIComponent(page.id)}/preview.webp`;
-          const version = encodeURIComponent(page.updatedAt || state.updatedAt || '');
+          const src = menuImageUrl(page, 1024, state.updatedAt);
+          const srcset = [640, 1024, 1600, 2400].map(w => `${menuImageUrl(page, w, state.updatedAt)} ${w}w`).join(', ');
+          const fallback = `/api/pages/${encodeURIComponent(page.id)}/preview.webp?w=1600&v=${encodeURIComponent(page.updatedAt || state.updatedAt || '')}`;
           const altText = `منيو ${page.name} - قائمة طعام وأسعار مطعم فالح أبو العنبة (منذ 1961)`;
           const fetchPriority = index === 0 ? 'high' : 'low';
           const loading = index === 0 ? 'eager' : 'lazy';
-          return `<figure class="svg-page"><img src="${base}?w=1024&v=${version}" srcset="${base}?w=640&v=${version} 640w, ${base}?w=1024&v=${version} 1024w, ${base}?w=1600&v=${version} 1600w, ${base}?w=2400&v=${version} 2400w" sizes="(max-width: 700px) 100vw, min(1100px, 100vw)" width="1054" height="1492" alt="${altText}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"></figure>`;
+          return `<figure class="svg-page"><img src="${src}" srcset="${srcset}" sizes="(max-width: 700px) 100vw, min(1100px, 100vw)" width="1054" height="1492" alt="${altText}" data-preview-fallback="${fallback}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"></figure>`;
         }).join('\n      ');
 
         const mainRegex = /<main class="svg-viewer" id="mainContent">[\s\S]*?<\/main>/i;
