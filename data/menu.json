@@ -13,7 +13,7 @@
         "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-2400.webp"
       },
       "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1600.webp",
-      "updatedAt": "2026-10-29T17:08:06.148Z",
+      "updatedAt": "2026-10-29T17:13:27.433Z",
       "changes": [
         {
           "type": "price",
@@ -759,13 +759,13 @@
       "createdAt": "2026-10-28T07:50:11.370Z",
       "ready": true,
       "previewFiles": {
-        "640": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-640.webp",
-        "1024": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1024.webp",
-        "1600": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1600.webp",
-        "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-2400.webp"
+        "640": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-640.webp",
+        "1024": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-1024.webp",
+        "1600": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-1600.webp",
+        "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-2400.webp"
       },
-      "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1600.webp",
-      "updatedAt": "2026-10-29T17:12:51.866Z",
+      "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-1600.webp",
+      "updatedAt": "2026-10-29T17:13:30.659Z",
       "changes": [
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-10-29T17:12:51.866Z"
+  "updatedAt": "2026-10-29T17:13:30.904Z"
 }
