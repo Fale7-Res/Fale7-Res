@@ -933,21 +933,25 @@ app.delete('/api/pages/:id', auth, async (req, res) => {
 });
 
 app.get('/api/pages/:id/download', auth, async (req, res) => {
-  const state = await readState({ fresh: true });
-  const page = state.pages.find((item) => item.id === req.params.id);
-  if (!page) return res.sendStatus(404);
-  const safeName = (page.name.replace(/[^w؀-ۿ -]/g, '') || 'menu-page') + '.svg';
-  res.set({
-    'Content-Type': 'image/svg+xml; charset=utf-8',
-    'Content-Disposition': "attachment; filename*=UTF-8''" + encodeURIComponent(safeName),
-    'Cache-Control': 'no-store'
-  });
-  if (isVercel && githubToken && githubRepository) {
-    const source = await readFromGitHub(`uploads/${page.fileName}`);
-    if (!source) return res.sendStatus(404);
-    return res.end(source);
+  try {
+    const state = await readState({ fresh: true });
+    const page = state.pages.find((item) => item.id === req.params.id);
+    if (!page) return res.sendStatus(404);
+    const safeName = (page.name.replace(/[^w؀-ۿ -]/g, '') || 'menu-page') + '.svg';
+    res.set({
+      'Content-Type': 'image/svg+xml; charset=utf-8',
+      'Content-Disposition': "attachment; filename*=UTF-8''" + encodeURIComponent(safeName),
+      'Cache-Control': 'no-store'
+    });
+    const source = isVercel && githubToken && githubRepository
+      ? await readFromGitHub(`uploads/${page.fileName}`)
+      : await fs.readFile(path.join(uploadDir, page.fileName), 'utf8');
+    if (typeof source !== 'string') return res.sendStatus(404);
+    res.end(page.changes?.length ? applyTextChanges(source, page.changes) : source);
+  } catch (error) {
+    console.error('SVG download failed:', error);
+    res.status(error.code === 'ENOENT' ? 404 : 500).end('تعذر تحميل ملف الصفحة');
   }
-  res.sendFile(path.join(uploadDir, page.fileName));
 });
 
 
