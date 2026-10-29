@@ -765,7 +765,7 @@
         "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-2400.webp"
       },
       "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1600.webp",
-      "updatedAt": "2026-10-29T17:08:10.082Z",
+      "updatedAt": "2026-10-29T17:12:51.866Z",
       "changes": [
         {
           "type": "price",
@@ -1280,7 +1280,7 @@
         {
           "type": "product",
           "index": "11",
-          "value": "حبة كبيبة"
+          "value": "وجبة كبسة"
         },
         {
           "type": "product",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-10-29T17:08:10.195Z"
+  "updatedAt": "2026-10-29T17:12:51.866Z"
 }
