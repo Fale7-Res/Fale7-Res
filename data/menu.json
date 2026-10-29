@@ -7,13 +7,13 @@
       "createdAt": "2026-10-28T09:03:47.670Z",
       "ready": true,
       "previewFiles": {
-        "640": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-c2ef19b8f809-640.webp",
-        "1024": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-c2ef19b8f809-1024.webp",
-        "1600": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-c2ef19b8f809-1600.webp",
-        "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-c2ef19b8f809-2400.webp"
+        "640": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-640.webp",
+        "1024": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1024.webp",
+        "1600": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1600.webp",
+        "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-2400.webp"
       },
-      "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-c2ef19b8f809-1600.webp",
-      "updatedAt": "2026-10-29T16:55:02.888Z",
+      "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1600.webp",
+      "updatedAt": "2026-10-29T17:08:06.148Z",
       "changes": [
         {
           "type": "price",
@@ -759,13 +759,13 @@
       "createdAt": "2026-10-28T07:50:11.370Z",
       "ready": true,
       "previewFiles": {
-        "640": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-640.webp",
-        "1024": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-1024.webp",
-        "1600": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-1600.webp",
-        "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-2400.webp"
+        "640": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-640.webp",
+        "1024": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1024.webp",
+        "1600": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1600.webp",
+        "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-2400.webp"
       },
-      "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-073b536f65a0-1600.webp",
-      "updatedAt": "2026-10-29T16:55:06.723Z",
+      "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-6253a865ecd4-1600.webp",
+      "updatedAt": "2026-10-29T17:08:10.082Z",
       "changes": [
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-10-29T16:55:06.814Z"
+  "updatedAt": "2026-10-29T17:08:10.195Z"
 }
