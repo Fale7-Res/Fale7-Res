@@ -471,24 +471,7 @@ function splitSvgFile(buffer) {
   return pages;
 }
 
-function escapeXmlText(value) {
-  return String(value).replace(/[&<>]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[character]));
-}
-
-function applyTextChanges(svg, changes) {
-  if (!Array.isArray(changes) || changes.length > 500) throw new Error('قائمة التعديلات غير صحيحة');
-  const values = new Map();
-  for (const change of changes) {
-    const index = Number.parseInt(change.index, 10);
-    const value = String(change.value ?? '').trim();
-    if (!Number.isInteger(index) || !value || value.length > 300) throw new Error('بيانات التعديل غير صحيحة');
-    values.set(`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${index}`, escapeXmlText(value));
-  }
-  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
-    const value = values.get(`${attribute.toLowerCase()}:${index}`);
-    return value === undefined ? match : `${start}${value}${end}`;
-  });
-}
+const { applyTextChanges } = require('./svgEdits');
 
 function optimizeSvg(svg) {
   return svg

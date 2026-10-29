@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - data/menu.json
+      - svgEdits.js
+      - tools/generate-previews.js
   workflow_dispatch:
 
 concurrency:

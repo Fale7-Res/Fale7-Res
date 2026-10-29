@@ -5,21 +5,7 @@ function cleanText(txt) {
   return String(txt || '').replace(/<[^>]+>/g, '').trim();
 }
 
-function applyTextChanges(svg, changes) {
-  if (!Array.isArray(changes) || changes.length === 0) return svg;
-  const values = new Map();
-  for (const change of changes) {
-    const index = Number.parseInt(change.index, 10);
-    const value = String(change.value ?? '').trim();
-    if (Number.isInteger(index) && value) {
-      values.set(`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${index}`, value);
-    }
-  }
-  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
-    const value = values.get(`${attribute.toLowerCase()}:${index}`);
-    return value === undefined ? match : `${start}${value}${end}`;
-  });
-}
+const { applyTextChanges } = require('./svgEdits');
 
 function parsePage1(svgContent) {
   const matches = [...svgContent.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/gi)];

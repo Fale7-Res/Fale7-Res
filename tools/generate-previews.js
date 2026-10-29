@@ -3,6 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
 const puppeteer = require('puppeteer');
+const { applyTextChanges: applyChanges } = require('../svgEdits');
 
 const root = process.cwd();
 const widths = [640, 1024, 1600, 2400];
@@ -64,19 +65,6 @@ async function run() {
   
   state.updatedAt = new Date().toISOString();
   await fs.writeFile(path.join(root, 'data/menu.json'), JSON.stringify(state, null, 2) + '\n');
-}
-
-function applyChanges(svg, changes) {
-  const values = new Map(changes.map((change) => [`${change.type === 'price' ? 'data-price-index' : 'data-product-index'}:${change.index}`, escapeXml(change.value)]));
-  // We no longer strip <style> because Chrome handles embedded web fonts flawlessly!
-  return svg.replace(/(<text\b[^>]*\b(data-price-index|data-product-index)=["'](\d+)["'][^>]*>)([\s\S]*?)(<\/text>)/gi, (match, start, attribute, index, body, end) => {
-    const value = values.get(`${attribute.toLowerCase()}:${index}`);
-    return value === undefined ? match : `${start}${value}${end}`;
-  });
-}
-
-function escapeXml(value) {
-  return String(value).replace(/[&<>]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[character]));
 }
 
 run().catch((error) => { console.error(error); process.exitCode = 1; });
