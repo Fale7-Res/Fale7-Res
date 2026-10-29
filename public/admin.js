@@ -230,14 +230,10 @@ function renderEditor() {
   textNodes = [...editorSvg.querySelectorAll('text')].filter((node) => !isPriceText(node.textContent) && !isPhoneText(node.textContent) && !node.hasAttribute('data-fixed-phone') && node.textContent.trim());
   restoreFixedTextNodes();
   fixedNumberNodes = [...editorSvg.querySelectorAll('text')].filter((node) => isPhoneText(node.textContent) || node.hasAttribute('data-fixed-phone'));
-  const columnCenters = getColumnCenters(priceNodes);
   priceNodes.forEach((node, index) => {
-    const width = getTextWidth(node);
-    const x = Number.parseFloat(node.getAttribute('x')) || 0;
+    const box = node.getBBox();
     const savedCenter = Number.parseFloat(node.getAttribute('data-price-center'));
-    const anchor = node.getAttribute('text-anchor') || 'start';
-    const measuredCenter = anchor === 'middle' ? x : anchor === 'end' ? x - width / 2 : x + width / 2;
-    const center = Number.isFinite(savedCenter) ? savedCenter : columnCenters.get(getColumnKey(node)) ?? measuredCenter;
+    const center = Number.isFinite(savedCenter) ? savedCenter : box.x + box.width / 2;
     priceCenters.set(node, center);
     node.classList.add('price-target');
     node.setAttribute('tabindex', '0');
@@ -308,10 +304,8 @@ function renderEditor() {
       updateTextSelection();
     });
   });
-  const productRepaired = normalizeProductPositions(textNodes);
-  if (priceNodes.length) normalizePricePositions();
   if (!priceNodes.length) textList.innerHTML = '<p class="notice">لم يتم العثور على أسعار رقمية داخل هذا الملف.</p>';
-  return restored || productRepaired;
+  return restored;
 }
 
 function isPriceText(value) {
@@ -363,7 +357,7 @@ function openPriceInput(node) {
   const commit = () => {
     if (!activePriceInput) return;
     node.textContent = input.value.trim() || node.textContent;
-    normalizePricePositions();
+    normalizePricePositions([node]);
     currentSvg = new XMLSerializer().serializeToString(editorSvg);
     closePriceInput();
   };
@@ -464,7 +458,7 @@ function applyBulkPrice(value) {
   const nextValue = String(value || '').trim();
   if (!/^\d+$/.test(nextValue) && !/^[٠-٩]+$/.test(nextValue)) return;
   selectedPrices.forEach((node) => { node.textContent = nextValue; });
-  normalizePricePositions();
+  normalizePricePositions(selectedPrices);
   currentSvg = new XMLSerializer().serializeToString(editorSvg);
   updatePriceSelection();
 }
@@ -499,8 +493,8 @@ function getColumnCenters(nodes) {
   }));
 }
 
-function normalizePricePositions() {
-  priceNodes.forEach((node) => {
+function normalizePricePositions(nodes) {
+  nodes.forEach((node) => {
     const center = priceCenters.get(node);
     node.setAttribute('text-anchor', 'middle');
     node.setAttribute('x', String(center));
