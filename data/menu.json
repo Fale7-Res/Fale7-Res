@@ -765,7 +765,7 @@
         "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-b3074293895d-2400.webp"
       },
       "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-b3074293895d-1600.webp",
-      "updatedAt": "2026-11-23T18:20:57.648Z",
+      "updatedAt": "2026-11-23T18:23:21.400Z",
       "changes": [
         {
           "type": "price",
@@ -795,7 +795,7 @@
         {
           "type": "price",
           "index": "5",
-          "value": "200"
+          "value": "220"
         },
         {
           "type": "price",
@@ -870,7 +870,7 @@
         {
           "type": "price",
           "index": "20",
-          "value": "170"
+          "value": "200"
         },
         {
           "type": "price",
@@ -880,7 +880,7 @@
         {
           "type": "price",
           "index": "22",
-          "value": "380"
+          "value": "360"
         },
         {
           "type": "price",
@@ -1175,7 +1175,7 @@
         {
           "type": "price",
           "index": "81",
-          "value": "10"
+          "value": "15"
         },
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-11-23T18:21:25.459Z"
+  "updatedAt": "2026-11-23T18:23:21.400Z"
 }
