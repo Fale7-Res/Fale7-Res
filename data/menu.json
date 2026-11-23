@@ -7,13 +7,13 @@
       "createdAt": "2026-10-28T09:03:47.670Z",
       "ready": true,
       "previewFiles": {
-        "640": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-640.webp",
-        "1024": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1024.webp",
-        "1600": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1600.webp",
-        "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-2400.webp"
+        "640": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-3857a2a17044-640.webp",
+        "1024": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-3857a2a17044-1024.webp",
+        "1600": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-3857a2a17044-1600.webp",
+        "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-3857a2a17044-2400.webp"
       },
-      "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1600.webp",
-      "updatedAt": "2026-11-23T18:26:54.993Z",
+      "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-3857a2a17044-1600.webp",
+      "updatedAt": "2026-11-23T18:27:06.220Z",
       "changes": [
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-11-23T18:26:54.993Z"
+  "updatedAt": "2026-11-23T18:27:06.439Z"
 }
