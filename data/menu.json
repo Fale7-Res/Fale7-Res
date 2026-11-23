@@ -765,32 +765,32 @@
         "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-fad10c8541f4-2400.webp"
       },
       "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-fad10c8541f4-1600.webp",
-      "updatedAt": "2026-11-23T18:15:21.150Z",
+      "updatedAt": "2026-11-23T18:19:46.031Z",
       "changes": [
         {
           "type": "price",
           "index": "0",
-          "value": "110"
+          "value": "120"
         },
         {
           "type": "price",
           "index": "1",
-          "value": "140"
+          "value": "150"
         },
         {
           "type": "price",
           "index": "2",
-          "value": "190"
+          "value": "200"
         },
         {
           "type": "price",
           "index": "3",
-          "value": "380"
+          "value": "400"
         },
         {
           "type": "price",
           "index": "4",
-          "value": "390"
+          "value": "420"
         },
         {
           "type": "price",
@@ -805,7 +805,7 @@
         {
           "type": "price",
           "index": "7",
-          "value": "195"
+          "value": "210"
         },
         {
           "type": "price",
@@ -850,7 +850,7 @@
         {
           "type": "price",
           "index": "16",
-          "value": "120"
+          "value": "100"
         },
         {
           "type": "price",
@@ -860,7 +860,7 @@
         {
           "type": "price",
           "index": "18",
-          "value": "165"
+          "value": "180"
         },
         {
           "type": "price",
@@ -875,12 +875,12 @@
         {
           "type": "price",
           "index": "21",
-          "value": "350"
+          "value": "380"
         },
         {
           "type": "price",
           "index": "22",
-          "value": "340"
+          "value": "380"
         },
         {
           "type": "price",
@@ -1280,7 +1280,7 @@
         {
           "type": "product",
           "index": "11",
-          "value": "وجبة كبسة"
+          "value": "وجبه كبسه شيش"
         },
         {
           "type": "product",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-11-23T18:15:21.217Z"
+  "updatedAt": "2026-11-23T18:19:46.031Z"
 }
