@@ -13,12 +13,12 @@
         "2400": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-2400.webp"
       },
       "previewFile": "previews/6bfe3aa4-1dda-4871-86fd-f826d2918373-43d68ea353b4-1600.webp",
-      "updatedAt": "2026-10-29T17:13:27.433Z",
+      "updatedAt": "2026-11-23T18:26:30.586Z",
       "changes": [
         {
           "type": "price",
           "index": "0",
-          "value": "30"
+          "value": "35"
         },
         {
           "type": "price",
@@ -33,7 +33,7 @@
         {
           "type": "price",
           "index": "3",
-          "value": "35"
+          "value": "40"
         },
         {
           "type": "price",
@@ -48,7 +48,7 @@
         {
           "type": "price",
           "index": "6",
-          "value": "35"
+          "value": "40"
         },
         {
           "type": "price",
@@ -63,7 +63,7 @@
         {
           "type": "price",
           "index": "9",
-          "value": "45"
+          "value": "50"
         },
         {
           "type": "price",
@@ -78,7 +78,7 @@
         {
           "type": "price",
           "index": "12",
-          "value": "45"
+          "value": "50"
         },
         {
           "type": "price",
@@ -93,7 +93,7 @@
         {
           "type": "price",
           "index": "15",
-          "value": "55"
+          "value": "60"
         },
         {
           "type": "price",
@@ -108,7 +108,7 @@
         {
           "type": "price",
           "index": "18",
-          "value": "55"
+          "value": "60"
         },
         {
           "type": "price",
@@ -123,7 +123,7 @@
         {
           "type": "price",
           "index": "21",
-          "value": "55"
+          "value": "60"
         },
         {
           "type": "price",
@@ -138,7 +138,7 @@
         {
           "type": "price",
           "index": "24",
-          "value": "65"
+          "value": "70"
         },
         {
           "type": "price",
@@ -153,7 +153,7 @@
         {
           "type": "price",
           "index": "27",
-          "value": "75"
+          "value": "80"
         },
         {
           "type": "price",
@@ -168,7 +168,7 @@
         {
           "type": "price",
           "index": "30",
-          "value": "40"
+          "value": "45"
         },
         {
           "type": "price",
@@ -183,7 +183,7 @@
         {
           "type": "price",
           "index": "33",
-          "value": "50"
+          "value": "55"
         },
         {
           "type": "price",
@@ -198,7 +198,7 @@
         {
           "type": "price",
           "index": "36",
-          "value": "65"
+          "value": "70"
         },
         {
           "type": "price",
@@ -213,7 +213,7 @@
         {
           "type": "price",
           "index": "39",
-          "value": "50"
+          "value": "55"
         },
         {
           "type": "price",
@@ -228,7 +228,7 @@
         {
           "type": "price",
           "index": "42",
-          "value": "50"
+          "value": "55"
         },
         {
           "type": "price",
@@ -243,7 +243,7 @@
         {
           "type": "price",
           "index": "45",
-          "value": "30"
+          "value": "35"
         },
         {
           "type": "price",
@@ -258,7 +258,7 @@
         {
           "type": "price",
           "index": "48",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -273,7 +273,7 @@
         {
           "type": "price",
           "index": "51",
-          "value": "115"
+          "value": "120"
         },
         {
           "type": "price",
@@ -288,7 +288,7 @@
         {
           "type": "price",
           "index": "54",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -303,7 +303,7 @@
         {
           "type": "price",
           "index": "57",
-          "value": "115"
+          "value": "120"
         },
         {
           "type": "price",
@@ -318,7 +318,7 @@
         {
           "type": "price",
           "index": "60",
-          "value": "85"
+          "value": "90"
         },
         {
           "type": "price",
@@ -333,7 +333,7 @@
         {
           "type": "price",
           "index": "63",
-          "value": "85"
+          "value": "90"
         },
         {
           "type": "price",
@@ -348,7 +348,7 @@
         {
           "type": "price",
           "index": "66",
-          "value": "95"
+          "value": "100"
         },
         {
           "type": "price",
@@ -363,7 +363,7 @@
         {
           "type": "price",
           "index": "69",
-          "value": "95"
+          "value": "100"
         },
         {
           "type": "price",
@@ -378,7 +378,7 @@
         {
           "type": "price",
           "index": "72",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -393,7 +393,7 @@
         {
           "type": "price",
           "index": "75",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -408,7 +408,7 @@
         {
           "type": "price",
           "index": "78",
-          "value": "115"
+          "value": "120"
         },
         {
           "type": "price",
@@ -423,7 +423,7 @@
         {
           "type": "price",
           "index": "81",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -438,7 +438,7 @@
         {
           "type": "price",
           "index": "84",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -453,7 +453,7 @@
         {
           "type": "price",
           "index": "87",
-          "value": "75"
+          "value": "80"
         },
         {
           "type": "price",
@@ -468,7 +468,7 @@
         {
           "type": "price",
           "index": "90",
-          "value": "105"
+          "value": "110"
         },
         {
           "type": "price",
@@ -483,7 +483,7 @@
         {
           "type": "price",
           "index": "93",
-          "value": "80"
+          "value": "85"
         },
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-11-23T18:23:55.008Z"
+  "updatedAt": "2026-11-23T18:26:30.586Z"
 }
