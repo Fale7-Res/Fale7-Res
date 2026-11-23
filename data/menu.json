@@ -765,7 +765,7 @@
         "2400": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-2400.webp"
       },
       "previewFile": "previews/ba9d965b-5449-4822-8bf6-2289dba62ba6-54559242b191-1600.webp",
-      "updatedAt": "2026-10-29T17:13:30.659Z",
+      "updatedAt": "2026-11-23T18:14:49.892Z",
       "changes": [
         {
           "type": "price",
@@ -850,7 +850,7 @@
         {
           "type": "price",
           "index": "16",
-          "value": "100"
+          "value": "120"
         },
         {
           "type": "price",
@@ -1865,5 +1865,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-10-29T17:25:28.436Z"
+  "updatedAt": "2026-11-23T18:14:49.892Z"
 }
